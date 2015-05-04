@@ -10,6 +10,8 @@ rc find_packages
 rc compile
 ```
 
+See https://github.com/kratsg/TheAccountant#installing for more information about installing the rest of the dependencies.
+
 ### Jet Reclustering
 
 Using `xAODAnaHelpers`, we provide an easy way for you to enable jet reclustering in a job. In particular, given a `json` file
