@@ -1,4 +1,5 @@
 #include <Reclustering/JetReclustering.h>
+#include <Reclustering/StandardKinematics.h>
 
 #ifdef __CINT__
 
@@ -9,4 +10,5 @@
 
 /* Add a pragma link for any EventLoop algorithm */
 #pragma link C++ class JetReclustering+;
+#pragma link C++ class StandardKinematics+;
 #endif
