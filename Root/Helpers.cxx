@@ -6,9 +6,23 @@
 // jet reclustering
 #include <fastjet/PseudoJet.hh>
 #include <fastjet/ClusterSequence.hh>
+#include "JetInterface/IJetModifier.h"
+#include "JetRec/PseudoJetGetter.h"
+#include "JetRec/JetFromPseudojet.h"
+#include "JetRec/JetFinder.h"
 
-// use this to set up constituents
-#include <JetRec/JetFromPseudojet.h>
+// tools for adding information to jet
+#include "JetSubStructureMomentTools/NSubjettinessTool.h"
+//#include "JetSubStructureMomentTools/NSubjettinessRatiosTool.h" // doesn't work
+#include "JetSubStructureMomentTools/JetChargeTool.h"
+#include "JetSubStructureMomentTools/JetPullTool.h"
+#include "JetSubStructureMomentTools/EnergyCorrelatorTool.h"
+#include "JetSubStructureMomentTools/EnergyCorrelatorRatiosTool.h"
+#include "JetSubStructureMomentTools/KTSplittingScaleTool.h"
+#include "JetSubStructureMomentTools/DipolarityTool.h"
+#include "JetSubStructureMomentTools/CenterOfMassShapesTool.h"
+
+#include "JetMomentTools/JetWidthTool.h"
 
 Reclustering :: Helpers :: Helpers ()
 {
@@ -39,92 +53,88 @@ struct Reclustering :: Helpers :: sort_by_pt
     }
 };
 
-/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*\
-|                                                                              |
-|   Author  : Giordon Stark                                                    |
-|   Email   : gstark@cern.ch                                                   |
-|   Thanks to Ben Nachman for inspiration                                      |
-|                                                                              |
-|   jet_reclustering():                                                        |
-|       Takes a set of small-R jets and reclusters to large-R jets             |
-|                                                                              |
-|       @jets   : jet container to recluster and trim                          |
-|       @radius : radius of large-R jet                                        |
-|       @fcut   : trimming cut to apply                                        |
-|       @rc_alg : clustering algorithm                                         |
-|                                                                              |
-|                                                                              |
-\*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
-void Reclustering::Helpers::jet_to_pj(std::vector<fastjet::PseudoJet>& out_pj, const xAOD::JetContainer* in_jets){
-  for(auto it = in_jets->begin(); it != in_jets->end(); ++it){
-    const TLorentzVector jet_p4 = (*it)->p4();
-    fastjet::PseudoJet pj(jet_p4.Px(),
-                          jet_p4.Py(),
-                          jet_p4.Pz(),
-                          jet_p4.E ());
-    pj.set_user_index(std::distance(in_jets->begin(), it));
-    out_pj.push_back(pj);
-  }
-  return;
-}
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*\
+|                                                                               |
+|   Author  : Giordon Stark                                                     |
+|   Email   : gstark@cern.ch                                                    |
+|   Thanks to Ben Nachman for inspiration                                       |
+|                                                                               |
+|   jet_reclustering():                                                         |
+|       Takes a set of small-R jets and reclusters to large-R jets              |
+|                                                                               |
+|       @inputJetContainer  : name of small-R jet container                     |
+|       @outputJetContainer : name of new jet container to record in TStore     |
+|       @radius             : radius of large-R jets                            |
+|       @rc_alg             : reclustering algorithm to use (AntiKt, Kt, CamKt) |
+|       @ptMin              : minimum Pt cut on reclustered jets                |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+|                                                                               |
+\*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+JetRecTool* Reclustering::Helpers::JetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius, fastjet::JetAlgorithm rc_alg, float ptMin){
+  ToolHandleArray<IJetExecuteTool> handleExec;
 
-void Reclustering::Helpers::jet_reclustering(xAOD::JetContainer& out_jets, const xAOD::JetContainer* in_jets, double radius, fastjet::JetAlgorithm rc_alg){
+  ToolHandleArray<IPseudoJetGetter> getterArray;
+  // Create a PseudoJet builder.
+  PseudoJetGetter* lcgetter = new PseudoJetGetter("lcget");
+  //ToolStore::put(lcgetter);
+  lcgetter->setProperty("InputContainer", inputJetContainer);
+  lcgetter->setProperty("OutputContainer", "PseudoJets_"+inputJetContainer);
+  lcgetter->setProperty("Label", "LCTopo");
+  lcgetter->setProperty("SkipNegativeEnergy", true);
+  lcgetter->setProperty("GhostScale", 0.0);
+  lcgetter->initialize();
 
-  std::map<fastjet::JetAlgorithm, std::string> algToAlgName = {{fastjet::kt_algorithm, "kt_algorithm"}, {fastjet::cambridge_algorithm, "cambridge_algorithm"}, {fastjet::antikt_algorithm, "antikt_algorithm"}};
+  //ToolHandle<IPseudoJetGetter> hlcget(lcgetter);
+  getterArray.push_back( ToolHandle<IPseudoJetGetter>(lcgetter) );
 
-  //1. Need to convert the vector of jets to a vector of pseudojets; only need p4() since we're using them as inputs
-  std::vector<fastjet::PseudoJet> input_jets;
-  Reclustering::Helpers::jet_to_pj(input_jets, in_jets);
+  JetFromPseudojet* jetFromPJ = new JetFromPseudojet("jetbuild");
+  //ToolStore::put(jetFromPJ);
+  //std::vector<std::string> areatts = {"ActiveArea", "ActiveAreaFourVector"};
+  //jetFromPJ->setProperty("Attributes", areatts);
+  //jetFromPJ->msg().setLevel(MSG::ERROR);
+  //jetFromPJ->msg().setLevel(MSG::VERBOSE);
+  jetFromPJ->initialize();
 
-  //2. Build up the new jet definitions using input configurations: jet algorithm, radius
-  fastjet::JetDefinition jet_def(rc_alg, radius);
+  std::map<fastjet::JetAlgorithm, std::string> algToAlgName = {{fastjet::kt_algorithm, "Kt"}, {fastjet::cambridge_algorithm, "CamKt"}, {fastjet::antikt_algorithm, "AntiKt"}};
 
-  //3. Run the Cluster Sequence on pseudojets with the right jet definition above; cs = clustersequence
-  fastjet::ClusterSequence cs(input_jets, jet_def);
+  JetFinder* finder = new JetFinder(outputJetContainer+"Finder");
+  //ToolStore::put(finder);
+  finder->setProperty("JetAlgorithm", algToAlgName.at(rc_alg));
+  finder->setProperty("JetRadius", radius);
+  finder->setProperty("PtMin", ptMin);
+  finder->setProperty("GhostArea", 0.0);
+  finder->setProperty("RandomOption", 1);
+  finder->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(jetFromPJ));
+  //finder->msg().setLevel(MSG::ERROR);
+  finder->initialize();
 
-  // 4. Grab the reclustered jets, sorted by pt(); rc_jets == reclustered jets
-  std::vector<fastjet::PseudoJet> rc_jets = fastjet::sorted_by_pt(cs.inclusive_jets());
+  // Create list of modifiers.
+  ToolHandleArray<IJetModifier> modArray;
+  modArray.push_back( ToolHandle<IJetModifier>( new NSubjettinessTool("NSubjettinessTool") ) );
+  //modArray.push_back( ToolHandle<IJetModifier>( new NSubjettinessRatiosTool("NSubjettinessRatiosTool") ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new JetChargeTool("JetChargeTool") ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new JetPullTool("JetPullTool") ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new EnergyCorrelatorTool("EnergyCorrelatorTool") ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new EnergyCorrelatorRatiosTool("EnergyCorrelatorRatiosTool") ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new KTSplittingScaleTool("KTSplittingScaleTool") ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new DipolarityTool("DipolarityTool") ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new CenterOfMassShapesTool("CenterOfMassShapesTool") ) );
 
-  JetFromPseudojet* pj2j_tool = new JetFromPseudojet("JetFromPseudoJetTool");
-  //pj2j_tool->msg().setLevel( MSG::DEBUG );
+  modArray.push_back( ToolHandle<IJetModifier>( new JetWidthTool("JetWidthTool") ) );
 
-  // figure out the correct attributes
-  const xAOD::JetInput::Type input_type = in_jets->at(0)->getInputType();
-  xAOD::JetTransform::Type transform_type(xAOD::JetTransform::UnknownTransform);
-  switch(rc_alg){
-    case fastjet::antikt_algorithm:
-      transform_type = xAOD::JetTransform::AntiKtRecluster;
-    break;
-    case fastjet::kt_algorithm:
-      transform_type = xAOD::JetTransform::KtRecluster;
-    break;
-    case fastjet::cambridge_algorithm:
-      transform_type = xAOD::JetTransform::CamKtRecluster;
-    break;
-    default:
-      transform_type = xAOD::JetTransform::UnknownTransform;
-    break;
-  }
+  JetRecTool* fullJetTool = new JetRecTool("FullJetRecTool");
+  fullJetTool->setProperty("OutputContainer", outputJetContainer);
+  fullJetTool->setProperty("PseudoJetGetters", getterArray);
+  fullJetTool->setProperty("JetFinder", ToolHandle<IJetFinder>(finder));
+  fullJetTool->setProperty("JetModifiers", modArray);
 
-  // set our attributes on the jets
-  for(auto rc_jet: rc_jets){
-    xAOD::Jet* jet_from_pj = pj2j_tool->add(rc_jet, out_jets, nullptr);
-    jet_from_pj->setInputType(input_type); // LCTopo, EMTopo, ... based on small-R jets
-    jet_from_pj->setAlgorithmType(xAOD::JetAlgorithmType::undefined_jet_algorithm); // not sure...
-    jet_from_pj->setSizeParameter(radius); // large-R jet size
-    jet_from_pj->auxdecor<int>("TransformType") = transform_type; // basically how we re-clustered
+  //fullJetTool->msg().setLevel(MSG::DEBUG);
+  fullJetTool->initialize();
 
-    // calculate substructure values using constituents
-    float width(0.0);
-    for(auto con: rc_jet.constituents()){
-      const xAOD::Jet* constitJet = in_jets->at(con.user_index());
-      jet_from_pj->addConstituent(constitJet);
-      width += constitJet->pt() * jet_from_pj->p4().DeltaR(constitJet->p4());
-    }
-    jet_from_pj->auxdecor<float>("Width") = width/jet_from_pj->pt();
-  }
+  // const xAOD::JetContainer* newjets = jetrectool->build();
+  /*int status = */fullJetTool->execute();
 
-  delete pj2j_tool;
-
-  return;
+  return fullJetTool;
 }

@@ -1,0 +1,24 @@
+[
+  {
+    "class": "JetReclustering",
+    "configs": {
+      "m_inputJetName": "AntiKt4LCTopoJets",
+      "m_outputJetName": "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets",
+      "m_radius": 1.0
+    }
+  },
+  {
+    "class": "StandardKinematics",
+    "configs": {
+      "m_numLeadingJets": 4,
+      "m_inputJets": "AntiKt10LCTopoJets"
+    }
+  },
+  {
+    "class": "StandardKinematics",
+    "configs": {
+      "m_numLeadingJets": 4,
+      "m_inputJets": "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets"
+    }
+  }
+]

@@ -7,9 +7,6 @@
 
 #include "xAODEventInfo/EventInfo.h"
 
-// for making new containers
-#include "xAODJet/JetAuxContainer.h"
-
 #include "xAODAnaHelpers/tools/ReturnCheck.h"
 #include "xAODAnaHelpers/HelperFunctions.h"
 
@@ -62,6 +59,8 @@ EL::StatusCode JetReclustering :: initialize ()
     RETURN_CHECK("JetReclustering::execute()", m_event->writeTo(file), "");
   }
 
+  // recluster 0.4 jets into 1.0 jets
+  m_jetReclusteringTool = Reclustering::Helpers::JetReclusteringTool(m_inputJetName, m_outputJetName, m_radius, m_clusteringAlgorithm);
 
   return EL::StatusCode::SUCCESS;
 }
@@ -69,47 +68,40 @@ EL::StatusCode JetReclustering :: initialize ()
 
 EL::StatusCode JetReclustering :: execute ()
 {
-  const xAOD::EventInfo* eventInfo(nullptr);
-  RETURN_CHECK("JetReclustering::execute()", HelperFunctions::retrieve( eventInfo, "EventInfo", m_event, 0, false), "Could not retrieve EventInfo object.");
 
-  // grab the small radius jets
-  const xAOD::JetContainer* smallRjets(nullptr);
-  RETURN_CHECK("JetReclustering::execute()", HelperFunctions::retrieve( smallRjets, m_inputJetName, m_event, m_store, false), ("Could not retrieve smallRjet object: "+m_inputJetName).c_str());
-
-  // set up the helpers
-  static Reclustering::Helpers helpers;
-
-  // set up the new containers to record the new jets
-  xAOD::JetContainer* reclusteredJets = new xAOD::JetContainer();
-  xAOD::JetAuxContainer* reclusteredJetsAux = new xAOD::JetAuxContainer;
-  reclusteredJets->setStore(reclusteredJetsAux);
-
-  // recluster 0.4 jets into 1.0 jets
-  helpers.jet_reclustering(*reclusteredJets, smallRjets, m_radius, m_clusteringAlgorithm);
+  m_jetReclusteringTool->execute();
 
   // print debugging information if needed
   if(m_debug){
+    const xAOD::JetContainer* smallRjets(nullptr);
+    RETURN_CHECK("JetReclustering::execute()", HelperFunctions::retrieve( smallRjets, m_inputJetName, m_event, m_store, m_debug), ("Could not retrieve smallRjet object: "+m_inputJetName).c_str());
+    const xAOD::JetContainer* reclusteredJets(nullptr);
+    RETURN_CHECK("JetReclustering::execute()", HelperFunctions::retrieve( reclusteredJets, m_outputJetName, nullptr, m_store, m_debug), ("Could not retrieve reclusteredJet object: "+m_outputJetName).c_str());
+
     std::string printStr = "\tPt: %0.2f\tMass: %0.2f\tEta: %0.2f\tPhi: %0.2f\tNum Subjets: %zu";
     Info("execute()", "%zu small-R jets", smallRjets->size());
     for(const auto jet: *smallRjets)
       Info("execute()", printStr.c_str(), jet->pt()/1000., jet->m()/1000., jet->eta(), jet->phi(), jet->numConstituents());
 
     Info("execute()", "%zu reclustered jets", reclusteredJets->size());
-    for(const auto jet: *reclusteredJets)
+    for(const auto jet: *reclusteredJets){
       Info("execute()", printStr.c_str(), jet->pt()/1000., jet->m()/1000., jet->eta(), jet->phi(), jet->numConstituents());
+      float tau1(jet->auxdecor<float>("Tau1"));
+      float tau2(jet->auxdecor<float>("Tau2"));
+      float tau3(jet->auxdecor<float>("Tau3"));
+      Info("execute()", "\t\tTau 1: %0.2f\tTau 2: %0.2f\tTau 3: %0.2f\tTau 21: %0.2f\tTau 32: %0.2f", tau1, tau2, tau3, tau2/tau1, tau3/tau2);
+    }
   }
 
-  // record in the store
-  RETURN_CHECK("JetReclustering::execute()", m_store->record( reclusteredJets, m_outputJetName ),               ("Could not record container to store: "+ m_outputJetName).c_str());
-  RETURN_CHECK("JetReclustering::execute()", m_store->record( reclusteredJetsAux, m_outputJetName + "Aux."),    ("Could not record aux container to store: "+ m_outputJetName+"Aux.").c_str());
 
+  /* need to update later, must retrieve all objects include cluster sequence and pseudojets, and record them one at a time
   if(!m_outputXAODName.empty()){
-    RETURN_CHECK("JetReclustering::execute()", m_event->record( reclusteredJets, m_outputJetName ),             ("Could not record container to event: "+ m_outputJetName).c_str());
-    RETURN_CHECK("JetReclustering::execute()", m_event->record( reclusteredJetsAux, m_outputJetName + "Aux."),  ("Could not record aux container to event: "+ m_outputJetName+"Aux.").c_str());
+    RETURN_CHECK("JetReclustering::execute()", m_event->copy( reclusteredJets, m_outputJetName ),             ("Could not copy container to event: "+ m_outputJetName).c_str());
 
     // fill the file
     m_event->fill();
   }
+  */
 
   return EL::StatusCode::SUCCESS;
 }

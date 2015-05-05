@@ -5,6 +5,7 @@
 
 // jet reclustering
 #include <fastjet/JetDefinition.hh>
+#include "JetRec/JetRecTool.h"
 
 namespace Reclustering {
 
@@ -15,9 +16,10 @@ namespace Reclustering {
 
     struct sort_by_pt;
 
-    // jet reclustering and trimming
+    // jet reclustering
     void jet_to_pj(std::vector<fastjet::PseudoJet>& out_pj, const xAOD::JetContainer* in_jets);
-    void jet_reclustering(xAOD::JetContainer& out_jets, const xAOD::JetContainer* in_jets, double radius = 1.0, fastjet::JetAlgorithm rc_alg = fastjet::antikt_algorithm);
+    static JetRecTool* JetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius = 1.0, fastjet::JetAlgorithm rc_alg = fastjet::antikt_algorithm, float ptMin = 50000.);
+
 
     template<typename T>
     T sort_container_pt(T* inCont){

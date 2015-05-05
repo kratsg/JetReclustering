@@ -10,6 +10,9 @@
 // jet definition
 #include <fastjet/JetDefinition.hh>
 
+// jet reclustering
+#include "JetRec/JetRecTool.h"
+
 class JetReclustering : public EL::Algorithm
 {
 public:
@@ -26,6 +29,7 @@ private:
   xAOD::TStore *m_store; //!
 
   fastjet::JetAlgorithm m_clusteringAlgorithm; //!
+  JetRecTool* m_jetReclusteringTool; //!
 
 public:
   // this is a standard constructor
