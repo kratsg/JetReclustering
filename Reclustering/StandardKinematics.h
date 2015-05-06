@@ -1,5 +1,5 @@
-#ifndef TheAccountant_StandardKinematics_H
-#define TheAccountant_StandardKinematics_H
+#ifndef Reclustering_StandardKinematics_H
+#define Reclustering_StandardKinematics_H
 
 #include <EventLoop/Algorithm.h>
 
@@ -8,8 +8,8 @@
 #include "xAODRootAccess/TStore.h"
 
 // plots to include
-#include <TheAccountant/IParticleKinematicHists.h>
-#include <TheAccountant/JetHists.h>
+#include <Reclustering/IParticleKinematicHists.h>
+#include <Reclustering/JetHists.h>
 
 class StandardKinematics : public EL::Algorithm
 {
@@ -27,8 +27,8 @@ private:
   xAOD::TEvent *m_event;  //!
   xAOD::TStore *m_store;  //!
 
-  std::map< std::string, TheAccountant::IParticleKinematicHists* > m_jetPlots; //!
-  std::map< std::string, TheAccountant::JetHists* > m_jetHistsPlots; //!
+  std::map< std::string, Reclustering::IParticleKinematicHists* > m_jetPlots; //!
+  std::map< std::string, Reclustering::JetHists* > m_jetHistsPlots; //!
 
 
 public:

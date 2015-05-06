@@ -5,13 +5,13 @@ The last stable analysis base used is **2.1.30**. To install,
 ```bash
 rcSetup Base,2.1.30
 git clone https://github.com/kratsg/Reclustering.git
-git clone https://github.com/kratsg/TheAccountant.git
+rc checkout_pkg atlasinst/Institutes/UChicago/xAODAnaHelpers/tags/xAODAnaHelpers-00-00-04
+source xAODAnaHelpers/scripts/ElectronEfficiencyCorrectionPatch_Base.2.1.29.sh
+rc checkout_pkg atlasoff/Reconstruction/Jet/JetSubStructureUtils/tags/JetSubStructureUtils-00-02-08
 rc checkout_pkg atlasoff/Reconstruction/Jet/JetSubStructureMomentTools/tags/JetSubStructureMomentTools-00-01-14
 rc find_packages
 rc compile
 ```
-
-See https://github.com/kratsg/TheAccountant#installing for more information about installing the rest of the dependencies.
 
 ### Jet Reclustering
 

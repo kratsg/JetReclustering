@@ -32,8 +32,8 @@ EL::StatusCode StandardKinematics :: setupJob (EL::Job& job)
 EL::StatusCode StandardKinematics :: histInitialize () {
   // initialize all histograms here
 
-  m_jetPlots[m_inputJets+"/jets"]          = new TheAccountant::IParticleKinematicHists( m_inputJets+"/jets/" );
-  m_jetHistsPlots[m_inputJets+"/jets"]          = new TheAccountant::JetHists( m_inputJets+"/jets/" );
+  m_jetPlots[m_inputJets+"/jets"]          = new Reclustering::IParticleKinematicHists( m_inputJets+"/jets/" );
+  m_jetHistsPlots[m_inputJets+"/jets"]          = new Reclustering::JetHists( m_inputJets+"/jets/" );
 
   // enable jet counting for jet plots above, set type to jet
   for(auto jetPlot: m_jetPlots){
@@ -44,7 +44,7 @@ EL::StatusCode StandardKinematics :: histInitialize () {
   // NLeadingJets
   for(int i=1; i <= m_numLeadingJets; ++i){
     //all/jetX
-    m_jetPlots[m_inputJets+"/jet"+std::to_string(i)] = new TheAccountant::IParticleKinematicHists( m_inputJets+"/jet"+std::to_string(i)+"/" );
+    m_jetPlots[m_inputJets+"/jet"+std::to_string(i)] = new Reclustering::IParticleKinematicHists( m_inputJets+"/jet"+std::to_string(i)+"/" );
   }
 
   for(auto jetPlot: m_jetPlots){
