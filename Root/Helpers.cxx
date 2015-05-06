@@ -73,14 +73,16 @@ struct Reclustering :: Helpers :: sort_by_pt
 |                                                                               |
 \*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 JetRecTool* Reclustering::Helpers::JetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius, fastjet::JetAlgorithm rc_alg, float ptMin){
+  std::string uniqueName = "_"+inputJetContainer+"_"+outputJetContainer;
+
   ToolHandleArray<IJetExecuteTool> handleExec;
 
   ToolHandleArray<IPseudoJetGetter> getterArray;
   // Create a PseudoJet builder.
-  PseudoJetGetter* lcgetter = new PseudoJetGetter("lcget");
+  PseudoJetGetter* lcgetter = new PseudoJetGetter("lcget"+uniqueName);
   //ToolStore::put(lcgetter);
   lcgetter->setProperty("InputContainer", inputJetContainer);
-  lcgetter->setProperty("OutputContainer", "PseudoJets_"+inputJetContainer);
+  lcgetter->setProperty("OutputContainer", "PseudoJets_"+uniqueName);
   lcgetter->setProperty("Label", "LCTopo");
   lcgetter->setProperty("SkipNegativeEnergy", true);
   lcgetter->setProperty("GhostScale", 0.0);
@@ -89,7 +91,7 @@ JetRecTool* Reclustering::Helpers::JetReclusteringTool(const std::string inputJe
   //ToolHandle<IPseudoJetGetter> hlcget(lcgetter);
   getterArray.push_back( ToolHandle<IPseudoJetGetter>(lcgetter) );
 
-  JetFromPseudojet* jetFromPJ = new JetFromPseudojet("jetbuild");
+  JetFromPseudojet* jetFromPJ = new JetFromPseudojet("jetbuild"+uniqueName);
   //ToolStore::put(jetFromPJ);
   //std::vector<std::string> areatts = {"ActiveArea", "ActiveAreaFourVector"};
   //jetFromPJ->setProperty("Attributes", areatts);
@@ -99,7 +101,7 @@ JetRecTool* Reclustering::Helpers::JetReclusteringTool(const std::string inputJe
 
   std::map<fastjet::JetAlgorithm, std::string> algToAlgName = {{fastjet::kt_algorithm, "Kt"}, {fastjet::cambridge_algorithm, "CamKt"}, {fastjet::antikt_algorithm, "AntiKt"}};
 
-  JetFinder* finder = new JetFinder(outputJetContainer+"Finder");
+  JetFinder* finder = new JetFinder("JetFinder"+uniqueName);
   //ToolStore::put(finder);
   finder->setProperty("JetAlgorithm", algToAlgName.at(rc_alg));
   finder->setProperty("JetRadius", radius);
@@ -112,19 +114,19 @@ JetRecTool* Reclustering::Helpers::JetReclusteringTool(const std::string inputJe
 
   // Create list of modifiers.
   ToolHandleArray<IJetModifier> modArray;
-  modArray.push_back( ToolHandle<IJetModifier>( new NSubjettinessTool("NSubjettinessTool") ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new NSubjettinessTool("NSubjettinessTool"+uniqueName) ) );
   //modArray.push_back( ToolHandle<IJetModifier>( new NSubjettinessRatiosTool("NSubjettinessRatiosTool") ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new JetChargeTool("JetChargeTool") ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new JetPullTool("JetPullTool") ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new EnergyCorrelatorTool("EnergyCorrelatorTool") ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new EnergyCorrelatorRatiosTool("EnergyCorrelatorRatiosTool") ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new KTSplittingScaleTool("KTSplittingScaleTool") ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new DipolarityTool("DipolarityTool") ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new CenterOfMassShapesTool("CenterOfMassShapesTool") ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new JetChargeTool("JetChargeTool"+uniqueName) ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new JetPullTool("JetPullTool"+uniqueName) ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new EnergyCorrelatorTool("EnergyCorrelatorTool"+uniqueName) ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new EnergyCorrelatorRatiosTool("EnergyCorrelatorRatiosTool"+uniqueName) ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new KTSplittingScaleTool("KTSplittingScaleTool"+uniqueName) ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new DipolarityTool("DipolarityTool"+uniqueName) ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new CenterOfMassShapesTool("CenterOfMassShapesTool"+uniqueName) ) );
 
-  modArray.push_back( ToolHandle<IJetModifier>( new JetWidthTool("JetWidthTool") ) );
+  modArray.push_back( ToolHandle<IJetModifier>( new JetWidthTool("JetWidthTool"+uniqueName) ) );
 
-  JetRecTool* fullJetTool = new JetRecTool("FullJetRecTool");
+  JetRecTool* fullJetTool = new JetRecTool("FullJetRecTool"+uniqueName);
   fullJetTool->setProperty("OutputContainer", outputJetContainer);
   fullJetTool->setProperty("PseudoJetGetters", getterArray);
   fullJetTool->setProperty("JetFinder", ToolHandle<IJetFinder>(finder));
@@ -134,7 +136,7 @@ JetRecTool* Reclustering::Helpers::JetReclusteringTool(const std::string inputJe
   fullJetTool->initialize();
 
   // const xAOD::JetContainer* newjets = jetrectool->build();
-  /*int status = */fullJetTool->execute();
+  /*int status = fullJetTool->execute();*/
 
   return fullJetTool;
 }
