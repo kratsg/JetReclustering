@@ -25,8 +25,8 @@ EL::StatusCode Reclustering::JetHists::initialize() {
 
   //substructure
     //subjettiness
-  m_tau21                     = book(m_name, "tau21", "#Tau_{21}", 100, 0, 1);
-  m_tau32                     = book(m_name, "tau32", "#Tau_{32}", 100, 0, 1);
+  m_tau21                     = book(m_name, "tau21", "#Tau_{21}", 120, 0, 1.2);
+  m_tau32                     = book(m_name, "tau32", "#Tau_{32}", 120, 0, 1.2);
     //subjet info
   m_subjet_multiplicity       = book(m_name, "subjets/multiplicity", "N_{subjet}", 21, -0.5, 20.5);
   m_subjet_ptFrac             = book(m_name, "subjets/ptFrac", "p_{T}^{subjet}/p_{T}^{jet}", 100, 0, 1);
