@@ -57,7 +57,7 @@ struct Reclustering :: Helpers :: sort_by_pt
 |                                                                               |
 |   Author  : Giordon Stark                                                     |
 |   Email   : gstark@cern.ch                                                    |
-|   Thanks to Ben Nachman for inspiration                                       |
+|   Thanks to Ben Nachman for inspiration, P-A for the help                     |
 |                                                                               |
 |   jet_reclustering():                                                         |
 |       Takes a set of small-R jets and reclusters to large-R jets              |
