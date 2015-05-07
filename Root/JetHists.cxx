@@ -84,8 +84,8 @@ EL::StatusCode Reclustering::JetHists::execute( const xAOD::Jet* jet, float even
   // if it is a transformed jet, deal with that
   static SG::AuxElement::ConstAccessor<int> TransformType("TransformType");
   if(TransformType.isAvailable(*jet)){
+    static SG::AuxElement::ConstAccessor<float> RClus("RClus");
     switch(TransformType(*jet)){
-      static SG::AuxElement::ConstAccessor<float> RClus("RClus");
       case xAOD::JetTransform::Trim:
         subjet_clustering = fastjet::kt_algorithm;
         subjet_radius     = RClus(*jet);
