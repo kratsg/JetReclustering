@@ -2,14 +2,14 @@
 # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/RootCore#Package_Makefile
 
 
-PACKAGE          = Reclustering
+PACKAGE          = xAODJetReclustering
 PACKAGE_PRELOAD  =
 PACKAGE_CXXFLAGS =
 PACKAGE_OBJFLAGS =
 PACKAGE_LDFLAGS  =
 PACKAGE_BINFLAGS =
 PACKAGE_LIBFLAGS =
-PACKAGE_DEP      = EventLoop xAODAnaHelpers xAODRootAccess xAODEventInfo xAODJet JetSubStructureUtils xAODBTagging xAODEgamma Asg_FastJet JetEDM JetRec JetInterface JetSubStructureMomentTools JetMomentTools
+PACKAGE_DEP      = EventLoop xAODRootAccess xAODEventInfo xAODJet JetSubStructureUtils xAODBTagging xAODEgamma Asg_FastJet JetEDM JetRec JetInterface JetSubStructureMomentTools JetMomentTools
 PACKAGE_TRYDEP   =
 PACKAGE_SCRIPTS  =
 PACKAGE_PEDANTIC = 1

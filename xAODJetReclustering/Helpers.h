@@ -1,5 +1,5 @@
-#ifndef Reclustering_Helpers_H
-#define Reclustering_Helpers_H
+#ifndef xAODJetReclustering_Helpers_H
+#define xAODJetReclustering_Helpers_H
 
 #include "xAODJet/JetContainer.h"
 
@@ -7,7 +7,7 @@
 #include <fastjet/JetDefinition.hh>
 #include "JetRec/JetRecTool.h"
 
-namespace Reclustering {
+namespace xAODJetReclustering {
 
   class Helpers {
 
@@ -18,7 +18,7 @@ namespace Reclustering {
 
     // jet reclustering
     void jet_to_pj(std::vector<fastjet::PseudoJet>& out_pj, const xAOD::JetContainer* in_jets);
-    static JetRecTool* JetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius = 1.0, fastjet::JetAlgorithm rc_alg = fastjet::antikt_algorithm, float ptMin = 50000.);
+    static JetRecTool* JetxAODJetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius = 1.0, fastjet::JetAlgorithm rc_alg = fastjet::antikt_algorithm, float ptMin = 50000.);
 
 
     template<typename T>
@@ -26,7 +26,7 @@ namespace Reclustering {
       T sortedCont(SG::VIEW_ELEMENTS);
       for(auto el : *inCont) sortedCont.push_back( el );
 
-      std::sort(sortedCont.begin(), sortedCont.end(), Reclustering::Helpers::sort_by_pt());
+      std::sort(sortedCont.begin(), sortedCont.end(), xAODJetReclustering::Helpers::sort_by_pt());
       return sortedCont;
     }
 
@@ -35,7 +35,7 @@ namespace Reclustering {
       ConstDataVector<T> sortedCont(SG::VIEW_ELEMENTS);
 
       for(auto el : *inCont) sortedCont.push_back( el );
-      std::sort(sortedCont.begin(), sortedCont.end(), Reclustering::Helpers::sort_by_pt());
+      std::sort(sortedCont.begin(), sortedCont.end(), xAODJetReclustering::Helpers::sort_by_pt());
       return *sortedCont.asDataVector();
     }
 

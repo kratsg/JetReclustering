@@ -1,4 +1,4 @@
-#include "Reclustering/Helpers.h"
+#include "xAODJetReclustering/Helpers.h"
 
 // for templating
 #include "xAODBase/IParticleContainer.h"
@@ -24,12 +24,12 @@
 
 #include "JetMomentTools/JetWidthTool.h"
 
-Reclustering :: Helpers :: Helpers ()
+xAODJetReclustering :: Helpers :: Helpers ()
 {
 }
 
 
-struct Reclustering :: Helpers :: sort_by_pt
+struct xAODJetReclustering :: Helpers :: sort_by_pt
 {
 
     inline bool operator() (const TLorentzVector& lhs, const TLorentzVector& rhs)
@@ -72,7 +72,7 @@ struct Reclustering :: Helpers :: sort_by_pt
 |                                                                               |
 |                                                                               |
 \*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
-JetRecTool* Reclustering::Helpers::JetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius, fastjet::JetAlgorithm rc_alg, float ptMin){
+JetRecTool* xAODJetReclustering::Helpers::JetxAODJetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius, fastjet::JetAlgorithm rc_alg, float ptMin){
   std::string uniqueName = "_"+inputJetContainer+"_"+outputJetContainer;
 
   ToolHandleArray<IJetExecuteTool> handleExec;

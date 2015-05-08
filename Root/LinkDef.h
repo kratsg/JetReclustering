@@ -1,5 +1,5 @@
-#include <Reclustering/JetReclustering.h>
-#include <Reclustering/StandardKinematics.h>
+#include <xAODJetReclustering/JetxAODJetReclustering.h>
+#include <xAODJetReclustering/StandardKinematics.h>
 
 #ifdef __CINT__
 
@@ -9,6 +9,6 @@
 #pragma link C++ nestedclass;
 
 /* Add a pragma link for any EventLoop algorithm */
-#pragma link C++ class JetReclustering+;
+#pragma link C++ class JetxAODJetReclustering+;
 #pragma link C++ class StandardKinematics+;
 #endif
