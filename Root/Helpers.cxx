@@ -21,7 +21,7 @@
 
 #include "JetMomentTools/JetWidthTool.h"
 
-JetRecTool* xAODJetReclustering::JetxAODJetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius, fastjet::JetAlgorithm rc_alg, float ptMin){
+JetRecTool* xAODJetReclustering::JetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius, fastjet::JetAlgorithm rc_alg, float ptMin){
   std::string uniqueName = "_"+inputJetContainer+"_"+outputJetContainer;
 
   ToolHandleArray<IJetExecuteTool> handleExec;
