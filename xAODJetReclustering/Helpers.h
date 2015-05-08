@@ -27,7 +27,7 @@ namespace xAODJetReclustering {
   |                                                                               |
   |                                                                               |
   \*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
-    static JetRecTool* JetxAODJetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius = 1.0, fastjet::JetAlgorithm rc_alg = fastjet::antikt_algorithm, float ptMin = 50000.);
+    JetRecTool* JetxAODJetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius = 1.0, fastjet::JetAlgorithm rc_alg = fastjet::antikt_algorithm, float ptMin = 50000.);
 
 }
 #endif
