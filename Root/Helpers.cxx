@@ -1,8 +1,5 @@
 #include "xAODJetReclustering/Helpers.h"
 
-// for templating
-#include "xAODBase/IParticleContainer.h"
-
 // jet reclustering
 #include <fastjet/PseudoJet.hh>
 #include <fastjet/ClusterSequence.hh>
@@ -24,55 +21,7 @@
 
 #include "JetMomentTools/JetWidthTool.h"
 
-xAODJetReclustering :: Helpers :: Helpers ()
-{
-}
-
-
-struct xAODJetReclustering :: Helpers :: sort_by_pt
-{
-
-    inline bool operator() (const TLorentzVector& lhs, const TLorentzVector& rhs)
-    {
-      return (lhs.Pt() > rhs.Pt());
-    }
-
-    inline bool operator() (const TLorentzVector* lhs, const TLorentzVector* rhs)
-    {
-      return (lhs->Pt() > rhs->Pt());
-    }
-
-    inline bool operator() (const xAOD::IParticle& lhs, const xAOD::IParticle& rhs)
-    {
-      return (lhs.pt() > rhs.pt());
-    }
-
-    inline bool operator() (const xAOD::IParticle* lhs, const xAOD::IParticle* rhs)
-    {
-      return (lhs->pt() > rhs->pt());
-    }
-};
-
-/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*\
-|                                                                               |
-|   Author  : Giordon Stark                                                     |
-|   Email   : gstark@cern.ch                                                    |
-|   Thanks to Ben Nachman for inspiration, P-A for the help                     |
-|                                                                               |
-|   jet_reclustering():                                                         |
-|       Takes a set of small-R jets and reclusters to large-R jets              |
-|                                                                               |
-|       @inputJetContainer  : name of small-R jet container                     |
-|       @outputJetContainer : name of new jet container to record in TStore     |
-|       @radius             : radius of large-R jets                            |
-|       @rc_alg             : reclustering algorithm to use (AntiKt, Kt, CamKt) |
-|       @ptMin              : minimum Pt cut on reclustered jets                |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-|                                                                               |
-\*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
-JetRecTool* xAODJetReclustering::Helpers::JetxAODJetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius, fastjet::JetAlgorithm rc_alg, float ptMin){
+JetRecTool* xAODJetReclustering::JetxAODJetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius, fastjet::JetAlgorithm rc_alg, float ptMin){
   std::string uniqueName = "_"+inputJetContainer+"_"+outputJetContainer;
 
   ToolHandleArray<IJetExecuteTool> handleExec;

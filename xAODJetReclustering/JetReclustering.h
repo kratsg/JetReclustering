@@ -1,5 +1,5 @@
-#ifndef xAODJetReclustering_JetxAODJetReclustering_H
-#define xAODJetReclustering_JetxAODJetReclustering_H
+#ifndef xAODJetReclustering_JetReclustering_H
+#define xAODJetReclustering_JetReclustering_H
 
 #include <EventLoop/Algorithm.h>
 
@@ -13,7 +13,7 @@
 // jet reclustering
 #include "JetRec/JetRecTool.h"
 
-class JetxAODJetReclustering : public EL::Algorithm
+class JetReclustering : public EL::Algorithm
 {
 public:
   std::string m_inputJetName,
@@ -29,11 +29,11 @@ private:
   xAOD::TStore *m_store; //!
 
   fastjet::JetAlgorithm m_clusteringAlgorithm; //!
-  JetRecTool* m_jetxAODJetReclusteringTool; //!
+  JetRecTool* m_jetReclusteringTool; //!
 
 public:
   // this is a standard constructor
-  JetxAODJetReclustering ();
+  JetReclustering ();
 
   // these are the functions inherited from Algorithm
   virtual EL::StatusCode setupJob (EL::Job& job);
@@ -47,7 +47,7 @@ public:
   virtual EL::StatusCode histFinalize ();
 
   // this is needed to distribute the algorithm to the workers
-  ClassDef(JetxAODJetReclustering, 1);
+  ClassDef(JetReclustering, 1);
 };
 
 #endif
