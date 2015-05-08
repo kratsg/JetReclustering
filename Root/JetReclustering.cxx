@@ -53,7 +53,10 @@ EL::StatusCode JetReclustering :: initialize ()
 
   if(!m_outputXAODName.empty()){
     TFile *file = wk()->getOutputFile(m_outputXAODName);
-    RETURN_CHECK("JetReclustering::execute()", m_event->writeTo(file), "");
+    if(!m_event->writeTo(file).isSuccess()){
+      Error("initialize()", "Could not set up an output file to write xAODs to.");
+      return EL::StatusCode::FAILURE;
+    }
   }
 
   // recluster 0.4 jets into 1.0 jets
@@ -122,7 +125,10 @@ EL::StatusCode JetReclustering :: postExecute () { return EL::StatusCode::SUCCES
 EL::StatusCode JetReclustering :: finalize () {
   if(!m_outputXAODName.empty()){
     TFile *file = wk()->getOutputFile(m_outputXAODName);
-    RETURN_CHECK("JetReclustering::finalize()", m_event->finishWritingTo( file ), "Could not finish writing to file.");
+    if(!m_event->finishWritingTo(file).isSuccess()){
+      Error("finalize()", "Could not finish writing to file... shit.");
+      return EL::StatusCode::FAILURE;
+    }
   }
 
   // clear off the tool created
