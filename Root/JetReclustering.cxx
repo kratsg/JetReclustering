@@ -73,10 +73,29 @@ EL::StatusCode JetReclustering :: execute ()
 
   // print debugging information if needed
   if(m_debug){
+
+    typedef xAOD::JetContainer jet_t;
     const xAOD::JetContainer* smallRjets(nullptr);
-    RETURN_CHECK("JetReclustering::execute()", HelperFunctions::retrieve( smallRjets, m_inputJetName, m_event, m_store, m_debug), ("Could not retrieve smallRjet object: "+m_inputJetName).c_str());
     const xAOD::JetContainer* reclusteredJets(nullptr);
-    RETURN_CHECK("JetReclustering::execute()", HelperFunctions::retrieve( reclusteredJets, m_outputJetName, nullptr, m_store, m_debug), ("Could not retrieve reclusteredJet object: "+m_outputJetName).c_str());
+
+    if(m_store->contains<jet_t>(m_inputJetName)){
+      if(!m_store->retrieve( smallRjets, m_inputJetName ).isSuccess()) return EL::StatusCode::FAILURE;
+    } else if(m_event->contains<jet_t>(m_inputJetName)){
+      if(!m_event->retrieve( smallRjets, m_inputJetName ).isSuccess()) return EL::StatusCode::FAILURE;
+    } else {
+      Error("execute()", "Could not find the input jet container. That's fucking weird.");
+      return EL::StatusCode::FAILURE;
+    }
+
+
+    if(m_store->contains<jet_t>(m_outputJetName)){
+      if(!m_store->retrieve( reclusteredJets, m_outputJetName ).isSuccess()) return EL::StatusCode::FAILURE;
+    } else if(m_event->contains<jet_t>(m_outputJetName)){
+      if(!m_event->retrieve( reclusteredJets, m_outputJetName ).isSuccess()) return EL::StatusCode::FAILURE;
+    } else {
+      Error("execute()", "Could not find the output jet container. Did the tool execute properly? Maybe it was misconfigured.");
+      return EL::StatusCode::FAILURE;
+    }
 
     std::string printStr = "\tPt: %0.2f\tMass: %0.2f\tEta: %0.2f\tPhi: %0.2f\tNum Subjets: %zu";
     Info("execute()", "%zu small-R jets", smallRjets->size());
@@ -84,13 +103,8 @@ EL::StatusCode JetReclustering :: execute ()
       Info("execute()", printStr.c_str(), jet->pt()/1000., jet->m()/1000., jet->eta(), jet->phi(), jet->numConstituents());
 
     Info("execute()", "%zu reclustered jets", reclusteredJets->size());
-    for(const auto jet: *reclusteredJets){
+    for(const auto jet: *reclusteredJets)
       Info("execute()", printStr.c_str(), jet->pt()/1000., jet->m()/1000., jet->eta(), jet->phi(), jet->numConstituents());
-      float tau1(jet->auxdecor<float>("Tau1"));
-      float tau2(jet->auxdecor<float>("Tau2"));
-      float tau3(jet->auxdecor<float>("Tau3"));
-      Info("execute()", "\t\tTau 1: %0.2f\tTau 2: %0.2f\tTau 3: %0.2f\tTau 21: %0.2f\tTau 32: %0.2f", tau1, tau2, tau3, tau2/tau1, tau3/tau2);
-    }
   }
 
 
@@ -113,6 +127,7 @@ EL::StatusCode JetReclustering :: finalize () {
     TFile *file = wk()->getOutputFile(m_outputXAODName);
     RETURN_CHECK("JetReclustering::finalize()", m_event->finishWritingTo( file ), "Could not finish writing to file.");
   }
+
   return EL::StatusCode::SUCCESS;
 }
 
