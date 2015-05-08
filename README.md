@@ -10,9 +10,20 @@ rc find_packages
 rc compile
 ```
 
-### Using xAOD Jet Reclustering
+## Configurations for `JetReclustering` algorithm
 
-#### Incorporating in existing code
+Variable | Type | Default | Description
+---------|------|---------|-------------
+m_inputJetName | std::string | | name of the input jet container for reclustering
+m_outputJetName | std::string | | name of the output jet container holding reclustered jets
+m_clusteringAlgorithmName | std::string | antikt_algorithm | how to recluster the input jets
+m_outputXAODName | std::string | | if defined, put the reclustered jets in an output xAOD file of the given name
+m_radius | float | 1.0 | radius of large-R reclustered jets
+m_debug | bool | false | enable verbose debugging information
+
+## Using xAOD Jet Reclustering
+
+### Incorporating in existing code
 
 If you wish to incorporate `JetReclustering` directly into your code, add this package as a dependency in `cmt/Makefile.RootCore` and then a header
 
@@ -28,7 +39,7 @@ JetRecTool* m_jetReclusteringTool = xAODJetReclustering::JetReclusteringTool(m_i
 
 and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s).
 
-#### Incorporating in algorithm chain
+### Incorporating in algorithm chain
 
 This is the least destructive option since it requires **no change** to your existing code. All you need to do is create a new `JetReclustering` algorithm and add it to the job before other algorithms downstream that want access to the reclustered jets. It is highly configurable. In your runner macro, add the header
 
