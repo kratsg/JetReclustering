@@ -7,6 +7,8 @@
 #include "JetRec/PseudoJetGetter.h"
 #include "JetRec/JetFromPseudojet.h"
 #include "JetRec/JetFinder.h"
+#include "JetRec/JetFilterTool.h"
+
 
 // tools for adding information to jet
 #include "JetSubStructureMomentTools/NSubjettinessTool.h"
@@ -21,7 +23,24 @@
 
 #include "JetMomentTools/JetWidthTool.h"
 
-JetRecTool* xAODJetReclustering::JetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, double radius, fastjet::JetAlgorithm rc_alg, float ptMin){
+JetRecTool* xAODJetReclustering::JetFiltering(const std::string inputJetContainer, const std::string outputJetContainer, float ptMin){
+  std::string uniqueName = "_"+inputJetContainer+"_"+outputJetContainer;
+
+  ToolHandleArray<IJetModifier> modArray;
+  JetFilterTool *jetFilterTool = new JetFilterTool("JetFilterTool"+uniqueName);
+  jetFilterTool->setProperty("PtMin", ptMin);
+  modArray.push_back( ToolHandle<IJetModifier>( jetFilterTool ) );
+
+  JetRecTool* inputJetFilterTool = new JetRecTool("InputJetFilteringTool"+uniqueName);
+  inputJetFilterTool->setProperty("InputContainer", inputJetContainer);
+  inputJetFilterTool->setProperty("OutputContainer", outputJetContainer);
+  inputJetFilterTool->setProperty("JetModifiers", modArray);
+  inputJetFilterTool->initialize();
+
+  return inputJetFilterTool;
+}
+
+JetRecTool* xAODJetReclustering::JetReclusteringTool(const std::string inputJetContainer, const std::string outputJetContainer, float radius, fastjet::JetAlgorithm rc_alg, float ptMin){
   std::string uniqueName = "_"+inputJetContainer+"_"+outputJetContainer;
 
   ToolHandleArray<IJetExecuteTool> handleExec;
