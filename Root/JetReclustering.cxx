@@ -128,6 +128,9 @@ EL::StatusCode JetReclustering :: finalize () {
     RETURN_CHECK("JetReclustering::finalize()", m_event->finishWritingTo( file ), "Could not finish writing to file.");
   }
 
+  // clear off the tool created
+  if(!m_jetReclusteringTool) delete m_jetReclusteringTool;
+
   return EL::StatusCode::SUCCESS;
 }
 
