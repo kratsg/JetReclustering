@@ -7,9 +7,6 @@
 
 #include "xAODEventInfo/EventInfo.h"
 
-#include "xAODAnaHelpers/tools/ReturnCheck.h"
-#include "xAODAnaHelpers/HelperFunctions.h"
-
 // in case we want to write the output reclustered jet collections
 #include <EventLoop/OutputStream.h>
 
@@ -60,7 +57,7 @@ EL::StatusCode JetReclustering :: initialize ()
   }
 
   // recluster 0.4 jets into 1.0 jets
-  m_jetReclusteringTool = xAODJetReclustering::Helpers::JetReclusteringTool(m_inputJetName, m_outputJetName, m_radius, m_clusteringAlgorithm);
+  m_jetReclusteringTool = xAODJetReclustering::JetReclusteringTool(m_inputJetName, m_outputJetName, m_radius, m_clusteringAlgorithm);
 
   return EL::StatusCode::SUCCESS;
 }
