@@ -52,5 +52,9 @@ jetReclusterer->m_outputJetName = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
 job.algsAdd(jetReclusterer);
 ```
 
+### Studies and Example Usage
+
+See [kratsg/ReclusteringStudies](https://github.com/kratsg/ReclusteringStudies) for studies and example usage.
+
 #### Authors
 - [Giordon Stark](https://github.com/kratsg)
