@@ -42,7 +42,7 @@ and then simply set up your algorithm like so
 // initialize and set it up
 JetReclustering* jetReclusterer = new JetReclustering();
 jetReclusterer->m_inputJetName = "AntiKt4LCTopoJets";
-jetReclusterer->m_outputJetName = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets"
+jetReclusterer->m_outputJetName = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
 
 // ...
 // ...
