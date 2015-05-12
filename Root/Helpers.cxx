@@ -11,8 +11,6 @@
 
 
 // tools for adding information to jet
-#include "JetSubStructureMomentTools/NSubjettinessTool.h"
-//#include "JetSubStructureMomentTools/NSubjettinessRatiosTool.h" // doesn't work
 #include "JetSubStructureMomentTools/JetChargeTool.h"
 #include "JetSubStructureMomentTools/JetPullTool.h"
 #include "JetSubStructureMomentTools/EnergyCorrelatorTool.h"
@@ -82,8 +80,6 @@ JetRecTool* xAODJetReclustering::JetReclusteringTool(const std::string inputJetC
 
   // Create list of modifiers.
   ToolHandleArray<IJetModifier> modArray;
-  modArray.push_back( ToolHandle<IJetModifier>( new NSubjettinessTool("NSubjettinessTool"+uniqueName) ) );
-  //modArray.push_back( ToolHandle<IJetModifier>( new NSubjettinessRatiosTool("NSubjettinessRatiosTool") ) );
   modArray.push_back( ToolHandle<IJetModifier>( new JetChargeTool("JetChargeTool"+uniqueName) ) );
   modArray.push_back( ToolHandle<IJetModifier>( new JetPullTool("JetPullTool"+uniqueName) ) );
   modArray.push_back( ToolHandle<IJetModifier>( new EnergyCorrelatorTool("EnergyCorrelatorTool"+uniqueName) ) );
