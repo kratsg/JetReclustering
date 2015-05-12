@@ -61,6 +61,7 @@ EL::StatusCode JetReclustering :: initialize ()
 
   // recluster 0.4 jets into 1.0 jets
   m_jetReclusteringTool = xAODJetReclustering::JetReclusteringTool(m_inputJetName, m_outputJetName, m_radius, m_clusteringAlgorithm);
+  if(!m_jetReclusteringTool) return EL::StatusCode::FAILURE;
 
   return EL::StatusCode::SUCCESS;
 }

@@ -1,4 +1,5 @@
 #include "xAODJetReclustering/Helpers.h"
+#include "xAODJetReclustering/tools/Check.h"
 
 // jet reclustering
 #include <fastjet/PseudoJet.hh>
@@ -26,14 +27,14 @@ JetRecTool* xAODJetReclustering::JetFiltering(const std::string inputJetContaine
 
   ToolHandleArray<IJetModifier> modArray;
   JetFilterTool *jetFilterTool = new JetFilterTool("JetFilterTool"+uniqueName);
-  jetFilterTool->setProperty("PtMin", ptMin);
+  CHECK("xAODJetReclustering", jetFilterTool->setProperty("PtMin", ptMin));
   modArray.push_back( ToolHandle<IJetModifier>( jetFilterTool ) );
 
   JetRecTool* inputJetFilterTool = new JetRecTool("InputJetFilteringTool"+uniqueName);
-  inputJetFilterTool->setProperty("InputContainer", inputJetContainer);
-  inputJetFilterTool->setProperty("OutputContainer", outputJetContainer);
-  inputJetFilterTool->setProperty("JetModifiers", modArray);
-  inputJetFilterTool->initialize();
+  CHECK("xAODJetReclustering", inputJetFilterTool->setProperty("InputContainer", inputJetContainer));
+  CHECK("xAODJetReclustering", inputJetFilterTool->setProperty("OutputContainer", outputJetContainer));
+  CHECK("xAODJetReclustering", inputJetFilterTool->setProperty("JetModifiers", modArray));
+  CHECK("xAODJetReclustering", inputJetFilterTool->initialize());
 
   return inputJetFilterTool;
 }
@@ -47,12 +48,12 @@ JetRecTool* xAODJetReclustering::JetReclusteringTool(const std::string inputJetC
   // Create a PseudoJet builder.
   PseudoJetGetter* lcgetter = new PseudoJetGetter("lcget"+uniqueName);
   //ToolStore::put(lcgetter);
-  lcgetter->setProperty("InputContainer", inputJetContainer);
-  lcgetter->setProperty("OutputContainer", "PseudoJets_"+uniqueName);
-  lcgetter->setProperty("Label", "LCTopo");
-  lcgetter->setProperty("SkipNegativeEnergy", true);
-  lcgetter->setProperty("GhostScale", 0.0);
-  lcgetter->initialize();
+  CHECK("xAODJetReclustering", lcgetter->setProperty("InputContainer", inputJetContainer));
+  CHECK("xAODJetReclustering", lcgetter->setProperty("OutputContainer", "PseudoJets_"+uniqueName));
+  CHECK("xAODJetReclustering", lcgetter->setProperty("Label", "LCTopo"));
+  CHECK("xAODJetReclustering", lcgetter->setProperty("SkipNegativeEnergy", true));
+  CHECK("xAODJetReclustering", lcgetter->setProperty("GhostScale", 0.0));
+  CHECK("xAODJetReclustering", lcgetter->initialize());
 
   //ToolHandle<IPseudoJetGetter> hlcget(lcgetter);
   getterArray.push_back( ToolHandle<IPseudoJetGetter>(lcgetter) );
@@ -63,20 +64,20 @@ JetRecTool* xAODJetReclustering::JetReclusteringTool(const std::string inputJetC
   //jetFromPJ->setProperty("Attributes", areatts);
   //jetFromPJ->msg().setLevel(MSG::ERROR);
   //jetFromPJ->msg().setLevel(MSG::VERBOSE);
-  jetFromPJ->initialize();
+  CHECK("xAODJetReclustering", jetFromPJ->initialize());
 
   std::map<fastjet::JetAlgorithm, std::string> algToAlgName = {{fastjet::kt_algorithm, "Kt"}, {fastjet::cambridge_algorithm, "CamKt"}, {fastjet::antikt_algorithm, "AntiKt"}};
 
   JetFinder* finder = new JetFinder("JetFinder"+uniqueName);
   //ToolStore::put(finder);
-  finder->setProperty("JetAlgorithm", algToAlgName.at(rc_alg));
-  finder->setProperty("JetRadius", radius);
-  finder->setProperty("PtMin", ptMin);
-  finder->setProperty("GhostArea", 0.0);
-  finder->setProperty("RandomOption", 1);
-  finder->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(jetFromPJ));
+  CHECK("xAODJetReclustering", finder->setProperty("JetAlgorithm", algToAlgName.at(rc_alg)));
+  CHECK("xAODJetReclustering", finder->setProperty("JetRadius", radius));
+  CHECK("xAODJetReclustering", finder->setProperty("PtMin", ptMin));
+  CHECK("xAODJetReclustering", finder->setProperty("GhostArea", 0.0));
+  CHECK("xAODJetReclustering", finder->setProperty("RandomOption", 1));
+  CHECK("xAODJetReclustering", finder->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(jetFromPJ)));
   //finder->msg().setLevel(MSG::ERROR);
-  finder->initialize();
+  CHECK("xAODJetReclustering", finder->initialize());
 
   // Create list of modifiers.
   ToolHandleArray<IJetModifier> modArray;
@@ -91,13 +92,13 @@ JetRecTool* xAODJetReclustering::JetReclusteringTool(const std::string inputJetC
   modArray.push_back( ToolHandle<IJetModifier>( new JetWidthTool("JetWidthTool"+uniqueName) ) );
 
   JetRecTool* fullJetTool = new JetRecTool("FullJetRecTool"+uniqueName);
-  fullJetTool->setProperty("OutputContainer", outputJetContainer);
-  fullJetTool->setProperty("PseudoJetGetters", getterArray);
-  fullJetTool->setProperty("JetFinder", ToolHandle<IJetFinder>(finder));
-  fullJetTool->setProperty("JetModifiers", modArray);
+  CHECK("xAODJetReclustering", fullJetTool->setProperty("OutputContainer", outputJetContainer));
+  CHECK("xAODJetReclustering", fullJetTool->setProperty("PseudoJetGetters", getterArray));
+  CHECK("xAODJetReclustering", fullJetTool->setProperty("JetFinder", ToolHandle<IJetFinder>(finder)));
+  CHECK("xAODJetReclustering", fullJetTool->setProperty("JetModifiers", modArray));
 
   //fullJetTool->msg().setLevel(MSG::DEBUG);
-  fullJetTool->initialize();
+  CHECK("xAODJetReclustering", fullJetTool->initialize());
 
   // const xAOD::JetContainer* newjets = jetrectool->build();
   /*int status = fullJetTool->execute();*/

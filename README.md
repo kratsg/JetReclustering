@@ -35,6 +35,7 @@ to get started. At this point, you can set up your standard tool in the `initial
 
 ```c++
 JetRecTool* m_jetReclusteringTool = xAODJetReclustering::JetReclusteringTool(m_inputJetName, m_outputJetName, m_radius, m_clusteringAlgorithm);
+if(!m_jetReclusteringTool) return EL::StatusCode::FAILURE;
 ```
 
 and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s).
