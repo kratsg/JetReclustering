@@ -67,5 +67,27 @@ job.algsAdd(jetReclusterer);
 
 See [kratsg/ReclusteringStudies](https://github.com/kratsg/ReclusteringStudies) for studies and example usage.
 
+### Accessing the subjets from constituents
+
+The reclustered jets have constituents which are your input small-R jets. These can be re-inflated, so to speak. As an example, I wanted to get the btagging information of my subjets as well as their constituents (eg: the topological calorimeter clusters, TopoCaloClusters)
+
+```c++
+for(auto jet: *in_jets){
+  const xAOD::Jet* subjet(nullptr);
+  const xAOD::BTagging* btag(nullptr);
+  for(auto constit: jet->getConstituents()){
+    subjet = static_cast<const xAOD::Jet*>(constit->rawConstituent());
+    btag = subjet->btagging();
+    if(btag) Info("execute()", "btagging: %0.2f", btag->MV1_discriminant());
+
+    for(auto subjet_constit: subjet->getConstituents()){
+      Info("execute()", "\tconstituent pt: %0.2f", subjet_constit->pt());
+    }
+  }
+}
+```
+
+where we explicitly `static_cast<>` our raw pointer from the `rawConstituent()` call. See [xAODJet/JetConstituentVector.h](http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Event/xAOD/xAODJet/xAODJet/JetConstituentVector.h) for more information about what is available. As a raw pointer, we already know that the input to the constituents were small-R jets (since we re-clustered ourselves) so this type of casting is safe.
+
 #### Authors
 - [Giordon Stark](https://github.com/kratsg)
