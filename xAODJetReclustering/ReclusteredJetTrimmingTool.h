@@ -9,7 +9,7 @@
 #include "JetRec/JetModifierBase.h"
 
 class ReclusteredJetTrimmingTool : public JetModifierBase {
-  ASG_TOOL_CLASS(ReclusteredJetTrimmingTool, IJetModifier);
+  ASG_TOOL_CLASS(ReclusteredJetTrimmingTool, IJetModifier)
 
   public:
     // Constructor from tool name.

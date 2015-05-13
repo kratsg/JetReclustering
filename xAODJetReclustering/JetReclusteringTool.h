@@ -1,6 +1,9 @@
 #ifndef xAODJetReclustering_JetReclusteringTool_H
 #define xAODJetReclustering_JetReclusteringTool_H
 
+// making it more like a tool
+#include "AsgTools/AsgTool.h"
+
 #include <fastjet/JetDefinition.hh>
 #include <map>
 #include <memory>
@@ -37,12 +40,13 @@
 #include "JetSubStructureMomentTools/CenterOfMassShapesTool.h"
 #include "JetMomentTools/JetWidthTool.h"
 
-class JetReclusteringTool {
+class JetReclusteringTool : virtual public asg::AsgTool {
   public:
+    ASG_TOOL_INTERFACE(JetReclusteringTool)
     JetReclusteringTool(std::string myname);
 
     // initialization - set up everything
-    bool initialize();
+    StatusCode initialize();
 
     // execute - build jets
     void execute() const;
@@ -50,28 +54,28 @@ class JetReclusteringTool {
     // display the configuration
     void print() const;
 
-  /* Properties */
-    // input jet container to use as a constituent proxy
-    std::string m_inputJetContainer;
-    // output jet container to store reclustered jets
-    std::string m_outputJetContainer;
-    // radius of the reclustered jets
-    float m_radius                  = 1.0;
-    // reclustering algorithm to use
-    fastjet::JetAlgorithm m_rc_alg  = fastjet::antikt_algorithm;
-    // minimum pt of the constituents (GeV)
-    float m_ptMin_input             = 25.0;
-    // minimum pt of the reclustered jets (GeV)
-    float m_ptMin_rc                = 50.0;
-    // trimming to apply to reclustered jets
-    float m_ptFrac                  = 0.05;
-
   private:
     // hold the class name
     std::string m_APP_NAME = "JetReclusteringTool";
 
     // unique name for all tools, makes our life fucking easier
     std::string m_name;
+
+  /* Properties */
+    // input jet container to use as a constituent proxy
+    std::string m_inputJetContainer;
+    // output jet container to store reclustered jets
+    std::string m_outputJetContainer;
+    // radius of the reclustered jets
+    float m_radius;
+    // reclustering algorithm to use
+    fastjet::JetAlgorithm m_rc_alg;
+    // minimum pt of the constituents (GeV)
+    float m_ptMin_input;
+    // minimum pt of the reclustered jets (GeV)
+    float m_ptMin_rc;
+    // trimming to apply to reclustered jets
+    float m_ptFrac;
 
     // make sure someone only calls a function once
     bool m_isInitialized = false;

@@ -11,6 +11,9 @@
 // in case we want to write the output reclustered jet collections
 #include <EventLoop/OutputStream.h>
 
+// RETURN_CHECK macro
+#include <xAODJetReclustering/tools/ReturnCheck.h>
+
 // this is needed to distribute the algorithm to the workers
 ClassImp(JetReclusteringAlgo)
 
@@ -66,18 +69,14 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
     return EL::StatusCode::FAILURE;
   }
   m_jetReclusteringTool = new JetReclusteringTool(m_name);
-  m_jetReclusteringTool->m_inputJetContainer = m_inputJetContainer;
-  m_jetReclusteringTool->m_outputJetContainer = m_outputJetContainer;
-  m_jetReclusteringTool->m_radius = m_radius;
-  m_jetReclusteringTool->m_rc_alg = m_rc_alg;
-  m_jetReclusteringTool->m_ptMin_input = m_ptMin_input;
-  m_jetReclusteringTool->m_ptMin_rc = m_ptMin_rc;
-  m_jetReclusteringTool->m_ptFrac = m_ptFrac;
-
-  if(!m_jetReclusteringTool->initialize()){
-    Error("initialize()", "Could not initialize the JetReclusteringTool.");
-    return EL::StatusCode::FAILURE;
-  }
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("InputJetContainer",  m_inputJetContainer), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("OutputJetContainer", m_outputJetContainer), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("ReclusterRadius",    m_radius), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("ReclusterAlgorithm", m_rc_alg), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("InputJetPtMin",      m_ptMin_input), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetPtMin",         m_ptMin_rc), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetPtFrac",        m_ptFrac), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->initialize(), "");
 
   if(m_debug) m_jetReclusteringTool->print();
 

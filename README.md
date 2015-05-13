@@ -62,21 +62,17 @@ to get started. At this point, you can set up your standard tool in the `initial
 
 ```c++
 m_jetReclusteringTool = new JetReclusteringTool(m_name);
-m_jetReclusteringTool->m_inputJetContainer = "AntiKt4LCTopoJets";
-m_jetReclusteringTool->m_outputJetContainer = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
-m_jetReclusteringTool->m_radius = 1.0;
-m_jetReclusteringTool->m_name = "R10"; // unique name for the tool
-m_jetReclusteringTool->m_ptMin_input = 25.0; // GeV
-m_jetReclusteringTool->m_ptMin_rc = 50.0; // GeV
-m_jetReclusteringTool->m_ptFrac = 0.05; // GeV
-
-if(!m_jetReclusteringTool->initialize()){
-  Error("initialize()", "Could not initialize the JetReclusteringTool.");
-  return EL::StatusCode::FAILURE;
-}
+RETURN_CHECK(m_jetReclusteringTool->setProperty("InputJetContainer",  m_inputJetContainer));
+RETURN_CHECK(m_jetReclusteringTool->setProperty("OutputJetContainer", m_outputJetContainer));
+RETURN_CHECK(m_jetReclusteringTool->setProperty("ReclusterRadius",    m_radius));
+RETURN_CHECK(m_jetReclusteringTool->setProperty("ReclusterAlgorithm", m_rc_alg));
+RETURN_CHECK(m_jetReclusteringTool->setProperty("InputJetPtMin",      m_ptMin_input));
+RETURN_CHECK(m_jetReclusteringTool->setProperty("RCJetPtMin",         m_ptMin_rc));
+RETURN_CHECK(m_jetReclusteringTool->setProperty("RCJetPtFrac",        m_ptFrac));
+RETURN_CHECK(m_jetReclusteringTool->initialize());
 ```
 
-and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Don't forget to delete the pointer when you're done
+and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Don't forget to delete the pointer when you're done. Note that as it behaves like an `AsgTool`, `setProperty()` and `initialize()` return `StatusCode` which needs to be checked.
 
 ```c++
 if(m_jetReclusteringTool) delete m_jetReclusteringTool;

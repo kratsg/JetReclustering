@@ -9,6 +9,7 @@
 #include<CxxUtils/make_unique.h>
 
 JetReclusteringTool::JetReclusteringTool(std::string name) :
+  AsgTool(name),
   m_name(name),
   m_jetFilterTool               (CxxUtils::make_unique<JetFilterTool>("JetFilterTool_"+name)),
   m_inputJetFilterTool          (CxxUtils::make_unique<JetRecTool>("JetRec_InputJetFilterTool_"+name)),
@@ -25,12 +26,20 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   m_dipolarityTool              (CxxUtils::make_unique<DipolarityTool>("DipolarityTool_"+name)),
   m_centerOfMassShapesTool      (CxxUtils::make_unique<CenterOfMassShapesTool>("CenterOfMassShapesTool_"+name)),
   m_jetWidthTool                (CxxUtils::make_unique<JetWidthTool>("JetWidthTool_"+name))
-{}
+{
+  declareProperty("InputJetContainer",  m_inputJetContainer = "");
+  declareProperty("OutputJetContainer", m_outputJetContainer = "");
+  declareProperty("ReclusterRadius",    m_radius = 1.0);
+  declareProperty("ReclusterAlgorithm", m_rc_alg = fastjet::antikt_algorithm);
+  declareProperty("InputJetPtMin",      m_ptMin_input = 25.0);
+  declareProperty("RCJetPtMin",         m_ptMin_rc = 50.0);
+  declareProperty("RCJetPtFrac",        m_ptFrac = 0.05);
+}
 
-bool JetReclusteringTool::initialize(){
+StatusCode JetReclusteringTool::initialize(){
   if(m_isInitialized){
     std::cout << "Warning: " << m_APP_NAME << " already initialized." << std::endl;
-    return false;
+    return StatusCode::FAILURE;
   }
   std::cout << "Info: " << m_APP_NAME << " initializing" << std::endl;
   // set to true, we're calling it now
@@ -101,7 +110,7 @@ bool JetReclusteringTool::initialize(){
   CHECK(prettyFuncName, m_reclusterJetTool->setProperty("JetModifiers", modArray));
   CHECK(prettyFuncName, m_reclusterJetTool->initialize());
 
-  return true;
+  return StatusCode::SUCCESS;
 }
 
 void JetReclusteringTool::execute() const {

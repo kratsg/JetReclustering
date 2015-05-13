@@ -1,12 +1,12 @@
 // Dear emacs, this is -*- c++ -*-
-#ifndef xAODJetReclustering_TOOLS_CHECK_H
-#define xAODJetReclustering_TOOLS_CHECK_H
+#ifndef xAODJetReclustering_TOOLS_RETURNCHECK_H
+#define xAODJetReclustering_TOOLS_RETURNCHECK_H
 
 // ROOT include(s):
 #include <TError.h>
 
 #include <xAODJetReclustering/tools/Message.h>
-#include <AsgTools/StatusCode.h>
+#include <EventLoop/StatusCode.h>
 
 /// Helper macro for checking return codes in a compact form in the code
 ///
@@ -18,14 +18,14 @@
 /// @param EXP The expression to execute in a checked manner
 /// @param INFO Extra information to print with the error message to debug
 ///
-#define CHECK( CONTEXT, EXP )                                              \
+#define RETURN_CHECK( CONTEXT, EXP, INFO )                                 \
    do {                                                                    \
       if( ! EXP.isSuccess() ) {                                            \
-         ::Error( CONTEXT, XAOD_MESSAGE( "Failed to execute: %s\n" ),      \
-                  #EXP );                                                  \
-         return StatusCode::FAILURE;                                       \
+         ::Error( CONTEXT, XAOD_MESSAGE( "Failed to execute: %s\n\t%s\n" ),\
+                  #EXP, INFO );                                            \
+         return EL::StatusCode::FAILURE;                                   \
       }                                                                    \
    } while( false )
 
-#endif // xAODJetReclustering_TOOLS_CHECK_H
+#endif // xAODJetReclustering_TOOLS_RETURNCHECK_H
 
