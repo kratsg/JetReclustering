@@ -20,6 +20,7 @@ m_rc_algName | std::string | antikt_algorithm | how to recluster the input jets
 m_outputXAODName | std::string | | if defined, put the reclustered jets in an output xAOD file of the given name
 m_radius | float | 1.0 | radius of large-R reclustered jets
 m_debug | bool | false | enable verbose debugging information
+m_ptMin_input | float | 25.0 | filter input jets by requiring a minimum pt cut
 
 ## Using xAOD Jet Reclustering
 
@@ -39,6 +40,7 @@ m_jetReclusteringTool->m_inputJetContainer = m_inputJetContainer;
 m_jetReclusteringTool->m_outputJetContainer = m_outputJetContainer;
 m_jetReclusteringTool->m_radius = m_radius;
 m_jetReclusteringTool->m_rc_alg = m_rc_alg;
+m_jetReclusteringTool->m_ptMin_input = m_ptMin_input; // GeV
 
 if(!m_jetReclusteringTool->initialize()){
   Error("initialize()", "Could not initialize the JetReclusteringTool.");

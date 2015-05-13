@@ -54,12 +54,14 @@ bool JetReclusteringTool::initialize(){
   CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("InputContainer", m_inputJetContainer));
   CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("OutputContainer", filteredInputJetContainer));
   CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("JetModifiers", modArray));
+  /* note: we cannot use shallow copies since we are removing elements from a
+   * container, we need a deep copy as linking will break */
+  CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("ShallowCopy", false));
   CHECK(prettyFuncName, m_inputJetFilterTool->initialize());
 
   /* initialize jet reclustering */
   //    - create a PseudoJet builder.
-  //CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("InputContainer", filteredInputJetContainer));
-  CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("InputContainer", m_inputJetContainer));
+  CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("InputContainer", filteredInputJetContainer));
   CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("OutputContainer", filteredInputPseudoJetsContainer));
   CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("Label", "LCTopo"));
   CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("SkipNegativeEnergy", true));
@@ -97,7 +99,7 @@ bool JetReclusteringTool::initialize(){
 }
 
 void JetReclusteringTool::execute() const {
-  //m_inputJetFilterTool->execute();
+  m_inputJetFilterTool->execute();
   m_reclusterJetTool->execute();
 }
 
