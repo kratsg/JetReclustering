@@ -10,7 +10,9 @@ rc find_packages
 rc compile
 ```
 
-## Configurations for `JetReclusteringAlgo` algorithm
+## Configurations for
+
+### `JetReclusteringTool` tool
 
 Variable | Type | Default | Description
 ---------|------|---------|-------------
@@ -20,6 +22,13 @@ m_outputJetContainer | std::string | | name of the output jet container holding 
 m_rc_algName | std::string | antikt_algorithm | how to recluster the input jets
 m_radius | float | 1.0 | radius of large-R reclustered jets
 m_ptMin_rc | float | 50.0 | filter reclustered jets by requiring a minimum pt cut
+
+### `JetReclusteringAlgo` algorithm
+
+As well as the provided above configurations for the `JetReclusteringTool`, we also provide a `m_debug` configuration for extra verbose output and an `m_outputXAODName` to create an output xAOD containing the reclustered jets (note: experimental)
+
+Variable | Type | Default | Description
+---------|------|---------|-------------
 m_outputXAODName | std::string | | if defined, put the reclustered jets in an output xAOD file of the given name
 m_debug | bool | false | enable verbose debugging information
 
