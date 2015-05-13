@@ -5,24 +5,25 @@
 #include <fastjet/ClusterSequence.hh>
 #include "JetInterface/IJetModifier.h"
 
-// all jet modifier tools
-#include "JetSubStructureMomentTools/JetChargeTool.h"
-#include "JetSubStructureMomentTools/JetPullTool.h"
-#include "JetSubStructureMomentTools/EnergyCorrelatorTool.h"
-#include "JetSubStructureMomentTools/EnergyCorrelatorRatiosTool.h"
-#include "JetSubStructureMomentTools/KTSplittingScaleTool.h"
-#include "JetSubStructureMomentTools/DipolarityTool.h"
-#include "JetSubStructureMomentTools/CenterOfMassShapesTool.h"
-#include "JetMomentTools/JetWidthTool.h"
+// make unique pointers
+#include<CxxUtils/make_unique.h>
 
 JetReclusteringTool::JetReclusteringTool(std::string name) :
   m_name(name),
-  m_jetFilterTool(new JetFilterTool("JetFilterTool_"+name)),
-  m_inputJetFilterTool(new JetRecTool("JetRec_InputJetFilterTool_"+name)),
-  m_pseudoJetGetterTool(new PseudoJetGetter("PseudoJetGetterTool_"+name)),
-  m_jetFromPseudoJetTool(new JetFromPseudojet("JetFromPseudoJetTool_"+name)),
-  m_jetFinderTool(new JetFinder("JetFinderTool_"+name)),
-  m_reclusterJetTool(new JetRecTool("JetRec_JetReclusterTool_"+name))
+  m_jetFilterTool               (CxxUtils::make_unique<JetFilterTool>("JetFilterTool_"+name)),
+  m_inputJetFilterTool          (CxxUtils::make_unique<JetRecTool>("JetRec_InputJetFilterTool_"+name)),
+  m_pseudoJetGetterTool         (CxxUtils::make_unique<PseudoJetGetter>("PseudoJetGetterTool_"+name)),
+  m_jetFromPseudoJetTool        (CxxUtils::make_unique<JetFromPseudojet>("JetFromPseudoJetTool_"+name)),
+  m_jetFinderTool               (CxxUtils::make_unique<JetFinder>("JetFinderTool_"+name)),
+  m_reclusterJetTool            (CxxUtils::make_unique<JetRecTool>("JetRec_JetReclusterTool_"+name)),
+  m_jetChargeTool               (CxxUtils::make_unique<JetChargeTool>("JetChargeTool_"+name)),
+  m_jetPullTool                 (CxxUtils::make_unique<JetPullTool>("JetPullTool_"+name)),
+  m_energyCorrelatorTool        (CxxUtils::make_unique<EnergyCorrelatorTool>("EnergyCorrelatorTool_"+name)),
+  m_energyCorrelatorRatiosTool  (CxxUtils::make_unique<EnergyCorrelatorRatiosTool>("EnergyCorrelatorRatiosTool_"+name)),
+  m_ktSplittingScaleTool        (CxxUtils::make_unique<KTSplittingScaleTool>("KTSplittingScaleTool_"+name)),
+  m_dipolarityTool              (CxxUtils::make_unique<DipolarityTool>("DipolarityTool_"+name)),
+  m_centerOfMassShapesTool      (CxxUtils::make_unique<CenterOfMassShapesTool>("CenterOfMassShapesTool_"+name)),
+  m_jetWidthTool                (CxxUtils::make_unique<JetWidthTool>("JetWidthTool_"+name))
 {}
 
 bool JetReclusteringTool::initialize(){
@@ -80,14 +81,14 @@ bool JetReclusteringTool::initialize(){
   CHECK(prettyFuncName, m_jetFinderTool->initialize());
   //    - create list of modifiers.
   modArray.clear();
-  modArray.push_back( ToolHandle<IJetModifier>( new JetChargeTool("JetChargeTool_"+m_name) ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new JetPullTool("JetPullTool_"+m_name) ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new EnergyCorrelatorTool("EnergyCorrelatorTool_"+m_name) ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new EnergyCorrelatorRatiosTool("EnergyCorrelatorRatiosTool_"+m_name) ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new KTSplittingScaleTool("KTSplittingScaleTool_"+m_name) ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new DipolarityTool("DipolarityTool_"+m_name) ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new CenterOfMassShapesTool("CenterOfMassShapesTool_"+m_name) ) );
-  modArray.push_back( ToolHandle<IJetModifier>( new JetWidthTool("JetWidthTool_"+m_name) ) );
+  modArray.push_back( ToolHandle<IJetModifier>( m_jetChargeTool.get() ) );
+  modArray.push_back( ToolHandle<IJetModifier>( m_jetPullTool.get() ) );
+  modArray.push_back( ToolHandle<IJetModifier>( m_energyCorrelatorTool.get() ) );
+  modArray.push_back( ToolHandle<IJetModifier>( m_energyCorrelatorRatiosTool.get() ) );
+  modArray.push_back( ToolHandle<IJetModifier>( m_ktSplittingScaleTool.get() ) );
+  modArray.push_back( ToolHandle<IJetModifier>( m_dipolarityTool.get() ) );
+  modArray.push_back( ToolHandle<IJetModifier>( m_centerOfMassShapesTool.get() ) );
+  modArray.push_back( ToolHandle<IJetModifier>( m_jetWidthTool.get() ) );
   //    - create our master reclustering tool
   CHECK(prettyFuncName, m_reclusterJetTool->setProperty("OutputContainer", m_outputJetContainer));
   CHECK(prettyFuncName, m_reclusterJetTool->setProperty("PseudoJetGetters", getterArray));

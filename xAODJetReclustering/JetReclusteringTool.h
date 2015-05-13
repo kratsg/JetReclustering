@@ -25,6 +25,15 @@
 #include "JetRec/JetFinder.h"
 #include "JetRec/JetFilterTool.h"
 #include "JetRec/JetRecTool.h"
+// all jet modifier tools
+#include "JetSubStructureMomentTools/JetChargeTool.h"
+#include "JetSubStructureMomentTools/JetPullTool.h"
+#include "JetSubStructureMomentTools/EnergyCorrelatorTool.h"
+#include "JetSubStructureMomentTools/EnergyCorrelatorRatiosTool.h"
+#include "JetSubStructureMomentTools/KTSplittingScaleTool.h"
+#include "JetSubStructureMomentTools/DipolarityTool.h"
+#include "JetSubStructureMomentTools/CenterOfMassShapesTool.h"
+#include "JetMomentTools/JetWidthTool.h"
 
 class JetReclusteringTool {
   public:
@@ -82,6 +91,17 @@ class JetReclusteringTool {
     std::unique_ptr<JetFromPseudojet> m_jetFromPseudoJetTool;
     std::unique_ptr<JetFinder> m_jetFinderTool;
     std::unique_ptr<JetRecTool> m_reclusterJetTool;
+
+    // modifier tools for the reclustered jets
+    std::unique_ptr<JetChargeTool>              m_jetChargeTool;
+    std::unique_ptr<JetPullTool>                m_jetPullTool;
+    std::unique_ptr<EnergyCorrelatorTool>       m_energyCorrelatorTool;
+    std::unique_ptr<EnergyCorrelatorRatiosTool> m_energyCorrelatorRatiosTool;
+    std::unique_ptr<KTSplittingScaleTool>       m_ktSplittingScaleTool;
+    std::unique_ptr<DipolarityTool>             m_dipolarityTool;
+    std::unique_ptr<CenterOfMassShapesTool>     m_centerOfMassShapesTool;
+    std::unique_ptr<JetWidthTool>               m_jetWidthTool;
+
 };
 
 #endif
