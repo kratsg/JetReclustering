@@ -14,9 +14,9 @@ rc compile
 
 Variable | Type | Default | Description
 ---------|------|---------|-------------
-m_inputJetName | std::string | | name of the input jet container for reclustering
-m_outputJetName | std::string | | name of the output jet container holding reclustered jets
-m_clusteringAlgorithmName | std::string | antikt_algorithm | how to recluster the input jets
+m_inputJetContainer | std::string | | name of the input jet container for reclustering
+m_outputJetContainer | std::string | | name of the output jet container holding reclustered jets
+m_rc_algName | std::string | antikt_algorithm | how to recluster the input jets
 m_outputXAODName | std::string | | if defined, put the reclustered jets in an output xAOD file of the given name
 m_radius | float | 1.0 | radius of large-R reclustered jets
 m_debug | bool | false | enable verbose debugging information
@@ -28,17 +28,29 @@ m_debug | bool | false | enable verbose debugging information
 If you wish to incorporate `JetReclustering` directly into your code, add this package as a dependency in `cmt/Makefile.RootCore` and then a header
 
 ```c++
-#include <xAODJetReclustering/Helpers.h>
+#include <xAODJetReclustering/JetReclusteringTool.h>
 ```
 
 to get started. At this point, you can set up your standard tool in the `initialize()` portion of your algorithm as a pointer
 
 ```c++
-JetRecTool* m_jetReclusteringTool = xAODJetReclustering::JetReclusteringTool(m_inputJetName, m_outputJetName, m_radius, m_clusteringAlgorithm);
-if(!m_jetReclusteringTool) return EL::StatusCode::FAILURE;
+m_jetReclusteringTool = new JetReclusteringTool(m_name);
+m_jetReclusteringTool->m_inputJetContainer = m_inputJetContainer;
+m_jetReclusteringTool->m_outputJetContainer = m_outputJetContainer;
+m_jetReclusteringTool->m_radius = m_radius;
+m_jetReclusteringTool->m_rc_alg = m_rc_alg;
+
+if(!m_jetReclusteringTool->initialize()){
+  Error("initialize()", "Could not initialize the JetReclusteringTool.");
+  return EL::StatusCode::FAILURE;
+}
 ```
 
-and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s).
+and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Don't forget to delete the pointer when you're done
+
+```c++
+if(m_jetReclusteringTool) delete m_jetReclusteringTool;
+```
 
 ### Incorporating in algorithm chain
 
@@ -53,8 +65,8 @@ and then simply set up your algorithm like so
 ```c++
 // initialize and set it up
 JetReclustering* jetReclusterer = new JetReclusteringAlgo();
-jetReclusterer->m_inputJetName = "AntiKt4LCTopoJets";
-jetReclusterer->m_outputJetName = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
+jetReclusterer->m_inputJetContainer = "AntiKt4LCTopoJets";
+jetReclusterer->m_outputJetContainer = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
 
 // ...
 // ...
