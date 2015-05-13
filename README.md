@@ -13,7 +13,7 @@
   - [Incorporating in algorithm chain](#incorporating-in-algorithm-chain)
   - [Studies and Example Usage](#studies-and-example-usage)
   - [Accessing the subjets from constituents](#accessing-the-subjets-from-constituents)
-    - [Authors](#authors)
+- [Authors](#authors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -136,5 +136,5 @@ for(auto jet: *in_jets){
 
 where we explicitly `static_cast<>` our raw pointer from the `rawConstituent()` call. See [xAODJet/JetConstituentVector.h](http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Event/xAOD/xAODJet/xAODJet/JetConstituentVector.h) for more information about what is available. As a raw pointer, we already know that the input to the constituents were small-R jets (since we re-clustered ourselves) so this type of casting is safe.
 
-#### Authors
+## Authors
 - [Giordon Stark](https://github.com/kratsg)
