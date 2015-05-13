@@ -10,7 +10,7 @@ rc find_packages
 rc compile
 ```
 
-## Configurations for `JetReclustering` algorithm
+## Configurations for `JetReclusteringAlgo` algorithm
 
 Variable | Type | Default | Description
 ---------|------|---------|-------------
@@ -45,14 +45,14 @@ and then simply call `m_jetReclusteringTool->execute()` in the `execute()` porti
 This is the least destructive option since it requires **no change** to your existing code. All you need to do is create a new `JetReclustering` algorithm and add it to the job before other algorithms downstream that want access to the reclustered jets. It is highly configurable. In your runner macro, add the header
 
 ```c++
-#include <xAODJetReclustering/JetReclustering.h>
+#include <xAODJetReclustering/JetReclusteringAlgo.h>
 ```
 
 and then simply set up your algorithm like so
 
 ```c++
 // initialize and set it up
-JetReclustering* jetReclusterer = new JetReclustering();
+JetReclustering* jetReclusterer = new JetReclusteringAlgo();
 jetReclusterer->m_inputJetName = "AntiKt4LCTopoJets";
 jetReclusterer->m_outputJetName = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
 

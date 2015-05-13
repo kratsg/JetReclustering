@@ -2,7 +2,7 @@
 #include <EventLoop/StatusCode.h>
 #include <EventLoop/Worker.h>
 
-#include <xAODJetReclustering/JetReclustering.h>
+#include <xAODJetReclustering/JetReclusteringAlgo.h>
 #include <xAODJetReclustering/Helpers.h>
 
 #include "xAODEventInfo/EventInfo.h"
@@ -11,14 +11,14 @@
 #include <EventLoop/OutputStream.h>
 
 // this is needed to distribute the algorithm to the workers
-ClassImp(JetReclustering)
+ClassImp(JetReclusteringAlgo)
 
-JetReclustering :: JetReclustering () {}
+JetReclusteringAlgo :: JetReclusteringAlgo () {}
 
-EL::StatusCode JetReclustering :: setupJob (EL::Job& job)
+EL::StatusCode JetReclusteringAlgo :: setupJob (EL::Job& job)
 {
   job.useXAOD();
-  xAOD::Init(("JetReclustering_"+m_inputJetName).c_str()).ignore(); // call before opening first file
+  xAOD::Init(("JetReclusteringAlgo_"+m_inputJetName).c_str()).ignore(); // call before opening first file
 
   if(!m_outputXAODName.empty()){
     // write an output xAOD
@@ -29,13 +29,13 @@ EL::StatusCode JetReclustering :: setupJob (EL::Job& job)
   return EL::StatusCode::SUCCESS;
 }
 
-EL::StatusCode JetReclustering :: histInitialize () { return EL::StatusCode::SUCCESS; }
-EL::StatusCode JetReclustering :: fileExecute () { return EL::StatusCode::SUCCESS; }
-EL::StatusCode JetReclustering :: changeInput (bool /*firstFile*/) { return EL::StatusCode::SUCCESS; }
+EL::StatusCode JetReclusteringAlgo :: histInitialize () { return EL::StatusCode::SUCCESS; }
+EL::StatusCode JetReclusteringAlgo :: fileExecute () { return EL::StatusCode::SUCCESS; }
+EL::StatusCode JetReclusteringAlgo :: changeInput (bool /*firstFile*/) { return EL::StatusCode::SUCCESS; }
 
-EL::StatusCode JetReclustering :: initialize ()
+EL::StatusCode JetReclusteringAlgo :: initialize ()
 {
-  Info("initialize()", "JetReclustering_%s", m_inputJetName.c_str() );
+  Info("initialize()", "JetReclusteringAlgo_%s", m_inputJetName.c_str() );
   m_event = wk()->xaodEvent();
   m_store = wk()->xaodStore();
 
@@ -67,7 +67,7 @@ EL::StatusCode JetReclustering :: initialize ()
 }
 
 
-EL::StatusCode JetReclustering :: execute ()
+EL::StatusCode JetReclusteringAlgo :: execute ()
 {
 
   m_jetReclusteringTool->execute();
@@ -111,7 +111,7 @@ EL::StatusCode JetReclustering :: execute ()
 
   /* need to update later, must retrieve all objects include cluster sequence and pseudojets, and record them one at a time
   if(!m_outputXAODName.empty()){
-    RETURN_CHECK("JetReclustering::execute()", m_event->copy( reclusteredJets, m_outputJetName ),             ("Could not copy container to event: "+ m_outputJetName).c_str());
+    RETURN_CHECK("JetReclusteringAlgo::execute()", m_event->copy( reclusteredJets, m_outputJetName ),             ("Could not copy container to event: "+ m_outputJetName).c_str());
 
     // fill the file
     m_event->fill();
@@ -121,9 +121,9 @@ EL::StatusCode JetReclustering :: execute ()
   return EL::StatusCode::SUCCESS;
 }
 
-EL::StatusCode JetReclustering :: postExecute () { return EL::StatusCode::SUCCESS; }
+EL::StatusCode JetReclusteringAlgo :: postExecute () { return EL::StatusCode::SUCCESS; }
 
-EL::StatusCode JetReclustering :: finalize () {
+EL::StatusCode JetReclusteringAlgo :: finalize () {
   if(!m_outputXAODName.empty()){
     TFile *file = wk()->getOutputFile(m_outputXAODName);
     if(!m_event->finishWritingTo(file).isSuccess()){
@@ -138,4 +138,4 @@ EL::StatusCode JetReclustering :: finalize () {
   return EL::StatusCode::SUCCESS;
 }
 
-EL::StatusCode JetReclustering :: histFinalize () { return EL::StatusCode::SUCCESS; }
+EL::StatusCode JetReclusteringAlgo :: histFinalize () { return EL::StatusCode::SUCCESS; }
