@@ -67,7 +67,7 @@ if(m_jetReclusteringTool) delete m_jetReclusteringTool;
 
 ### Incorporating in algorithm chain
 
-This is the least destructive option since it requires **no change** to your existing code. All you need to do is create a new `JetReclustering` algorithm and add it to the job before other algorithms downstream that want access to the reclustered jets. It is highly configurable. In your runner macro, add the header
+This is the least destructive option since it requires **no change** to your existing code. All you need to do is create a new `JetReclusteringAlgo` algorithm and add it to the job before other algorithms downstream that want access to the reclustered jets. It is highly configurable. In your runner macro, add the header
 
 ```c++
 #include <xAODJetReclustering/JetReclusteringAlgo.h>
