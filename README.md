@@ -20,6 +20,7 @@ m_outputJetContainer | std::string | | name of the output jet container holding 
 m_rc_algName | std::string | antikt_algorithm | how to recluster the input jets
 m_radius | float | 1.0 | radius of large-R reclustered jets
 m_ptMin_rc | float | 50.0 | filter reclustered jets by requiring a minimum pt cut
+m_ptFrac | float | 0.05 | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
 
 ### `JetReclusteringAlgo` algorithm
 
@@ -50,6 +51,7 @@ m_jetReclusteringTool->m_radius = 1.0;
 m_jetReclusteringTool->m_name = "R10"; // unique name for the tool
 m_jetReclusteringTool->m_ptMin_input = 25.0; // GeV
 m_jetReclusteringTool->m_ptMin_rc = 50.0; // GeV
+m_jetReclusteringTool->m_ptFrac = 0.05; // GeV
 
 if(!m_jetReclusteringTool->initialize()){
   Error("initialize()", "Could not initialize the JetReclusteringTool.");
@@ -81,6 +83,8 @@ jetReclusterer->m_outputJetContainer = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
 jetReclusterer->m_name = "R10"; // unique name for the tool
 jetReclusterer->m_ptMin_input = 25.0; // GeV
 jetReclusterer->m_ptMin_rc = 50.0; // GeV
+jetReclusterer->m_ptFrac = 0.05; // GeV
+
 // ...
 // ...
 // ...

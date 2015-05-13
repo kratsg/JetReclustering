@@ -16,6 +16,7 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   m_jetFromPseudoJetTool        (CxxUtils::make_unique<JetFromPseudojet>("JetFromPseudoJetTool_"+name)),
   m_jetFinderTool               (CxxUtils::make_unique<JetFinder>("JetFinderTool_"+name)),
   m_reclusterJetTool            (CxxUtils::make_unique<JetRecTool>("JetRec_JetReclusterTool_"+name)),
+  m_reclusteredJetTrimmingTool  (CxxUtils::make_unique<ReclusteredJetTrimmingTool>("ReclusteredJetTrimmingTool_"+name)),
   m_jetChargeTool               (CxxUtils::make_unique<JetChargeTool>("JetChargeTool_"+name)),
   m_jetPullTool                 (CxxUtils::make_unique<JetPullTool>("JetPullTool_"+name)),
   m_energyCorrelatorTool        (CxxUtils::make_unique<EnergyCorrelatorTool>("EnergyCorrelatorTool_"+name)),
@@ -81,6 +82,10 @@ bool JetReclusteringTool::initialize(){
   CHECK(prettyFuncName, m_jetFinderTool->initialize());
   //    - create list of modifiers.
   modArray.clear();
+  //        the very first modifier is to trim the reclustered jets first
+  CHECK(prettyFuncName, m_reclusteredJetTrimmingTool->setProperty("PtFrac", m_ptFrac));
+  modArray.push_back( ToolHandle<IJetModifier>( m_reclusteredJetTrimmingTool.get() ) );
+  //        and then apply all other modifiers based on the trimmed reclustered jets
   modArray.push_back( ToolHandle<IJetModifier>( m_jetChargeTool.get() ) );
   modArray.push_back( ToolHandle<IJetModifier>( m_jetPullTool.get() ) );
   modArray.push_back( ToolHandle<IJetModifier>( m_energyCorrelatorTool.get() ) );

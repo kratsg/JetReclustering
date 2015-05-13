@@ -25,6 +25,8 @@
 #include "JetRec/JetFinder.h"
 #include "JetRec/JetFilterTool.h"
 #include "JetRec/JetRecTool.h"
+// reclustered jet trimming tool
+#include "xAODJetReclustering/ReclusteredJetTrimmingTool.h"
 // all jet modifier tools
 #include "JetSubStructureMomentTools/JetChargeTool.h"
 #include "JetSubStructureMomentTools/JetPullTool.h"
@@ -92,6 +94,8 @@ class JetReclusteringTool {
     std::unique_ptr<JetFinder> m_jetFinderTool;
     std::unique_ptr<JetRecTool> m_reclusterJetTool;
 
+    // tool for trimming reclustered jet
+    std::unique_ptr<ReclusteredJetTrimmingTool> m_reclusteredJetTrimmingTool;
     // modifier tools for the reclustered jets
     std::unique_ptr<JetChargeTool>              m_jetChargeTool;
     std::unique_ptr<JetPullTool>                m_jetPullTool;

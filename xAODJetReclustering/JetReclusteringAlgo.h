@@ -24,6 +24,7 @@ public:
   float m_radius = 1.0;
   float m_ptMin_input = 25.0; // GeV
   float m_ptMin_rc = 50.0; // GeV
+  float m_ptFrac = 0.05;
   bool m_debug = false;
 
 private:
