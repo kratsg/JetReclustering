@@ -17,10 +17,10 @@ Variable | Type | Default | Description
 m_inputJetContainer | std::string | | name of the input jet container for reclustering
 m_outputJetContainer | std::string | | name of the output jet container holding reclustered jets
 m_rc_algName | std::string | antikt_algorithm | how to recluster the input jets
+m_ptMin_input | float | 25.0 | filter input jets by requiring a minimum pt cut
 m_outputXAODName | std::string | | if defined, put the reclustered jets in an output xAOD file of the given name
 m_radius | float | 1.0 | radius of large-R reclustered jets
 m_debug | bool | false | enable verbose debugging information
-m_ptMin_input | float | 25.0 | filter input jets by requiring a minimum pt cut
 
 ## Using xAOD Jet Reclustering
 
@@ -36,11 +36,11 @@ to get started. At this point, you can set up your standard tool in the `initial
 
 ```c++
 m_jetReclusteringTool = new JetReclusteringTool(m_name);
-m_jetReclusteringTool->m_inputJetContainer = m_inputJetContainer;
-m_jetReclusteringTool->m_outputJetContainer = m_outputJetContainer;
-m_jetReclusteringTool->m_radius = m_radius;
-m_jetReclusteringTool->m_rc_alg = m_rc_alg;
-m_jetReclusteringTool->m_ptMin_input = m_ptMin_input; // GeV
+m_jetReclusteringTool->m_inputJetContainer = "AntiKt4LCTopoJets";
+m_jetReclusteringTool->m_outputJetContainer = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
+m_jetReclusteringTool->m_radius = 1.0;
+m_jetReclusteringTool->m_name = "R10"; // unique name for the tool
+m_jetReclusteringTool->m_ptMin_input = 25.0; // GeV
 
 if(!m_jetReclusteringTool->initialize()){
   Error("initialize()", "Could not initialize the JetReclusteringTool.");
@@ -69,7 +69,8 @@ and then simply set up your algorithm like so
 JetReclustering* jetReclusterer = new JetReclusteringAlgo();
 jetReclusterer->m_inputJetContainer = "AntiKt4LCTopoJets";
 jetReclusterer->m_outputJetContainer = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
-
+jetReclusterer->m_name = "R10"; // unique name for the tool
+jetReclusterer->m_ptMin_input = 25.0; // GeV
 // ...
 // ...
 // ...
