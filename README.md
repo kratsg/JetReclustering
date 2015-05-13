@@ -1,4 +1,21 @@
-# xAODJetReclustering - A RootCore Package
+# xAODJetReclustering
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Installing](#installing)
+- [Configurations for](#configurations-for)
+  - [`JetReclusteringTool` tool](#jetreclusteringtool-tool)
+  - [`JetReclusteringAlgo` algorithm](#jetreclusteringalgo-algorithm)
+- [Using xAOD Jet Reclustering](#using-xaod-jet-reclustering)
+  - [Incorporating in existing code](#incorporating-in-existing-code)
+  - [Incorporating in algorithm chain](#incorporating-in-algorithm-chain)
+  - [Studies and Example Usage](#studies-and-example-usage)
+  - [Accessing the subjets from constituents](#accessing-the-subjets-from-constituents)
+    - [Authors](#authors)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installing
 The last stable analysis base used is **2.1.30**. To install,
