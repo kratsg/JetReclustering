@@ -1,7 +1,7 @@
 // Dear emacs, this is -*- c++ -*-
 // $Id: Message.h 567323 2013-10-27 14:49:47Z krasznaa $
-#ifndef xAODAnaHelpers_TOOLS_MESSAGE_H
-#define xAODAnaHelpers_TOOLS_MESSAGE_H
+#ifndef xAODJetReclustering_TOOLS_MESSAGE_H
+#define xAODJetReclustering_TOOLS_MESSAGE_H
 
 /// Simple macro for printing error/verbose messages
 ///
@@ -14,4 +14,4 @@
 #define XAOD_MESSAGE( MESSAGE )                 \
      "%s:%i " MESSAGE, __FILE__, __LINE__
 
-#endif // xAODAnaHelpers_TOOLS_MESSAGE_H
+#endif // xAODJetReclustering_TOOLS_MESSAGE_H
