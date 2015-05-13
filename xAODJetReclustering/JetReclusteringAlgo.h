@@ -22,6 +22,7 @@ public:
               m_rc_algName,
               m_outputXAODName;
   float m_radius = 1.0;
+  float m_ptMin_input = 25.0; // GeV
   bool m_debug = false;
 
 private:
