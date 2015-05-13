@@ -15,11 +15,12 @@ rc compile
 Variable | Type | Default | Description
 ---------|------|---------|-------------
 m_inputJetContainer | std::string | | name of the input jet container for reclustering
+m_ptMin_input | float | 25.0 | filter input jets by requiring a minimum pt cut
 m_outputJetContainer | std::string | | name of the output jet container holding reclustered jets
 m_rc_algName | std::string | antikt_algorithm | how to recluster the input jets
-m_ptMin_input | float | 25.0 | filter input jets by requiring a minimum pt cut
-m_outputXAODName | std::string | | if defined, put the reclustered jets in an output xAOD file of the given name
 m_radius | float | 1.0 | radius of large-R reclustered jets
+m_ptMin_rc | float | 50.0 | filter reclustered jets by requiring a minimum pt cut
+m_outputXAODName | std::string | | if defined, put the reclustered jets in an output xAOD file of the given name
 m_debug | bool | false | enable verbose debugging information
 
 ## Using xAOD Jet Reclustering
@@ -41,6 +42,7 @@ m_jetReclusteringTool->m_outputJetContainer = "AntiKt10LCTopoJetsRCAntiKt4LCTopo
 m_jetReclusteringTool->m_radius = 1.0;
 m_jetReclusteringTool->m_name = "R10"; // unique name for the tool
 m_jetReclusteringTool->m_ptMin_input = 25.0; // GeV
+m_jetReclusteringTool->m_ptMin_rc = 50.0; // GeV
 
 if(!m_jetReclusteringTool->initialize()){
   Error("initialize()", "Could not initialize the JetReclusteringTool.");
@@ -71,6 +73,7 @@ jetReclusterer->m_inputJetContainer = "AntiKt4LCTopoJets";
 jetReclusterer->m_outputJetContainer = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
 jetReclusterer->m_name = "R10"; // unique name for the tool
 jetReclusterer->m_ptMin_input = 25.0; // GeV
+jetReclusterer->m_ptMin_rc = 50.0; // GeV
 // ...
 // ...
 // ...
