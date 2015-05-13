@@ -71,6 +71,7 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
   m_jetReclusteringTool->m_radius = m_radius;
   m_jetReclusteringTool->m_rc_alg = m_rc_alg;
   m_jetReclusteringTool->m_ptMin_input = m_ptMin_input;
+  m_jetReclusteringTool->m_ptMin_rc = m_ptMin_rc;
 
   if(!m_jetReclusteringTool->initialize()){
     Error("initialize()", "Could not initialize the JetReclusteringTool.");
