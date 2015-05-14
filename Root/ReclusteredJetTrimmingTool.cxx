@@ -1,6 +1,7 @@
 #include "xAODJetReclustering/ReclusteredJetTrimmingTool.h"
 
 #include "xAODJet/JetConstituentVector.h"
+#include "xAODJet/JetContainer.h"
 #include "xAODBase/IParticleContainer.h"
 #include "AthLinks/ElementLink.h"
 
@@ -14,11 +15,11 @@ int ReclusteredJetTrimmingTool::modifyJet(xAOD::Jet& jet) const {
 
   // in this case we can access directly the raw
   // constituents (i.e. small R jets)
-  xAOD::JetConstituentVector originalConstits = jet.getConstituents();
-  std::vector<const xAOD::JetConstituent*> filteredConstits;
+  std::vector<const xAOD::Jet*> filteredConstits;
 
-  for(auto constit: originalConstits)
-    if(constit->pt() / jet.pt() > m_ptFrac) filteredConstits.push_back(constit);
+  for(auto constit: jet.getConstituents())
+    if(constit->pt() / jet.pt() > m_ptFrac)
+      filteredConstits.push_back(static_cast<const xAOD::Jet*>(constit->rawConstituent()));
 
   // Access directly the internal links and clear it
   static SG::AuxElement::Accessor< std::vector< ElementLink< xAOD::IParticleContainer > > >  constituentAcc( "constituentLinks" );
@@ -27,8 +28,8 @@ int ReclusteredJetTrimmingTool::modifyJet(xAOD::Jet& jet) const {
   xAOD::JetFourMom_t totalJetP4;
   // re-add the filtered constituents with weight=1.0
   for( auto constit: filteredConstits){
-    jet.addConstituent(constit->rawConstituent(), 1.0);
-    totalJetP4 += *constit;
+    jet.addConstituent(constit, 1.0);
+    totalJetP4 += constit->jetP4();
   }
 
   jet.setJetP4( totalJetP4 );
