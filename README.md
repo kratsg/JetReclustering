@@ -11,7 +11,7 @@
 - [Using xAOD Jet Reclustering](#using-xaod-jet-reclustering)
   - [Incorporating in existing code](#incorporating-in-existing-code)
   - [Incorporating in algorithm chain](#incorporating-in-algorithm-chain)
-  - [Studies and Example Usage](#studies-and-example-usage)
+- [Studies and Example Usage](#studies-and-example-usage)
   - [Accessing the subjets from constituents](#accessing-the-subjets-from-constituents)
 - [Authors](#authors)
 
@@ -130,7 +130,7 @@ jetReclusterer->m_ptFrac = 0.05; // GeV
 job.algsAdd(jetReclusterer);
 ```
 
-### Studies and Example Usage
+## Studies and Example Usage
 
 See [kratsg/ReclusteringStudies](https://github.com/kratsg/ReclusteringStudies) for studies and example usage.
 
