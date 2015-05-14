@@ -17,6 +17,7 @@ If you would like to get involved, see the twiki for [the JetMET working group f
   - [Incorporating in algorithm chain](#incorporating-in-algorithm-chain)
 - [Studies and Example Usage](#studies-and-example-usage)
   - [Accessing the subjets from constituents](#accessing-the-subjets-from-constituents)
+  - [Accessing various jet moments](#accessing-various-jet-moments)
 - [Authors](#authors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -150,6 +151,44 @@ for(auto jet: *in_jets){
 ```
 
 where we explicitly `static_cast<>` our raw pointer from the `rawConstituent()` call. See [xAODJet/JetConstituentVector.h](http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Event/xAOD/xAODJet/xAODJet/JetConstituentVector.h) for more information about what is available. As a raw pointer, we already know that the input to the constituents were small-R jets (since we re-clustered ourselves) so this type of casting is safe.
+
+### Accessing various jet moments
+
+We try to use the standard `JetModifier` tools that are available ATLAS-wide. In those cases, you can find a lot more information on the [Run 2 - Jet Moments](https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/Run2JetMoments) twiki. There are two ways to figure out what information is stored on the reclustered jet.
+
+1. Store the reclustered jets in an output xAOD. Use [kratsg/xAODDumper](https://github.com/kratsg/xAODDumper) to dump the properties and attributes of the jet containers associated with the reclustered jets.
+2. Go to [Root/JetReclusteringTool.cxx](Root/JetReclusteringTool.cxx) around line 100, find the `modArray.push_back()` calls, and look at all the tools being added. For a given tool, you can look it up in the [Run 2 - Jet Moments](https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/Run2JetMoments) twiki to figure out the corresponding property names.
+
+As an example of the second way, I see that `m_ktSplittingScaleTool` is added. On the twiki, I see an entry for `KTSplittingScaleTool` which lists 6 variables associated with it: `Split12, Split23, Split34, ZCut12, ZCut23, ZCut34` and all are of a `float` type, so I can write
+
+```c++
+static SG::AuxElement::ConstAccessor<float> Split12("Split12");
+static SG::AuxElement::ConstAccessor<float> Split23("Split23");
+static SG::AuxElement::ConstAccessor<float> Split34("Split34");
+static SG::AuxElement::ConstAccessor<float> ZCut12("ZCut12");
+static SG::AuxElement::ConstAccessor<float> ZCut23("ZCut23");
+static SG::AuxElement::ConstAccessor<float> ZCut34("ZCut34");
+```
+
+and with these, I can quickly access it on my jet (protecting myself against when it doesn't exist for some reason)
+
+```c++
+for(auto jet: *in_jets){
+  if(Split12.isAvailable(*jet))
+    Info("execute()", "\tSplit12: %0.2f", Split12(*jet));
+  if(Split23.isAvailable(*jet))
+    Info("execute()", "\tSplit23: %0.2f", Split23(*jet));
+  if(Split34.isAvailable(*jet))
+    Info("execute()", "\tSplit34: %0.2f", Split34(*jet));
+  if(ZCut12.isAvailable(*jet))
+    Info("execute()", "\tZCut12: %0.2f", ZCut12(*jet));
+  if(ZCut23.isAvailable(*jet))
+    Info("execute()", "\tZCut23: %0.2f", ZCut23(*jet));
+  if(ZCut34.isAvailable(*jet))
+    Info("execute()", "\tZCut34: %0.2f", ZCut34(*jet));
+}
+
+```
 
 ## Authors
 - [Giordon Stark](https://github.com/kratsg)
