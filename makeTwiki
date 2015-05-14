@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+use Markdown::Foswiki;
+my $mc = Markdown::Foswiki->new();
+my @md_lines = $mc->getData('README.md');
+my $fw_text = $mc->process(@md_lines);;
+print $fw_text;
+
+
+use Markdown::Foswiki;
+my $mc = Markdown::Foswiki->new();
+print $mc->process($mc->getData('README.md'));
+
+
+$mc->save ( $fw_text, '', 'README.twiki');
+
