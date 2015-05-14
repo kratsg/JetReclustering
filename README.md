@@ -29,17 +29,17 @@ rc compile
 
 ### `JetReclusteringTool` tool
 
- Property | Variable | Type | Default | Description
-----------|----------|------|---------|-------------
-InputJetContainer | m_inputJetContainer | std::string | | name of the input jet container for reclustering
-InputJetPtMin | m_ptMin_input | float | 25.0 | filter input jets by requiring a minimum pt cut [GeV]
-OutputJetContainer | m_outputJetContainer | std::string | | name of the output jet container holding reclustered jets
-ReclusterAlgorithm | m_rc_algName | std::string | antikt_algorithm | how to recluster the input jets
-ReclusterRadius | m_radius | float | 1.0 | radius of large-R reclustered jets
-RCJetPtMin | m_ptMin_rc | float | 50.0 | filter reclustered jets by requiring a minimum pt cut [GeV]
-RCJetPtFrac | m_ptFrac | float | 0.05 | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
-VariableRMinRadius | m_varR_minR | float | -1.0 | minimum radius for variable-R jet finding
-VariableRMassScale | m_varR_mass | float | -1.0 | mass scale [GeV] for variable-R jet finding
+ Property           | Type      | Default           | Description
+:-------------------|:---------:|------------------:|:-------------------------------------------------------------------------------------
+InputJetContainer   | string    |                   | name of the input jet container for reclustering
+OutputJetContainer  | string    |                   | name of the output jet container holding reclustered jets
+InputJetPtMin       | float     | 25.0              | filter input jets by requiring a minimum pt cut [GeV]
+ReclusterAlgorithm  | string    | antikt_algorithm  | name of algorithm for clustering large-R jets
+ReclusterRadius     | float     | 1.0               | radius of large-R reclustered jets
+RCJetPtMin          | float     | 50.0              | filter reclustered jets by requiring a minimum pt cut [GeV]
+RCJetPtFrac         | float     | 0.05              | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
+VariableRMinRadius  | float     | -1.0              | minimum radius for variable-R jet finding
+VariableRMassScale  | float     | -1.0              | mass scale [GeV] for variable-R jet finding
 
 Note that variable-R jet finding is performed if `VariableRMinRadius >= 0` and `VariableRMassScale >= 0`.
 
@@ -47,10 +47,17 @@ Note that variable-R jet finding is performed if `VariableRMinRadius >= 0` and `
 
 As well as the provided above configurations for the `JetReclusteringTool`, we also provide a `m_debug` configuration for extra verbose output and an `m_outputXAODName` to create an output xAOD containing the reclustered jets (note: experimental)
 
-Variable | Type | Default | Description
----------|------|---------|-------------
-m_outputXAODName | std::string | | if defined, put the reclustered jets in an output xAOD file of the given name
-m_debug | bool | false | enable verbose debugging information
+Variable            | Type      | Default           | Description
+:-------------------|:---------:|------------------:|:-------------------------------------------------------------------------------------
+m_inputJetContainer | string    |                   | see above
+m_outputJetContainer| string    |                   | see above
+m_ptMin_input       | float     | 25.0              | see above
+m_rc_algName        | string    | antikt_algorithm  | see above
+m_radius            | float     | 1.0               | see above
+m_ptMin_rc          | float     | 50.0              | see above
+m_ptFrac            | float     | 0.05              | see above
+m_outputXAODName    | string    |                   | if defined, put the reclustered jets in an output xAOD file of the given name
+m_debug             | bool      | false             | enable verbose debugging information, such as printing the tool configurations
 
 ## Using xAOD Jet Reclustering
 
