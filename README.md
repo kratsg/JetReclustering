@@ -140,7 +140,7 @@ See [kratsg/ReclusteringStudies](https://github.com/kratsg/ReclusteringStudies) 
 
 ### Accessing the subjets from constituents
 
-The reclustered jets have constituents which are your input small-R jets. These can be re-inflated, so to speak. As an example, I wanted to get the btagging information of my subjets as well as their constituents (eg: the topological calorimeter clusters, TopoCaloClusters)
+The reclustered jets have constituents which are your input small-R jets. These can be re-inflated, so to speak. As an example, I wanted to get the btagging information of my subjets as well as their constituents (eg: the topological calorimeter clusters, `TopoCaloClusters`)
 
 ```c++
 for(auto jet: *in_jets){
