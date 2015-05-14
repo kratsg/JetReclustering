@@ -85,10 +85,21 @@ RETURN_CHECK(m_jetReclusteringTool->setProperty("RCJetPtFrac",        m_ptFrac))
 RETURN_CHECK(m_jetReclusteringTool->initialize());
 ```
 
-and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Don't forget to delete the pointer when you're done. Note that as it behaves like an `AsgTool`, `setProperty()` and `initialize()` return `StatusCode` which needs to be checked.
-
+and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Don't forget to delete the pointer when you're done.
 ```c++
 if(m_jetReclusteringTool) delete m_jetReclusteringTool;
+```
+
+Note that as it behaves like an `AsgTool`, `setProperty()` and `initialize()` return `StatusCode` which needs to be checked.
+```c++
+#define RETURN_CHECK( CONTEXT, EXP, INFO )                                 \
+   do {                                                                    \
+      if( ! EXP.isSuccess() ) {                                            \
+         ::Error( CONTEXT, XAOD_MESSAGE( "Failed to execute: %s\n\t%s\n" ),\
+                  #EXP, INFO );                                            \
+         return EL::StatusCode::FAILURE;                                   \
+      }                                                                    \
+   } while( false )
 ```
 
 ### Incorporating in algorithm chain
