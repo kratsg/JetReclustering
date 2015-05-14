@@ -69,7 +69,7 @@ m_debug             | bool      | false             | enable verbose debugging i
 
 ### Incorporating in existing code
 
-If you wish to incorporate `JetReclustering` directly into your code, add this package as a dependency in `cmt/Makefile.RootCore` and then a header
+If you wish to incorporate `xAODJetReclustering` directly into your code, add this package as a dependency in `cmt/Makefile.RootCore` and then a header
 
 ```c++
 #include <xAODJetReclustering/JetReclusteringTool.h>
