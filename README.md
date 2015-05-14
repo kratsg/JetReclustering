@@ -46,7 +46,7 @@ RCJetPtFrac         | float     | 0.05              | trim the reclustered jets 
 VariableRMinRadius  | float     | -1.0              | minimum radius for variable-R jet finding
 VariableRMassScale  | float     | -1.0              | mass scale [GeV] for variable-R jet finding
 
-Variable-R jet finding is performed if `VariableRMinRadius >= 0` and `VariableRMassScale >= 0`.
+Variable-R jet finding is performed if `VariableRMinRadius >= 0` and `VariableRMassScale >= 0`. For more information on these variables, see the [Jets with Variable R](http://arxiv.org/pdf/0903.0392v1.pdf) paper.
 
 ### `JetReclusteringAlgo` algorithm
 
