@@ -29,15 +29,19 @@ rc compile
 
 ### `JetReclusteringTool` tool
 
-Variable | Type | Default | Description
----------|------|---------|-------------
-m_inputJetContainer | std::string | | name of the input jet container for reclustering
-m_ptMin_input | float | 25.0 | filter input jets by requiring a minimum pt cut
-m_outputJetContainer | std::string | | name of the output jet container holding reclustered jets
-m_rc_algName | std::string | antikt_algorithm | how to recluster the input jets
-m_radius | float | 1.0 | radius of large-R reclustered jets
-m_ptMin_rc | float | 50.0 | filter reclustered jets by requiring a minimum pt cut
-m_ptFrac | float | 0.05 | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
+ Property | Variable | Type | Default | Description
+----------|----------|------|---------|-------------
+InputJetContainer | m_inputJetContainer | std::string | | name of the input jet container for reclustering
+InputJetPtMin | m_ptMin_input | float | 25.0 | filter input jets by requiring a minimum pt cut [GeV]
+OutputJetContainer | m_outputJetContainer | std::string | | name of the output jet container holding reclustered jets
+ReclusterAlgorithm | m_rc_algName | std::string | antikt_algorithm | how to recluster the input jets
+ReclusterRadius | m_radius | float | 1.0 | radius of large-R reclustered jets
+RCJetPtMin | m_ptMin_rc | float | 50.0 | filter reclustered jets by requiring a minimum pt cut [GeV]
+RCJetPtFrac | m_ptFrac | float | 0.05 | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
+VariableRMinRadius | m_varR_minR | float | -1.0 | minimum radius for variable-R jet finding
+VariableRMassScale | m_varR_mass | float | -1.0 | mass scale [GeV] for variable-R jet finding
+
+Note that variable-R jet finding is performed if `VariableRMinRadius >= 0` and `VariableRMassScale >= 0`.
 
 ### `JetReclusteringAlgo` algorithm
 

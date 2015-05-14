@@ -73,6 +73,8 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
   RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("OutputJetContainer", m_outputJetContainer), "");
   RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("ReclusterRadius",    m_radius), "");
   RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("ReclusterAlgorithm", m_rc_alg), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("VariableRMinRadius", m_varR_minR), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("VariableRMassScale", m_varR_mass), "");
   RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("InputJetPtMin",      m_ptMin_input), "");
   RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetPtMin",         m_ptMin_rc), "");
   RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetPtFrac",        m_ptFrac), "");

@@ -31,6 +31,8 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   declareProperty("OutputJetContainer", m_outputJetContainer = "");
   declareProperty("ReclusterRadius",    m_radius = 1.0);
   declareProperty("ReclusterAlgorithm", m_rc_alg = fastjet::antikt_algorithm);
+  declareProperty("VariableRMinRadius", m_varR_minR =-1.0);
+  declareProperty("VariableRMassScale", m_varR_mass =-1.0);
   declareProperty("InputJetPtMin",      m_ptMin_input = 25.0);
   declareProperty("RCJetPtMin",         m_ptMin_rc = 50.0);
   declareProperty("RCJetPtFrac",        m_ptFrac = 0.05);
@@ -84,6 +86,8 @@ StatusCode JetReclusteringTool::initialize(){
   //    - create a ClusterSequence Tool
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("JetAlgorithm", algToAlgName.at(m_rc_alg)));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("JetRadius", m_radius));
+  CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMinRadius", m_varR_minR));
+  CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMassScale", m_varR_mass));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("PtMin", m_ptMin_rc*1.e3));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("GhostArea", 0.0));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("RandomOption", 1));
@@ -124,9 +128,12 @@ void JetReclusteringTool::print() const {
             << "    OutputJetContainer:     " << m_outputJetContainer << std::endl
             << "    Radius:                 " << m_radius << std::endl
             << "    ReclusteringAlgorithm:  " << algToAlgName.at(m_rc_alg) << " (" << m_rc_alg << ")" << std::endl
+            << "    VariableRMinRadius:     " << m_varR_minR << std::endl
+            << "    VariableRMassScale:     " << m_varR_mass << " GeV" << std::endl
             << "    InputJetPtCut:          " << m_ptMin_input << " GeV" << std::endl
             << "    ReclusteredJetPtCut:    " << m_ptMin_rc << " GeV" << std::endl
             << "    ReclusteredJetPtFrac:   " << m_ptFrac << std::endl;
+
   if(m_isInitialized){
     m_inputJetFilterTool->print();
     m_reclusterJetTool->print();

@@ -70,6 +70,12 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     float m_radius;
     // reclustering algorithm to use
     fastjet::JetAlgorithm m_rc_alg;
+  /* variable R reclustering */
+    // minimum radius
+    float m_varR_minR;
+    // mass scale (GeV)
+    float m_varR_mass;
+  /* end variable R reclustering */
     // minimum pt of the constituents (GeV)
     float m_ptMin_input;
     // minimum pt of the reclustered jets (GeV)
