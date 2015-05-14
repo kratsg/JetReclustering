@@ -94,17 +94,7 @@ and then simply call `m_jetReclusteringTool->execute()` in the `execute()` porti
 if(m_jetReclusteringTool) delete m_jetReclusteringTool;
 ```
 
-Note that as it behaves like an `AsgTool`, `setProperty()` and `initialize()` return `StatusCode` which needs to be checked.
-```c++
-#define RETURN_CHECK( CONTEXT, EXP, INFO )                                 \
-   do {                                                                    \
-      if( ! EXP.isSuccess() ) {                                            \
-         ::Error( CONTEXT, XAOD_MESSAGE( "Failed to execute: %s\n\t%s\n" ),\
-                  #EXP, INFO );                                            \
-         return EL::StatusCode::FAILURE;                                   \
-      }                                                                    \
-   } while( false )
-```
+Note that as it behaves like an `AsgTool`, the functions `setProperty()` and `initialize()` have a return type `StatusCode` which needs to be checked. In this package, we use a macro [`ReturnCheck.h`](xAODJetReclustering/tools/ReturnCheck.h) to simplify our code as it is quite repetitive to check it for each `setProperty()` call.
 
 ### Incorporating in algorithm chain
 
@@ -149,11 +139,11 @@ for(auto jet: *in_jets){
   for(auto constit: jet->getConstituents()){
     subjet = static_cast<const xAOD::Jet*>(constit->rawConstituent());
     btag = subjet->btagging();
-    if(btag) Info("execute()", "btagging: %0.2f", btag->MV1_discriminant());
+    if(btag)
+      Info("execute()", "btagging: %0.2f", btag->MV1_discriminant());
 
-    for(auto subjet_constit: subjet->getConstituents()){
+    for(auto subjet_constit: subjet->getConstituents())
       Info("execute()", "\tconstituent pt: %0.2f", subjet_constit->pt());
-    }
   }
 }
 ```
