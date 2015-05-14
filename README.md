@@ -157,7 +157,7 @@ where we explicitly `static_cast<>` our raw pointer from the `rawConstituent()` 
 We try to use the standard `JetModifier` tools that are available ATLAS-wide. In those cases, you can find a lot more information on the [Run 2 - Jet Moments](https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/Run2JetMoments) twiki. There are two ways to figure out what information is stored on the reclustered jet.
 
 1. Store the reclustered jets in an output xAOD. Use [kratsg/xAODDumper](https://github.com/kratsg/xAODDumper) to dump the properties and attributes of the jet containers associated with the reclustered jets.
-2. Go to [Root/JetReclusteringTool.cxx](Root/JetReclusteringTool.cxx) around line 100, find the `modArray.push_back()` calls, and look at all the tools being added. For a given tool, you can look it up in the [Run 2 - Jet Moments](https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/Run2JetMoments) twiki to figure out the corresponding property names.
+2. Go to [Root/JetReclusteringTool.cxx](Root/JetReclusteringTool.cxx#L101) around line 100, find the `modArray.push_back()` calls, and look at all the tools being added. For a given tool, you can look it up in the [Run 2 - Jet Moments](https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/Run2JetMoments) twiki to figure out the corresponding property names.
 
 As an example of the second way, I see that `m_ktSplittingScaleTool` is added. On the twiki, I see an entry for `KTSplittingScaleTool` which lists 6 variables associated with it: `Split12, Split23, Split34, ZCut12, ZCut23, ZCut34` and all are of a `float` type, so I can write
 
