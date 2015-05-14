@@ -24,6 +24,7 @@ If you would like to get involved, see the twiki for [the JetMET working group f
 ## Installing
 The last stable analysis base used is **2.1.30**. To install,
 ```bash
+rcSetup Base,2.1.30
 git clone https://github.com/kratsg/xAODJetReclustering.git
 rc find_packages
 rc compile
