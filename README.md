@@ -56,6 +56,8 @@ m_rc_algName        | string    | antikt_algorithm  | see above
 m_radius            | float     | 1.0               | see above
 m_ptMin_rc          | float     | 50.0              | see above
 m_ptFrac            | float     | 0.05              | see above
+m_varR_minR         | float     | -1.0              | see above
+m_varR_mass         | float     | -1.0              | see above
 m_outputXAODName    | string    |                   | if defined, put the reclustered jets in an output xAOD file of the given name
 m_debug             | bool      | false             | enable verbose debugging information, such as printing the tool configurations
 
