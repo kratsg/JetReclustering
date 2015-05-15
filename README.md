@@ -13,7 +13,7 @@ If you would like to get involved, see the twiki for [the JetMET working group f
   - [`JetReclusteringTool` tool](#jetreclusteringtool-tool)
   - [`JetReclusteringAlgo` algorithm](#jetreclusteringalgo-algorithm)
 - [Using xAOD Jet Reclustering](#using-xaod-jet-reclustering)
-  - [Variable-R Clustering](#variable-r-clustering)
+  - [Variable-R Jet Finding](#variable-r-jet-finding)
   - [Incorporating in existing code](#incorporating-in-existing-code)
   - [Incorporating in algorithm chain](#incorporating-in-algorithm-chain)
 - [Studies and Example Usage](#studies-and-example-usage)
@@ -68,9 +68,9 @@ m_debug             | bool      | false             | enable verbose debugging i
 
 ## Using xAOD Jet Reclustering
 
-### Variable-R Clustering
+### Variable-R Jet Finding
 
-Variable-R jet finding is performed if `VariableRMinRadius >= 0` and `VariableRMassScale >= 0`. For more information on these variables, see the [Jets with Variable R](http://arxiv.org/pdf/0903.0392v1.pdf) paper. If you choose variable-R reclustering, the maximum jet radius will be specified by `ReclusterRadius`. The relevant properties are listed in the following table
+Variable-R jet finding is performed if `VariableRMinRadius >= 0` and `VariableRMassScale >= 0`. For more information on these variables, see the [Jets with Variable R](http://arxiv.org/pdf/0903.0392v1.pdf) paper. If you choose variable-R jet finding, the maximum jet radius will be specified by `ReclusterRadius`. The relevant properties are listed in the following table
 
  Property           | Type                      | Default                   | Description
 :-------------------|:-------------------------:|--------------------------:|:-------------------------------------------------------------------------------------
