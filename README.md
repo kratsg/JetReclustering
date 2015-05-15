@@ -78,7 +78,7 @@ ReclusterRadius     | float                     | 1.0                       | ma
 VariableRMinRadius  | float                     | -1.0                      | minimum radius for variable-R jet finding
 VariableRMassScale  | float                     | -1.0                      | mass scale [GeV] for variable-R jet finding
 
-When a new jet is formed using variable-R jet finding, it will have some extra attributes as mentioned on the Run-2 Jet Moments page. We will also decorate with an `EffectiveR` attribute as well which reflects the effective radius of the reclustered jet using its untrimmed transverse momentum. To summarize the translations
+When a new jet is formed using variable-R jet finding, it will have some extra attributes as mentioned on the [Run 2 - Jet Moments](https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/Run2JetMoments) twiki. We will also decorate with an `EffectiveR` attribute as well which reflects the effective radius of the reclustered jet using its untrimmed transverse momentum. To summarize the translations
 
  Property           | Type                      | Jet Attribute
 :-------------------|:-------------------------:|--------------------
