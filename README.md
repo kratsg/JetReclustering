@@ -8,17 +8,17 @@ If you would like to get involved, see the twiki for [the JetMET working group f
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Installing](#installing)
-- [Configurations for](#configurations-for)
-  - [`JetReclusteringTool` tool](#jetreclusteringtool-tool)
-  - [`JetReclusteringAlgo` algorithm](#jetreclusteringalgo-algorithm)
-- [Using xAOD Jet Reclustering](#using-xaod-jet-reclustering)
-  - [Variable-R Jet Finding](#variable-r-jet-finding)
-  - [Incorporating in existing code](#incorporating-in-existing-code)
-  - [Incorporating in algorithm chain](#incorporating-in-algorithm-chain)
-- [Studies and Example Usage](#studies-and-example-usage)
-  - [Accessing the subjets from constituents](#accessing-the-subjets-from-constituents)
-  - [Accessing various jet moments](#accessing-various-jet-moments)
+  - [Installing](#installing)
+  - [Configurations for](#configurations-for)
+    - [`JetReclusteringTool` tool](#jetreclusteringtool-tool)
+    - [`JetReclusteringAlgo` algorithm](#jetreclusteringalgo-algorithm)
+  - [Using xAOD Jet Reclustering](#using-xaod-jet-reclustering)
+    - [Variable-R Jet Finding](#variable-r-jet-finding)
+    - [Incorporating in existing code](#incorporating-in-existing-code)
+    - [Incorporating in algorithm chain](#incorporating-in-algorithm-chain)
+  - [Studies and Example Usage](#studies-and-example-usage)
+    - [Accessing the subjets from constituents](#accessing-the-subjets-from-constituents)
+    - [Accessing various jet moments](#accessing-various-jet-moments)
 - [Authors](#authors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -208,5 +208,5 @@ for(auto jet: *in_jets){
 
 ```
 
-## Authors
+# Authors
 - [Giordon Stark](https://github.com/kratsg)
