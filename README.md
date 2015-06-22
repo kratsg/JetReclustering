@@ -1,4 +1,4 @@
-# xAODJetReclustering
+# xAOD Jet Reclustering
 
 This tool allows you to recluster small-R xAOD jets into large-R xAOD jets. It provides configurable filtering of the small-R jets, reclustering using standard or variable-R algorithms, configurable trimming of the large-R jets, and jet moment & jet substructure moment calculations.
 
@@ -24,9 +24,11 @@ If you would like to get involved, see the twiki for [the JetMET working group f
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installing
-The last stable analysis base used is **2.1.30**. To install,
+
+This works in AB 2.1.X and 2.3.X on ROOT6 releases. As long as [JetRec](http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Reconstruction/Jet/JetRec/JetRec/) works, this will be ok.
+
 ```bash
-rcSetup Base,2.1.30
+rcSetup Base,2.3.XX
 git clone https://github.com/kratsg/xAODJetReclustering.git
 rc find_packages
 rc compile
