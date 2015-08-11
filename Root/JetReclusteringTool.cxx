@@ -88,7 +88,7 @@ StatusCode JetReclusteringTool::initialize(){
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("JetAlgorithm", algToAlgName.at(m_rc_alg)));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("JetRadius", m_radius));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMinRadius", m_varR_minR));
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMassScale", m_varR_mass));
+  CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMassScale", m_varR_mass*1.e3));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("PtMin", m_ptMin_rc*1.e3));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("GhostArea", 0.0));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("RandomOption", 1));
