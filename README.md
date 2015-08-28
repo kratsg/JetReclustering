@@ -70,6 +70,10 @@ m_debug             | bool      | false             | enable verbose debugging i
 
 ## Using xAOD Jet Reclustering
 
+### Input Jet Filtering
+
+The input jets can be filtered using the `InputJetPtMin` or `m_ptMin_input` options. If these are set to 0 (or less), this will turn the jet filtering tool off (essentially skipping the step).
+
 ### Variable-R Jet Finding
 
 Variable-R jet finding is performed if `VariableRMinRadius >= 0` and `VariableRMassScale >= 0`. For more information on these variables, see the [Jets with Variable R](http://arxiv.org/pdf/0903.0392v1.pdf) paper. If you choose variable-R jet finding, the maximum jet radius will be specified by `ReclusterRadius`. The relevant properties are listed in the following table

@@ -53,25 +53,30 @@ StatusCode JetReclusteringTool::initialize(){
   ToolHandleArray<IPseudoJetGetter> getterArray;
 
   // this is for intermediate output containers used between tools
-  std::string filteredInputJetContainer = m_inputJetContainer+"_"+m_name+"_FilteredPtMin_"+std::to_string(static_cast<int>(m_ptMin_input));
+  std::string filteredInputJetContainer(m_inputJetContainer);
+  if(m_ptMin_input > 0)
+    filteredInputJetContainer = m_inputJetContainer+"_"+m_name+"_FilteredPtMin_"+std::to_string(static_cast<int>(m_ptMin_input));
+
   std::string filteredInputPseudoJetsContainer = "PseudoJets_"+filteredInputJetContainer;
 
   // for the CHECK() statements
   const char* prettyFuncName = (m_APP_NAME+"::initialize()").c_str();
 
-  /* initialize input jet filtering */
-  //    - create a tool that will filter jets
-  CHECK(prettyFuncName, m_jetFilterTool->setProperty("PtMin", m_ptMin_input*1.e3));
-  modArray.clear();
-  modArray.push_back( ToolHandle<IJetModifier>( m_jetFilterTool.get() ) );
-  //    - create the master tool to filter the input jets
-  CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("InputContainer", m_inputJetContainer));
-  CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("OutputContainer", filteredInputJetContainer));
-  CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("JetModifiers", modArray));
-  /* note: we cannot use shallow copies since we are removing elements from a
-   * container, we need a deep copy as linking will break */
-  CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("ShallowCopy", false));
-  CHECK(prettyFuncName, m_inputJetFilterTool->initialize());
+  if(m_ptMin_input > 0){
+    /* initialize input jet filtering */
+    //    - create a tool that will filter jets
+    CHECK(prettyFuncName, m_jetFilterTool->setProperty("PtMin", m_ptMin_input*1.e3));
+    modArray.clear();
+    modArray.push_back( ToolHandle<IJetModifier>( m_jetFilterTool.get() ) );
+    //    - create the master tool to filter the input jets
+    CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("InputContainer", m_inputJetContainer));
+    CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("OutputContainer", filteredInputJetContainer));
+    CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("JetModifiers", modArray));
+    /* note: we cannot use shallow copies since we are removing elements from a
+     * container, we need a deep copy as linking will break */
+    CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("ShallowCopy", false));
+    CHECK(prettyFuncName, m_inputJetFilterTool->initialize());
+  }
 
   /* initialize jet reclustering */
   //    - create a PseudoJet builder.
@@ -121,7 +126,8 @@ StatusCode JetReclusteringTool::initialize(){
 }
 
 void JetReclusteringTool::execute() const {
-  m_inputJetFilterTool->execute();
+  if(m_ptMin_input > 0)
+    m_inputJetFilterTool->execute();
   m_reclusterJetTool->execute();
 }
 
