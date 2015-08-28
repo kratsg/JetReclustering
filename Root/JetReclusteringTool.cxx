@@ -103,9 +103,11 @@ StatusCode JetReclusteringTool::initialize(){
   modArray.clear();
   //        we need to calculate effectiveR before trimming, if we are doing variableR
   modArray.push_back( ToolHandle<IJetModifier>( m_effectiveRTool.get() ) );
-  //        then trim the reclustered jets
-  CHECK(prettyFuncName, m_reclusteredJetTrimmingTool->setProperty("PtFrac", m_ptFrac));
-  modArray.push_back( ToolHandle<IJetModifier>( m_reclusteredJetTrimmingTool.get() ) );
+  if(m_ptFrac > 0){
+    //        then trim the reclustered jets
+    CHECK(prettyFuncName, m_reclusteredJetTrimmingTool->setProperty("PtFrac", m_ptFrac));
+    modArray.push_back( ToolHandle<IJetModifier>( m_reclusteredJetTrimmingTool.get() ) );
+  }
   //        and then apply all other modifiers based on the trimmed reclustered jets
   modArray.push_back( ToolHandle<IJetModifier>( m_jetChargeTool.get() ) );
   modArray.push_back( ToolHandle<IJetModifier>( m_jetPullTool.get() ) );
