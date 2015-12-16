@@ -28,7 +28,8 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   m_ktSplittingScaleTool        (CxxUtils::make_unique<KTSplittingScaleTool>("KTSplittingScaleTool_"+name)),
   m_dipolarityTool              (CxxUtils::make_unique<DipolarityTool>("DipolarityTool_"+name)),
   m_centerOfMassShapesTool      (CxxUtils::make_unique<CenterOfMassShapesTool>("CenterOfMassShapesTool_"+name)),
-  m_jetWidthTool                (CxxUtils::make_unique<JetWidthTool>("JetWidthTool_"+name))
+  m_jetWidthTool                (CxxUtils::make_unique<JetWidthTool>("JetWidthTool_"+name)),
+  m_nSubjettinessTool           (CxxUtils::make_unique<NSubjettinessTool>("NSubjettinessTool_"+name))
 {
   declareProperty("InputJetContainer",  m_inputJetContainer = "");
   declareProperty("OutputJetContainer", m_outputJetContainer = "");
@@ -139,6 +140,7 @@ StatusCode JetReclusteringTool::initialize(){
   modArray.push_back( ToolHandle<IJetModifier>( m_dipolarityTool.get() ) );
   modArray.push_back( ToolHandle<IJetModifier>( m_centerOfMassShapesTool.get() ) );
   modArray.push_back( ToolHandle<IJetModifier>( m_jetWidthTool.get() ) );
+  modArray.push_back( ToolHandle<IJetModifier>( m_nSubjettinessTool.get() ) );
   //    - create our master reclustering tool
   CHECK(prettyFuncName, m_reclusterJetTool->setProperty("OutputContainer", m_outputJetContainer));
   CHECK(prettyFuncName, m_reclusterJetTool->setProperty("PseudoJetGetters", getterArray));

@@ -40,6 +40,7 @@
 #include "JetSubStructureMomentTools/DipolarityTool.h"
 #include "JetSubStructureMomentTools/CenterOfMassShapesTool.h"
 #include "JetMomentTools/JetWidthTool.h"
+#include "JetSubStructureMomentTools/NSubjettinessTool.h"
 
 class JetReclusteringTool : virtual public asg::AsgTool {
   public:
@@ -122,6 +123,7 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     std::unique_ptr<DipolarityTool>             m_dipolarityTool;
     std::unique_ptr<CenterOfMassShapesTool>     m_centerOfMassShapesTool;
     std::unique_ptr<JetWidthTool>               m_jetWidthTool;
+    std::unique_ptr<NSubjettinessTool>          m_nSubjettinessTool;
 
 };
 
