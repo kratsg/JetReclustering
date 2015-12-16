@@ -50,6 +50,7 @@ ReclusterAlgorithm  | fastjet::JetAlgorithm     | fastjet::antikt_algorithm | na
 ReclusterRadius     | float                     | 1.0                       | radius of large-R reclustered jets or maximum radius of variable-R jet finding
 RCJetPtMin          | float                     | 50.0                      | filter reclustered jets by requiring a minimum pt cut [GeV]
 RCJetPtFrac         | float                     | 0.05                      | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
+RCJetSubjetRadius   | float                     | 0.0                       | radius parameter for kt-clustering to form subjets (R=0.0 should not do any clustering)
 VariableRMinRadius  | float                     | -1.0                      | minimum radius for variable-R jet finding
 VariableRMassScale  | float                     | -1.0                      | mass scale [GeV] for variable-R jet finding
 DoArea              | bool                      | false                     | turn on ghost area calculations (set ghost area scale to 0.01)
@@ -68,6 +69,7 @@ m_rc_algName        | string    | antikt_algorithm          | see above
 m_radius            | float     | 1.0                       | see above
 m_ptMin_rc          | float     | 50.0                      | see above
 m_ptFrac            | float     | 0.05                      | see above
+m_subjet_radius     | float     | 0.0                       | see above
 m_varR_minR         | float     | -1.0                      | see above
 m_varR_mass         | float     | -1.0                      | see above
 m_doArea            | bool      | false                     | see above
@@ -83,7 +85,7 @@ The input jets can be filtered using the `InputJetPtMin` or `m_ptMin_input` opti
 
 ### Output Reclustered Jet Trimming
 
-The output jets can be trimmed using the `RCJetPtFrac` or `m_ptFrac` options. If these are set to 0 (or less), this will turn the reclustered jet trimming tool off (essentially skipping the step).
+The output jets can be trimmed using the `RCJetPtFrac` or `m_ptFrac` options. If these are set to 0 (or less), this will turn the reclustered jet trimming tool off (essentially skipping the step). Note that by default, we will not kt-cluster the subjets as `RCJetSubjetRadius` / `m_subjet_radius` are set to 0.0 by default, however one can set them to a non-zero radius value if you want to form subjets (if you somehow passed in `xAOD::Jet` objects that represent clusters rather than small-R jets).
 
 ### Variable-R Jet Finding
 

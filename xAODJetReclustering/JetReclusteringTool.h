@@ -28,10 +28,9 @@
 #include "JetRec/JetFinder.h"
 #include "JetRec/JetFilterTool.h"
 #include "JetRec/JetRecTool.h"
+#include "JetRec/JetTrimmer.h"
 // calculate EffectiveR
 #include "xAODJetReclustering/EffectiveRTool.h"
-// reclustered jet trimming tool
-#include "xAODJetReclustering/ReclusteredJetTrimmingTool.h"
 // all jet modifier tools
 #include "JetSubStructureMomentTools/JetChargeTool.h"
 #include "JetSubStructureMomentTools/JetPullTool.h"
@@ -84,6 +83,7 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     float m_ptMin_rc;
     // trimming to apply to reclustered jets
     float m_ptFrac;
+    float m_subjet_radius;
     // enable to add area attributes form
     bool m_doArea;
     std::string m_areaAttributes;
@@ -112,7 +112,7 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     // tool for calculating effectiveR
     std::unique_ptr<EffectiveRTool> m_effectiveRTool;
     // tool for trimming reclustered jet
-    std::unique_ptr<ReclusteredJetTrimmingTool> m_reclusteredJetTrimmingTool;
+    std::unique_ptr<JetTrimmer> m_jetTrimmingTool;
     // modifier tools for the reclustered jets
     std::unique_ptr<JetChargeTool>              m_jetChargeTool;
     std::unique_ptr<JetPullTool>                m_jetPullTool;
