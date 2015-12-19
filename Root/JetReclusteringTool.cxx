@@ -61,10 +61,9 @@ StatusCode JetReclusteringTool::initialize(){
 
   // this is for intermediate output containers used between tools
   std::string filteredInputJetContainer(m_inputJetContainer);
-  if(m_ptMin_input > 0)
-    filteredInputJetContainer = m_inputJetContainer+"_"+m_name+"_FilteredPtMin_"+std::to_string(static_cast<int>(m_ptMin_input));
-
-  std::string filteredInputPseudoJetsContainer = "PseudoJets_"+filteredInputJetContainer;
+  if(m_ptMin_input > 0) filteredInputJetContainer = "Filtered_"+m_name;
+  std::string filteredInputPseudoJetsContainer = "PseudoJets_"+m_name;
+  std::string reclusteredJetsContainer = "ReclusteredJets_"+m_name;
 
   // for the CHECK() statements
   const char* prettyFuncName = (m_APP_NAME+"::initialize()").c_str();
@@ -125,7 +124,7 @@ StatusCode JetReclusteringTool::initialize(){
   //        we need to calculate effectiveR before trimming, if we are doing variableR
   modArray.push_back( ToolHandle<IJetModifier>( m_effectiveRTool.get() ) );
   //    - create our master reclustering tool
-  CHECK(prettyFuncName, m_reclusterJetTool->setProperty("OutputContainer", m_outputJetContainer));
+  CHECK(prettyFuncName, m_reclusterJetTool->setProperty("OutputContainer", reclusteredJetsContainer));
   CHECK(prettyFuncName, m_reclusterJetTool->setProperty("PseudoJetGetters", getterArray));
   CHECK(prettyFuncName, m_reclusterJetTool->setProperty("JetFinder", ToolHandle<IJetFinder>(m_jetFinderTool.get())));
   CHECK(prettyFuncName, m_reclusterJetTool->setProperty("JetModifiers", modArray));
@@ -148,11 +147,14 @@ StatusCode JetReclusteringTool::initialize(){
   modArray.push_back( ToolHandle<IJetModifier>( m_jetWidthTool.get() ) );
   modArray.push_back( ToolHandle<IJetModifier>( m_nSubjettinessTool.get() ) );
   // finish up the rest of the tool
-  CHECK(prettyFuncName, m_trimJetTool->setProperty("InputContainer", m_outputJetContainer));
+  CHECK(prettyFuncName, m_trimJetTool->setProperty("InputContainer", reclusteredJetsContainer));
   CHECK(prettyFuncName, m_trimJetTool->setProperty("OutputContainer", m_outputJetContainer));
   CHECK(prettyFuncName, m_trimJetTool->setProperty("JetModifiers", modArray));
   CHECK(prettyFuncName, m_trimJetTool->setProperty("JetGroomer", ToolHandle<IJetGroomer>( m_jetTrimmingTool.get() ) ));
   CHECK(prettyFuncName, m_trimJetTool->initialize());
+
+  //m_reclusterJetTool->msg().setLevel(MSG::VERBOSE);
+  //m_trimJetTool->msg().setLevel(MSG::VERBOSE);
 
   return StatusCode::SUCCESS;
 }
@@ -161,6 +163,7 @@ void JetReclusteringTool::execute() const {
   if(m_ptMin_input > 0)
     m_inputJetFilterTool->execute();
   m_reclusterJetTool->execute();
+  m_trimJetTool->execute();
 }
 
 void JetReclusteringTool::print() const {
