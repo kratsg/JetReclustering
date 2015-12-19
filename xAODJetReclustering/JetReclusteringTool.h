@@ -109,6 +109,7 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     std::unique_ptr<JetFromPseudojet> m_jetFromPseudoJetTool;
     std::unique_ptr<JetFinder> m_jetFinderTool;
     std::unique_ptr<JetRecTool> m_reclusterJetTool;
+    std::unique_ptr<JetRecTool> m_trimJetTool;
 
     // tool for calculating effectiveR
     std::unique_ptr<EffectiveRTool> m_effectiveRTool;
