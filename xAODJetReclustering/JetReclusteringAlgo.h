@@ -27,6 +27,7 @@ public:
   float m_ptFrac = 0.05;
   float m_varR_minR = -1.0;
   float m_varR_mass = -1.0; // GeV
+  float m_ghostArea = 0.01;
   bool m_debug = false;
 
 private:

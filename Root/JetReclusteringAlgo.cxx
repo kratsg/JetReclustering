@@ -78,6 +78,7 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
   RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("InputJetPtMin",      m_ptMin_input), "");
   RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetPtMin",         m_ptMin_rc), "");
   RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetPtFrac",        m_ptFrac), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("GhostArea",          m_ghostArea), "");
   RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->initialize(), "");
 
   if(m_debug) m_jetReclusteringTool->print();

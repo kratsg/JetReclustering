@@ -37,6 +37,7 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   declareProperty("InputJetPtMin",      m_ptMin_input = 25.0);
   declareProperty("RCJetPtMin",         m_ptMin_rc = 50.0);
   declareProperty("RCJetPtFrac",        m_ptFrac = 0.05);
+  declareProperty("GhostArea",          m_ghostArea = 0.01);
 }
 
 StatusCode JetReclusteringTool::initialize(){
@@ -95,7 +96,9 @@ StatusCode JetReclusteringTool::initialize(){
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMinRadius", m_varR_minR));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMassScale", m_varR_mass*1.e3));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("PtMin", m_ptMin_rc*1.e3));
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("GhostArea", 0.0));
+  // set ghost area, ignore if trimming is being applied to reclustered jets
+  if(m_ptFrac > 0.0) m_ghostArea = 0.0;
+  CHECK(prettyFuncName, m_jetFinderTool->setProperty("GhostArea", m_ghostArea));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("RandomOption", 1));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(m_jetFromPseudoJetTool.get())));
   CHECK(prettyFuncName, m_jetFinderTool->initialize());

@@ -84,6 +84,8 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     float m_ptMin_rc;
     // trimming to apply to reclustered jets
     float m_ptFrac;
+    // ghost area of jet (only used if m_ptFrac == 0)
+    float m_ghostArea;
 
     // make sure someone only calls a function once
     bool m_isInitialized = false;
