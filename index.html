@@ -1,26 +1,45 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<!doctype html>
+<html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>xAOD Jet Reclustering by kratsg</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
   <body>
-    <section class="page-header">
-      <h1 class="project-name">xAOD Jet Reclustering</h1>
-      <h2 class="project-tagline">Recluster Jets in a Single Bound!</h2>
-      <a href="https://github.com/kratsg/xAODJetReclustering" class="btn">View on GitHub</a>
-      <a href="https://github.com/kratsg/xAODJetReclustering/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/kratsg/xAODJetReclustering/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/kratsg/xAODJetReclustering">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/kratsg/xAODJetReclustering/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/kratsg/xAODJetReclustering/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
 
-    <section class="main-content">
-      <h1>
-<a id="xaod-jet-reclustering" class="anchor" href="#xaod-jet-reclustering" aria-hidden="true"><span class="octicon octicon-link"></span></a>xAOD Jet Reclustering</h1>
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>xAOD Jet Reclustering</h1>
+          <p>Recluster Jets in a Single Bound!</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/kratsg">kratsg</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a id="xaod-jet-reclustering" class="anchor" href="#xaod-jet-reclustering" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>xAOD Jet Reclustering</h1>
 
 <p>This tool allows you to recluster small-R xAOD jets into large-R xAOD jets. It provides configurable filtering of the small-R jets, reclustering using standard or variable-R algorithms, configurable trimming of the large-R jets, and jet moment &amp; jet substructure moment calculations.</p>
 
@@ -46,7 +65,10 @@
 <a href="#using-xaod-jet-reclustering">Using xAOD Jet Reclustering</a>
 
 <ul>
+<li><a href="#input-jet-filtering">Input Jet Filtering</a></li>
+<li><a href="#output-reclustered-jet-trimming">Output Reclustered Jet Trimming</a></li>
 <li><a href="#variable-r-jet-finding">Variable-R Jet Finding</a></li>
+<li><a href="#area-calculations">Area Calculations</a></li>
 <li><a href="#incorporating-in-existing-code">Incorporating in existing code</a></li>
 <li><a href="#incorporating-in-algorithm-chain">Incorporating in algorithm chain</a></li>
 </ul>
@@ -65,21 +87,20 @@
 
 
 <h2>
-<a id="installing" class="anchor" href="#installing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installing</h2>
+<a id="installing" class="anchor" href="#installing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installing</h2>
 
 <p>This works in AB 2.1.X and 2.3.X on ROOT6 releases. As long as <a href="http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Reconstruction/Jet/JetRec/JetRec/">JetRec</a> works, this will be ok.</p>
 
-<div class="highlight highlight-bash"><pre>rcSetup Base,2.3.XX
+<div class="highlight highlight-source-shell"><pre>rcSetup Base,2.3.XX
 git clone https://github.com/kratsg/xAODJetReclustering.git
 rc find_packages
 rc compile</pre></div>
 
 <h2>
-<a id="configurations-for" class="anchor" href="#configurations-for" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configurations for</h2>
+<a id="configurations-for" class="anchor" href="#configurations-for" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configurations for</h2>
 
 <h3>
-<a id="jetreclusteringtool-tool" class="anchor" href="#jetreclusteringtool-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-<code>JetReclusteringTool</code> tool</h3>
+<a id="jetreclusteringtool-tool" class="anchor" href="#jetreclusteringtool-tool" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>JetReclusteringTool</code> tool</h3>
 
 <table>
 <thead>
@@ -145,12 +166,23 @@ rc compile</pre></div>
 <td align="right">-1.0</td>
 <td align="left">mass scale [GeV] for variable-R jet finding</td>
 </tr>
+<tr>
+<td align="left">DoArea</td>
+<td align="center">bool</td>
+<td align="right">false</td>
+<td align="left">turn on ghost area calculations (set ghost area scale to 0.01)</td>
+</tr>
+<tr>
+<td align="left">AreaAttributes</td>
+<td align="center">string</td>
+<td align="right">ActiveArea ActiveArea4vec</td>
+<td align="left">space-delimited list of attributes to transfer over from fastjet</td>
+</tr>
 </tbody>
 </table>
 
 <h3>
-<a id="jetreclusteringalgo-algorithm" class="anchor" href="#jetreclusteringalgo-algorithm" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-<code>JetReclusteringAlgo</code> algorithm</h3>
+<a id="jetreclusteringalgo-algorithm" class="anchor" href="#jetreclusteringalgo-algorithm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>JetReclusteringAlgo</code> algorithm</h3>
 
 <p>As well as the provided above configurations for the <code>JetReclusteringTool</code>, we also provide a <code>m_debug</code> configuration for extra verbose output and an <code>m_outputXAODName</code> to create an output xAOD containing the reclustered jets (note: experimental)</p>
 
@@ -219,6 +251,18 @@ rc compile</pre></div>
 <td align="left">see above</td>
 </tr>
 <tr>
+<td align="left">m_doArea</td>
+<td align="center">bool</td>
+<td align="right">false</td>
+<td align="left">see above</td>
+</tr>
+<tr>
+<td align="left">m_areaAttributes</td>
+<td align="center">string</td>
+<td align="right">ActiveArea ActiveArea4vec</td>
+<td align="left">see above</td>
+</tr>
+<tr>
 <td align="left">m_outputXAODName</td>
 <td align="center">string</td>
 <td align="right"></td>
@@ -234,10 +278,20 @@ rc compile</pre></div>
 </table>
 
 <h2>
-<a id="using-xaod-jet-reclustering" class="anchor" href="#using-xaod-jet-reclustering" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using xAOD Jet Reclustering</h2>
+<a id="using-xaod-jet-reclustering" class="anchor" href="#using-xaod-jet-reclustering" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using xAOD Jet Reclustering</h2>
 
 <h3>
-<a id="variable-r-jet-finding" class="anchor" href="#variable-r-jet-finding" aria-hidden="true"><span class="octicon octicon-link"></span></a>Variable-R Jet Finding</h3>
+<a id="input-jet-filtering" class="anchor" href="#input-jet-filtering" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Input Jet Filtering</h3>
+
+<p>The input jets can be filtered using the <code>InputJetPtMin</code> or <code>m_ptMin_input</code> options. If these are set to 0 (or less), this will turn the jet filtering tool off (essentially skipping the step).</p>
+
+<h3>
+<a id="output-reclustered-jet-trimming" class="anchor" href="#output-reclustered-jet-trimming" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Output Reclustered Jet Trimming</h3>
+
+<p>The output jets can be trimmed using the <code>RCJetPtFrac</code> or <code>m_ptFrac</code> options. If these are set to 0 (or less), this will turn the reclustered jet trimming tool off (essentially skipping the step).</p>
+
+<h3>
+<a id="variable-r-jet-finding" class="anchor" href="#variable-r-jet-finding" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Variable-R Jet Finding</h3>
 
 <p>Variable-R jet finding is performed if <code>VariableRMinRadius &gt;= 0</code> and <code>VariableRMassScale &gt;= 0</code>. For more information on these variables, see the <a href="http://arxiv.org/pdf/0903.0392v1.pdf">Jets with Variable R</a> paper. If you choose variable-R jet finding, the maximum jet radius will be specified by <code>ReclusterRadius</code>. The relevant properties are listed in the following table</p>
 
@@ -307,15 +361,26 @@ rc compile</pre></div>
 </table>
 
 <h3>
-<a id="incorporating-in-existing-code" class="anchor" href="#incorporating-in-existing-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Incorporating in existing code</h3>
+<a id="area-calculations" class="anchor" href="#area-calculations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Area Calculations</h3>
+
+<p>Areas can be calculated and added to the jets. Fastjet does the area calculation and these values can be transferred over using the <code>JetFromPseudojet</code> tool. To make this happen, simply enable <code>m_doArea</code> (<code>DoArea</code>) which will set the ghost area size to <code>0.01</code> which is a reasonable default for most use cases. The attributes that get transferred over are defined in <code>m_areaAttributes</code> (<code>AreaAttributes</code>). As of the time of writing this section of the README, there were only two allowed values which would get decorated:</p>
+
+<ul>
+<li>
+<code>ActiveArea</code> (most people use this one)</li>
+<li><code>ActiveArea4vec</code></li>
+</ul>
+
+<h3>
+<a id="incorporating-in-existing-code" class="anchor" href="#incorporating-in-existing-code" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Incorporating in existing code</h3>
 
 <p>If you wish to incorporate <code>xAODJetReclustering</code> directly into your code, add this package as a dependency in <code>cmt/Makefile.RootCore</code> and then a header</p>
 
-<div class="highlight highlight-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>xAODJetReclustering/JetReclusteringTool.h<span class="pl-pds">&gt;</span></span></pre></div>
+<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>xAODJetReclustering/JetReclusteringTool.h<span class="pl-pds">&gt;</span></span></pre></div>
 
 <p>to get started. At this point, you can set up your standard tool in the <code>initialize()</code> portion of your algorithm as a pointer</p>
 
-<div class="highlight highlight-c++"><pre>m_jetReclusteringTool = <span class="pl-k">new</span> JetReclusteringTool(m_name);
+<div class="highlight highlight-source-c++"><pre>m_jetReclusteringTool = <span class="pl-k">new</span> JetReclusteringTool(m_name);
 <span class="pl-en">RETURN_CHECK</span>(m_jetReclusteringTool-&gt;<span class="pl-en">setProperty</span>(<span class="pl-s"><span class="pl-pds">"</span>InputJetContainer<span class="pl-pds">"</span></span>,  m_inputJetContainer));
 <span class="pl-en">RETURN_CHECK</span>(m_jetReclusteringTool-&gt;<span class="pl-en">setProperty</span>(<span class="pl-s"><span class="pl-pds">"</span>OutputJetContainer<span class="pl-pds">"</span></span>, m_outputJetContainer));
 <span class="pl-en">RETURN_CHECK</span>(m_jetReclusteringTool-&gt;<span class="pl-en">setProperty</span>(<span class="pl-s"><span class="pl-pds">"</span>ReclusterRadius<span class="pl-pds">"</span></span>,    m_radius));
@@ -327,20 +392,20 @@ rc compile</pre></div>
 
 <p>and then simply call <code>m_jetReclusteringTool-&gt;execute()</code> in the <code>execute()</code> portion of your algorithm to fill the TStore with the appropriate container(s). Don't forget to delete the pointer when you're done.</p>
 
-<div class="highlight highlight-c++"><pre><span class="pl-k">if</span>(m_jetReclusteringTool) <span class="pl-k">delete</span> m_jetReclusteringTool;</pre></div>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">if</span>(m_jetReclusteringTool) <span class="pl-k">delete</span> m_jetReclusteringTool;</pre></div>
 
 <p>Note that as it behaves like an <code>AsgTool</code>, the functions <code>setProperty()</code> and <code>initialize()</code> have a return type <code>StatusCode</code> which needs to be checked. In this package, we use a macro <a href="xAODJetReclustering/tools/ReturnCheck.h"><code>ReturnCheck.h</code></a> to simplify our code as it is quite repetitive to check it for each <code>setProperty()</code> call.</p>
 
 <h3>
-<a id="incorporating-in-algorithm-chain" class="anchor" href="#incorporating-in-algorithm-chain" aria-hidden="true"><span class="octicon octicon-link"></span></a>Incorporating in algorithm chain</h3>
+<a id="incorporating-in-algorithm-chain" class="anchor" href="#incorporating-in-algorithm-chain" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Incorporating in algorithm chain</h3>
 
 <p>This is the least destructive option since it requires <strong>no change</strong> to your existing code. All you need to do is create a new <code>JetReclusteringAlgo</code> algorithm and add it to the job before other algorithms downstream that want access to the reclustered jets. It is highly configurable. In your runner macro, add the header</p>
 
-<div class="highlight highlight-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>xAODJetReclustering/JetReclusteringAlgo.h<span class="pl-pds">&gt;</span></span></pre></div>
+<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>xAODJetReclustering/JetReclusteringAlgo.h<span class="pl-pds">&gt;</span></span></pre></div>
 
 <p>and then simply set up your algorithm like so</p>
 
-<div class="highlight highlight-c++"><pre><span class="pl-c">// initialize and set it up</span>
+<div class="highlight highlight-source-c++"><pre><span class="pl-c">// initialize and set it up</span>
 JetReclustering* jetReclusterer = <span class="pl-k">new</span> JetReclusteringAlgo();
 jetReclusterer-&gt;m_inputJetContainer = <span class="pl-s"><span class="pl-pds">"</span>AntiKt4LCTopoJets<span class="pl-pds">"</span></span>;
 jetReclusterer-&gt;m_outputJetContainer = <span class="pl-s"><span class="pl-pds">"</span>AntiKt10LCTopoJetsRCAntiKt4LCTopoJets<span class="pl-pds">"</span></span>;
@@ -357,16 +422,16 @@ jetReclusterer-&gt;m_ptFrac = <span class="pl-c1">0.05</span>; <span class="pl-c
 job.algsAdd(jetReclusterer);</pre></div>
 
 <h2>
-<a id="studies-and-example-usage" class="anchor" href="#studies-and-example-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Studies and Example Usage</h2>
+<a id="studies-and-example-usage" class="anchor" href="#studies-and-example-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Studies and Example Usage</h2>
 
 <p>See <a href="https://github.com/kratsg/ReclusteringStudies">kratsg/ReclusteringStudies</a> for studies and example usage.</p>
 
 <h3>
-<a id="accessing-the-subjets-from-constituents" class="anchor" href="#accessing-the-subjets-from-constituents" aria-hidden="true"><span class="octicon octicon-link"></span></a>Accessing the subjets from constituents</h3>
+<a id="accessing-the-subjets-from-constituents" class="anchor" href="#accessing-the-subjets-from-constituents" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Accessing the subjets from constituents</h3>
 
 <p>The reclustered jets have constituents which are your input small-R jets. These can be re-inflated, so to speak. As an example, I wanted to get the btagging information of my subjets as well as their constituents (eg: the topological calorimeter clusters, <code>TopoCaloClusters</code>)</p>
 
-<div class="highlight highlight-c++"><pre><span class="pl-k">for</span>(<span class="pl-k">auto</span> jet: *in_jets){
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">for</span>(<span class="pl-k">auto</span> jet: *in_jets){
   <span class="pl-k">const</span> xAOD::Jet* <span class="pl-c1">subjet</span>(<span class="pl-v">nullptr</span>);
   <span class="pl-k">const</span> xAOD::BTagging* <span class="pl-c1">btag</span>(<span class="pl-v">nullptr</span>);
   <span class="pl-k">for</span>(<span class="pl-k">auto</span> constit: jet-&gt;<span class="pl-c1">getConstituents</span>()){
@@ -383,7 +448,7 @@ job.algsAdd(jetReclusterer);</pre></div>
 <p>where we explicitly <code>static_cast&lt;&gt;</code> our raw pointer from the <code>rawConstituent()</code> call. See <a href="http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Event/xAOD/xAODJet/xAODJet/JetConstituentVector.h">xAODJet/JetConstituentVector.h</a> for more information about what is available. As a raw pointer, we already know that the input to the constituents were small-R jets (since we re-clustered ourselves) so this type of casting is safe.</p>
 
 <h3>
-<a id="accessing-various-jet-moments" class="anchor" href="#accessing-various-jet-moments" aria-hidden="true"><span class="octicon octicon-link"></span></a>Accessing various jet moments</h3>
+<a id="accessing-various-jet-moments" class="anchor" href="#accessing-various-jet-moments" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Accessing various jet moments</h3>
 
 <p>We try to use the standard <code>JetModifier</code> tools that are available ATLAS-wide. In those cases, you can find a lot more information on the <a href="https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/Run2JetMoments">Run 2 - Jet Moments</a> twiki. There are two ways to figure out what information is stored on the reclustered jet.</p>
 
@@ -394,7 +459,7 @@ job.algsAdd(jetReclusterer);</pre></div>
 
 <p>As an example of the second way, I see that <code>m_ktSplittingScaleTool</code> is added. On the twiki, I see an entry for <code>KTSplittingScaleTool</code> which lists 6 variables associated with it: <code>Split12, Split23, Split34, ZCut12, ZCut23, ZCut34</code> and all are of a <code>float</code> type, so I can write</p>
 
-<div class="highlight highlight-c++"><pre><span class="pl-k">static</span> SG::AuxElement::ConstAccessor&lt;<span class="pl-k">float</span>&gt; <span class="pl-en">Split12</span>(<span class="pl-s"><span class="pl-pds">"</span>Split12<span class="pl-pds">"</span></span>);
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">static</span> SG::AuxElement::ConstAccessor&lt;<span class="pl-k">float</span>&gt; <span class="pl-en">Split12</span>(<span class="pl-s"><span class="pl-pds">"</span>Split12<span class="pl-pds">"</span></span>);
 <span class="pl-k">static</span> SG::AuxElement::ConstAccessor&lt;<span class="pl-k">float</span>&gt; <span class="pl-en">Split23</span>(<span class="pl-s"><span class="pl-pds">"</span>Split23<span class="pl-pds">"</span></span>);
 <span class="pl-k">static</span> SG::AuxElement::ConstAccessor&lt;<span class="pl-k">float</span>&gt; <span class="pl-en">Split34</span>(<span class="pl-s"><span class="pl-pds">"</span>Split34<span class="pl-pds">"</span></span>);
 <span class="pl-k">static</span> SG::AuxElement::ConstAccessor&lt;<span class="pl-k">float</span>&gt; <span class="pl-en">ZCut12</span>(<span class="pl-s"><span class="pl-pds">"</span>ZCut12<span class="pl-pds">"</span></span>);
@@ -403,7 +468,7 @@ job.algsAdd(jetReclusterer);</pre></div>
 
 <p>and with these, I can quickly access it on my jet (protecting myself against when it doesn't exist for some reason)</p>
 
-<div class="highlight highlight-c++"><pre><span class="pl-k">for</span>(<span class="pl-k">auto</span> jet: *in_jets){
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">for</span>(<span class="pl-k">auto</span> jet: *in_jets){
   <span class="pl-k">if</span>(Split12.<span class="pl-c1">isAvailable</span>(*jet))
     <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>Split12: <span class="pl-c1">%0.2f</span><span class="pl-pds">"</span></span>, <span class="pl-c1">Split12</span>(*jet));
   <span class="pl-k">if</span>(Split23.<span class="pl-c1">isAvailable</span>(*jet))
@@ -420,21 +485,16 @@ job.algsAdd(jetReclusterer);</pre></div>
 </pre></div>
 
 <h2>
-<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors</h2>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors</h2>
 
 <ul>
 <li><a href="https://github.com/kratsg">Giordon Stark</a></li>
 </ul>
+      </section>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/kratsg/xAODJetReclustering">xAOD Jet Reclustering</a> is maintained by <a href="https://github.com/kratsg">kratsg</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
-    </section>
-
-            <script type="text/javascript">
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+              <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -447,4 +507,3 @@ job.algsAdd(jetReclusterer);</pre></div>
 
   </body>
 </html>
-
