@@ -83,10 +83,10 @@ StatusCode JetReclusteringTool::initialize(){
 
   // only compute area if ptFrac = 0.0 and m_area is specified
   float ghostArea(0.0);
+  std::vector<std::string> areaAttributes;
   if(m_ptFrac == 0.0 && !m_area.empty()){
     ghostArea = 0.01;
     // split up the m_area string specifying which attributes to record
-    std::vector<std::string> areaAttributes;
     std::string token;
     std::istringstream ss(m_area);
     while(std::getline(ss, token, ' '))
