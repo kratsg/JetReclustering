@@ -83,8 +83,10 @@ StatusCode JetReclusteringTool::initialize(){
   }
 
   // only compute area if ptFrac = 0.0 and m_areaAttributes is specified
+  float ghostArea(0.0);
   std::vector<std::string> areaAttributes;
   if(m_doArea){
+    ghostArea = 0.01;
     // split up the m_areaAttributes string specifying which attributes to record
     std::string token;
     std::istringstream ss(m_areaAttributes);
@@ -111,7 +113,7 @@ StatusCode JetReclusteringTool::initialize(){
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMassScale", m_varR_mass*1.e3));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("PtMin", m_ptMin_rc*1.e3));
   // set ghost area, ignore if trimming is being applied to reclustered jets
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("GhostArea", 0.0));
+  CHECK(prettyFuncName, m_jetFinderTool->setProperty("GhostArea", ghostArea));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("RandomOption", 1));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(m_jetFromPseudoJetTool.get())));
   CHECK(prettyFuncName, m_jetFinderTool->initialize());
