@@ -13,7 +13,10 @@ If you would like to get involved, see the twiki for [the JetMET working group f
   - [`JetReclusteringTool` tool](#jetreclusteringtool-tool)
   - [`JetReclusteringAlgo` algorithm](#jetreclusteringalgo-algorithm)
 - [Using xAOD Jet Reclustering](#using-xaod-jet-reclustering)
+  - [Input Jet Filtering](#input-jet-filtering)
+  - [Output Reclustered Jet Trimming](#output-reclustered-jet-trimming)
   - [Variable-R Jet Finding](#variable-r-jet-finding)
+  - [Area Calculations](#area-calculations)
   - [Incorporating in existing code](#incorporating-in-existing-code)
   - [Incorporating in algorithm chain](#incorporating-in-algorithm-chain)
 - [Studies and Example Usage](#studies-and-example-usage)
@@ -49,24 +52,28 @@ RCJetPtMin          | float                     | 50.0                      | fi
 RCJetPtFrac         | float                     | 0.05                      | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
 VariableRMinRadius  | float                     | -1.0                      | minimum radius for variable-R jet finding
 VariableRMassScale  | float                     | -1.0                      | mass scale [GeV] for variable-R jet finding
+DoArea              | bool                      | false                     | turn on ghost area calculations (set ghost area scale to 0.01)
+AreaAttributes      | string                    | ActiveArea ActiveArea4vec | space-delimited list of attributes to transfer over from fastjet
 
 ### `JetReclusteringAlgo` algorithm
 
 As well as the provided above configurations for the `JetReclusteringTool`, we also provide a `m_debug` configuration for extra verbose output and an `m_outputXAODName` to create an output xAOD containing the reclustered jets (note: experimental)
 
-Variable            | Type      | Default           | Description
-:-------------------|:---------:|------------------:|:-------------------------------------------------------------------------------------
-m_inputJetContainer | string    |                   | see above
-m_outputJetContainer| string    |                   | see above
-m_ptMin_input       | float     | 25.0              | see above
-m_rc_algName        | string    | antikt_algorithm  | see above
-m_radius            | float     | 1.0               | see above
-m_ptMin_rc          | float     | 50.0              | see above
-m_ptFrac            | float     | 0.05              | see above
-m_varR_minR         | float     | -1.0              | see above
-m_varR_mass         | float     | -1.0              | see above
-m_outputXAODName    | string    |                   | if defined, put the reclustered jets in an output xAOD file of the given name
-m_debug             | bool      | false             | enable verbose debugging information, such as printing the tool configurations
+Variable            | Type      | Default                   | Description
+:-------------------|:---------:|--------------------------:|:-------------------------------------------------------------------------------------
+m_inputJetContainer | string    |                           | see above
+m_outputJetContainer| string    |                           | see above
+m_ptMin_input       | float     | 25.0                      | see above
+m_rc_algName        | string    | antikt_algorithm          | see above
+m_radius            | float     | 1.0                       | see above
+m_ptMin_rc          | float     | 50.0                      | see above
+m_ptFrac            | float     | 0.05                      | see above
+m_varR_minR         | float     | -1.0                      | see above
+m_varR_mass         | float     | -1.0                      | see above
+m_doArea            | bool      | false                     | see above
+m_areaAttributes    | string    | ActiveArea ActiveArea4vec | see above
+m_outputXAODName    | string    |                           | if defined, put the reclustered jets in an output xAOD file of the given name
+m_debug             | bool      | false                     | enable verbose debugging information, such as printing the tool configurations
 
 ## Using xAOD Jet Reclustering
 
@@ -96,6 +103,13 @@ ReclusterRadius     | float                     | SizeParameter
 VariableRMinRadius  | float                     | VariableRMinRadius
 VariableRMassScale  | float                     | VariableRMassScale
                     | float                     | EffectiveR
+
+### Area Calculations
+
+Areas can be calculated and added to the jets. Fastjet does the area calculation and these values can be transferred over using the `JetFromPseudojet` tool. To make this happen, simply enable `m_doArea` (`DoArea`) which will set the ghost area size to `0.01` which is a reasonable default for most use cases. The attributes that get transferred over are defined in `m_areaAttributes` (`AreaAttributes`). As of the time of writing this section of the README, there were only two allowed values which would get decorated:
+
+- `ActiveArea` (most people use this one)
+- `ActiveArea4vec`
 
 ### Incorporating in existing code
 

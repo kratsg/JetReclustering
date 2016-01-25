@@ -8,6 +8,8 @@
 // make unique pointers
 #include<CxxUtils/make_unique.h>
 
+#include <sstream>
+
 JetReclusteringTool::JetReclusteringTool(std::string name) :
   AsgTool(name),
   m_name(name),
@@ -37,6 +39,8 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   declareProperty("InputJetPtMin",      m_ptMin_input = 25.0);
   declareProperty("RCJetPtMin",         m_ptMin_rc = 50.0);
   declareProperty("RCJetPtFrac",        m_ptFrac = 0.05);
+  declareProperty("DoArea",             m_doArea = false);
+  declareProperty("AreaAttributes",     m_areaAttributes = "ActiveArea ActiveArea4vec");
 }
 
 StatusCode JetReclusteringTool::initialize(){
@@ -78,6 +82,18 @@ StatusCode JetReclusteringTool::initialize(){
     CHECK(prettyFuncName, m_inputJetFilterTool->initialize());
   }
 
+  // only compute area if ptFrac = 0.0 and m_areaAttributes is specified
+  float ghostArea(0.0);
+  std::vector<std::string> areaAttributes;
+  if(m_doArea){
+    ghostArea = 0.01;
+    // split up the m_areaAttributes string specifying which attributes to record
+    std::string token;
+    std::istringstream ss(m_areaAttributes);
+    while(std::getline(ss, token, ' '))
+      areaAttributes.push_back(token);
+  }
+
   /* initialize jet reclustering */
   //    - create a PseudoJet builder.
   CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("InputContainer", filteredInputJetContainer));
@@ -88,6 +104,7 @@ StatusCode JetReclusteringTool::initialize(){
   CHECK(prettyFuncName, m_pseudoJetGetterTool->initialize());
   getterArray.push_back( ToolHandle<IPseudoJetGetter>(m_pseudoJetGetterTool.get()) );
   //    - create a Jet builder
+  CHECK(prettyFuncName, m_jetFromPseudoJetTool->setProperty("Attributes", areaAttributes));
   CHECK(prettyFuncName, m_jetFromPseudoJetTool->initialize());
   //    - create a ClusterSequence Tool
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("JetAlgorithm", algToAlgName.at(m_rc_alg)));
@@ -95,7 +112,8 @@ StatusCode JetReclusteringTool::initialize(){
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMinRadius", m_varR_minR));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMassScale", m_varR_mass*1.e3));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("PtMin", m_ptMin_rc*1.e3));
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("GhostArea", 0.0));
+  // set ghost area, ignore if trimming is being applied to reclustered jets
+  CHECK(prettyFuncName, m_jetFinderTool->setProperty("GhostArea", ghostArea));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("RandomOption", 1));
   CHECK(prettyFuncName, m_jetFinderTool->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(m_jetFromPseudoJetTool.get())));
   CHECK(prettyFuncName, m_jetFinderTool->initialize());
