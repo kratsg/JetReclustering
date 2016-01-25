@@ -86,7 +86,7 @@ StatusCode JetReclusteringTool::initialize(){
   if(m_ptFrac == 0.0 && !m_area.empty()){
     ghostArea = 0.01;
     // split up the m_area string specifying which attributes to record
-    std::vector<std::string> areaAttributes();
+    std::vector<std::string> areaAttributes;
     std::string token;
     std::istringstream ss(m_area);
     while(std::getline(ss, token, ' '))
