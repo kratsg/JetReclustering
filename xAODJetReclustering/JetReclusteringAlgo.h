@@ -27,7 +27,8 @@ public:
   float m_ptFrac = 0.05;
   float m_varR_minR = -1.0;
   float m_varR_mass = -1.0; // GeV
-  std::string m_area = "";
+  bool m_doArea = false;
+  std::string m_areaAttributes = "ActiveArea ActiveArea4vec";
   bool m_debug = false;
 
 private:
