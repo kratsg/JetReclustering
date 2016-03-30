@@ -25,7 +25,7 @@ public:
   float m_ptMin_input = 25.0; // GeV
   float m_ptMin_rc = 50.0; // GeV
   float m_ptFrac = 0.05;
-  float m_subjet_radius = 0.0;
+  float m_subjet_radius = 0.2;
   float m_varR_minR = -1.0;
   float m_varR_mass = -1.0; // GeV
   bool m_doArea = false;

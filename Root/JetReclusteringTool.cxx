@@ -41,7 +41,7 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   declareProperty("InputJetPtMin",      m_ptMin_input = 25.0);
   declareProperty("RCJetPtMin",         m_ptMin_rc = 50.0);
   declareProperty("RCJetPtFrac",        m_ptFrac = 0.05);
-  declareProperty("RCJetSubjetRadius",  m_subjet_radius = 0.0);
+  declareProperty("RCJetSubjetRadius",  m_subjet_radius = 0.2);
   declareProperty("DoArea",             m_doArea = false);
   declareProperty("AreaAttributes",     m_areaAttributes = "ActiveArea ActiveArea4vec");
 }
