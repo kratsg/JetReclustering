@@ -28,10 +28,9 @@
 #include "JetRec/JetFinder.h"
 #include "JetRec/JetFilterTool.h"
 #include "JetRec/JetRecTool.h"
+#include "JetRec/JetTrimmer.h"
 // calculate EffectiveR
 #include "xAODJetReclustering/EffectiveRTool.h"
-// reclustered jet trimming tool
-#include "xAODJetReclustering/ReclusteredJetTrimmingTool.h"
 // all jet modifier tools
 #include "JetSubStructureMomentTools/JetChargeTool.h"
 #include "JetSubStructureMomentTools/JetPullTool.h"
@@ -41,6 +40,7 @@
 #include "JetSubStructureMomentTools/DipolarityTool.h"
 #include "JetSubStructureMomentTools/CenterOfMassShapesTool.h"
 #include "JetMomentTools/JetWidthTool.h"
+#include "JetSubStructureMomentTools/NSubjettinessTool.h"
 
 class JetReclusteringTool : virtual public asg::AsgTool {
   public:
@@ -84,6 +84,7 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     float m_ptMin_rc;
     // trimming to apply to reclustered jets
     float m_ptFrac;
+    float m_subjet_radius;
     // enable to add area attributes form
     bool m_doArea;
     std::string m_areaAttributes;
@@ -108,11 +109,12 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     std::unique_ptr<JetFromPseudojet> m_jetFromPseudoJetTool;
     std::unique_ptr<JetFinder> m_jetFinderTool;
     std::unique_ptr<JetRecTool> m_reclusterJetTool;
+    std::unique_ptr<JetRecTool> m_trimJetTool;
 
     // tool for calculating effectiveR
     std::unique_ptr<EffectiveRTool> m_effectiveRTool;
     // tool for trimming reclustered jet
-    std::unique_ptr<ReclusteredJetTrimmingTool> m_reclusteredJetTrimmingTool;
+    std::unique_ptr<JetTrimmer> m_jetTrimmingTool;
     // modifier tools for the reclustered jets
     std::unique_ptr<JetChargeTool>              m_jetChargeTool;
     std::unique_ptr<JetPullTool>                m_jetPullTool;
@@ -122,6 +124,7 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     std::unique_ptr<DipolarityTool>             m_dipolarityTool;
     std::unique_ptr<CenterOfMassShapesTool>     m_centerOfMassShapesTool;
     std::unique_ptr<JetWidthTool>               m_jetWidthTool;
+    std::unique_ptr<NSubjettinessTool>          m_nSubjettinessTool;
 
 };
 
