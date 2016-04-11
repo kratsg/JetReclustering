@@ -2,7 +2,7 @@
 
 This tool allows you to recluster small-R xAOD jets into large-R xAOD jets. It provides configurable filtering of the small-R jets, reclustering using standard or variable-R algorithms, configurable trimming of the large-R jets, and jet moment & jet substructure moment calculations.
 
-If you would like to get involved, see the twiki for [the JetMET working group for jet reclustering](https://twiki.cern.ch/twiki/bin/view/AtlasProtected/JetReclustering).
+If you would like to get involved, see the twiki for [the JetMET working group for jet reclustering](https://twiki.cern.ch/twiki/bin/view/AtlasProtected/JetReclustering). The [pre-recommendations](https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/PreRec) twiki contains the guidelines for your analyses.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
