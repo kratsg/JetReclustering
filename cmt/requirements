@@ -1,6 +1,6 @@
 ## automatically generated CMT requirements file
 package xAODJetReclustering
-author  kratsg
+author  Giordon Stark
 
 ## for athena policies: this has to be the first use statement
 use AtlasPolicy 	AtlasPolicy-*
@@ -37,7 +37,7 @@ private
 use AtlasReflex AtlasReflex-* External
 apply_pattern lcgdict dict=xAODJetReclustering selectionfile=selection.xml headerfiles="../xAODJetReclustering/xAODJetReclusteringDict.h"
 end_private
-#test for JetReclusteringTool ... compile and execute it with 'make check' 
+#test for JetReclusteringTool ... compile and execute it with 'make check'
 private
 use TestTools      TestTools-*         AtlasTest
 apply_pattern UnitTest_run unit_test=ut_JetReclusteringTool
