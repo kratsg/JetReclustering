@@ -1,5 +1,5 @@
 #include "xAODJetReclustering/JetReclusteringTool.h"
-#include "xAODJetReclustering/tools/Check.h"
+#include "AsgTools/Check.h"
 
 #include <fastjet/PseudoJet.hh>
 #include <fastjet/ClusterSequence.hh>
@@ -65,23 +65,20 @@ StatusCode JetReclusteringTool::initialize(){
   std::string filteredInputPseudoJetsContainer = "PseudoJets_"+m_name;
   std::string reclusteredJetsContainer = "ReclusteredJets_"+m_name;
 
-  // for the CHECK() statements
-  const char* prettyFuncName = (m_APP_NAME+"::initialize()").c_str();
-
   if(m_ptMin_input > 0){
     /* initialize input jet filtering */
     //    - create a tool that will filter jets
-    CHECK(prettyFuncName, m_jetFilterTool->setProperty("PtMin", m_ptMin_input*1.e3));
+    ASG_CHECK(m_jetFilterTool->setProperty("PtMin", m_ptMin_input*1.e3));
     modArray.clear();
     modArray.push_back( ToolHandle<IJetModifier>( m_jetFilterTool.get() ) );
     //    - create the master tool to filter the input jets
-    CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("InputContainer", m_inputJetContainer));
-    CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("OutputContainer", filteredInputJetContainer));
-    CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("JetModifiers", modArray));
+    ASG_CHECK(m_inputJetFilterTool->setProperty("InputContainer", m_inputJetContainer));
+    ASG_CHECK(m_inputJetFilterTool->setProperty("OutputContainer", filteredInputJetContainer));
+    ASG_CHECK(m_inputJetFilterTool->setProperty("JetModifiers", modArray));
     /* note: we cannot use shallow copies since we are removing elements from a
      * container, we need a deep copy as linking will break */
-    CHECK(prettyFuncName, m_inputJetFilterTool->setProperty("ShallowCopy", false));
-    CHECK(prettyFuncName, m_inputJetFilterTool->initialize());
+    ASG_CHECK(m_inputJetFilterTool->setProperty("ShallowCopy", false));
+    ASG_CHECK(m_inputJetFilterTool->initialize());
   }
 
   // only compute area if ptFrac = 0.0 and m_areaAttributes is specified
@@ -98,44 +95,44 @@ StatusCode JetReclusteringTool::initialize(){
 
   /* initialize jet reclustering */
   //    - create a PseudoJet builder.
-  CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("InputContainer", filteredInputJetContainer));
-  CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("OutputContainer", filteredInputPseudoJetsContainer));
-  CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("Label", "LCTopo"));
-  CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("SkipNegativeEnergy", true));
-  CHECK(prettyFuncName, m_pseudoJetGetterTool->setProperty("GhostScale", 0.0));
-  CHECK(prettyFuncName, m_pseudoJetGetterTool->initialize());
+  ASG_CHECK(m_pseudoJetGetterTool->setProperty("InputContainer", filteredInputJetContainer));
+  ASG_CHECK(m_pseudoJetGetterTool->setProperty("OutputContainer", filteredInputPseudoJetsContainer));
+  ASG_CHECK(m_pseudoJetGetterTool->setProperty("Label", "LCTopo"));
+  ASG_CHECK(m_pseudoJetGetterTool->setProperty("SkipNegativeEnergy", true));
+  ASG_CHECK(m_pseudoJetGetterTool->setProperty("GhostScale", 0.0));
+  ASG_CHECK(m_pseudoJetGetterTool->initialize());
   getterArray.push_back( ToolHandle<IPseudoJetGetter>(m_pseudoJetGetterTool.get()) );
   //    - create a Jet builder
-  CHECK(prettyFuncName, m_jetFromPseudoJetTool->setProperty("Attributes", areaAttributes));
-  CHECK(prettyFuncName, m_jetFromPseudoJetTool->initialize());
+  ASG_CHECK(m_jetFromPseudoJetTool->setProperty("Attributes", areaAttributes));
+  ASG_CHECK(m_jetFromPseudoJetTool->initialize());
   //    - create a ClusterSequence Tool
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("JetAlgorithm", algToAlgName.at(m_rc_alg)));
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("JetRadius", m_radius));
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMinRadius", m_varR_minR));
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("VariableRMassScale", m_varR_mass*1.e3));
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("PtMin", m_ptMin_rc*1.e3));
+  ASG_CHECK(m_jetFinderTool->setProperty("JetAlgorithm", algToAlgName.at(m_rc_alg)));
+  ASG_CHECK(m_jetFinderTool->setProperty("JetRadius", m_radius));
+  ASG_CHECK(m_jetFinderTool->setProperty("VariableRMinRadius", m_varR_minR));
+  ASG_CHECK(m_jetFinderTool->setProperty("VariableRMassScale", m_varR_mass*1.e3));
+  ASG_CHECK(m_jetFinderTool->setProperty("PtMin", m_ptMin_rc*1.e3));
   // set ghost area, ignore if trimming is being applied to reclustered jets
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("GhostArea", ghostArea));
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("RandomOption", 1));
-  CHECK(prettyFuncName, m_jetFinderTool->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(m_jetFromPseudoJetTool.get())));
-  CHECK(prettyFuncName, m_jetFinderTool->initialize());
+  ASG_CHECK(m_jetFinderTool->setProperty("GhostArea", ghostArea));
+  ASG_CHECK(m_jetFinderTool->setProperty("RandomOption", 1));
+  ASG_CHECK(m_jetFinderTool->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(m_jetFromPseudoJetTool.get())));
+  ASG_CHECK(m_jetFinderTool->initialize());
   //    - create list of modifiers.
   modArray.clear();
   //        we need to calculate effectiveR before trimming, if we are doing variableR
   modArray.push_back( ToolHandle<IJetModifier>( m_effectiveRTool.get() ) );
   //    - create our master reclustering tool
-  CHECK(prettyFuncName, m_reclusterJetTool->setProperty("OutputContainer", reclusteredJetsContainer));
-  CHECK(prettyFuncName, m_reclusterJetTool->setProperty("PseudoJetGetters", getterArray));
-  CHECK(prettyFuncName, m_reclusterJetTool->setProperty("JetFinder", ToolHandle<IJetFinder>(m_jetFinderTool.get())));
-  CHECK(prettyFuncName, m_reclusterJetTool->setProperty("JetModifiers", modArray));
-  CHECK(prettyFuncName, m_reclusterJetTool->initialize());
+  ASG_CHECK(m_reclusterJetTool->setProperty("OutputContainer", reclusteredJetsContainer));
+  ASG_CHECK(m_reclusterJetTool->setProperty("PseudoJetGetters", getterArray));
+  ASG_CHECK(m_reclusterJetTool->setProperty("JetFinder", ToolHandle<IJetFinder>(m_jetFinderTool.get())));
+  ASG_CHECK(m_reclusterJetTool->setProperty("JetModifiers", modArray));
+  ASG_CHECK(m_reclusterJetTool->initialize());
 
   // clear modArray again
   modArray.clear();
   //        then trim the reclustered jets
-  CHECK(prettyFuncName, m_jetTrimmingTool->setProperty("PtFrac", m_ptFrac));
-  CHECK(prettyFuncName, m_jetTrimmingTool->setProperty("RClus", m_subjet_radius));
-  CHECK(prettyFuncName, m_jetTrimmingTool->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(m_jetFromPseudoJetTool.get())));
+  ASG_CHECK(m_jetTrimmingTool->setProperty("PtFrac", m_ptFrac));
+  ASG_CHECK(m_jetTrimmingTool->setProperty("RClus", m_subjet_radius));
+  ASG_CHECK(m_jetTrimmingTool->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(m_jetFromPseudoJetTool.get())));
   //        and then apply all other modifiers based on the trimmed reclustered jets
   modArray.push_back( ToolHandle<IJetModifier>( m_jetChargeTool.get() ) );
   modArray.push_back( ToolHandle<IJetModifier>( m_jetPullTool.get() ) );
@@ -147,11 +144,11 @@ StatusCode JetReclusteringTool::initialize(){
   modArray.push_back( ToolHandle<IJetModifier>( m_jetWidthTool.get() ) );
   modArray.push_back( ToolHandle<IJetModifier>( m_nSubjettinessTool.get() ) );
   // finish up the rest of the tool
-  CHECK(prettyFuncName, m_trimJetTool->setProperty("InputContainer", reclusteredJetsContainer));
-  CHECK(prettyFuncName, m_trimJetTool->setProperty("OutputContainer", m_outputJetContainer));
-  CHECK(prettyFuncName, m_trimJetTool->setProperty("JetModifiers", modArray));
-  CHECK(prettyFuncName, m_trimJetTool->setProperty("JetGroomer", ToolHandle<IJetGroomer>( m_jetTrimmingTool.get() ) ));
-  CHECK(prettyFuncName, m_trimJetTool->initialize());
+  ASG_CHECK(m_trimJetTool->setProperty("InputContainer", reclusteredJetsContainer));
+  ASG_CHECK(m_trimJetTool->setProperty("OutputContainer", m_outputJetContainer));
+  ASG_CHECK(m_trimJetTool->setProperty("JetModifiers", modArray));
+  ASG_CHECK(m_trimJetTool->setProperty("JetGroomer", ToolHandle<IJetGroomer>( m_jetTrimmingTool.get() ) ));
+  ASG_CHECK(m_trimJetTool->initialize());
 
   //m_reclusterJetTool->msg().setLevel(MSG::VERBOSE);
   //m_trimJetTool->msg().setLevel(MSG::VERBOSE);
