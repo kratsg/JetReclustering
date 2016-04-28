@@ -45,10 +45,10 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
 
 StatusCode JetReclusteringTool::initialize(){
   if(m_isInitialized){
-    std::cout << "Warning: " << m_APP_NAME << " already initialized." << std::endl;
+    ATH_MSG_WARNING(m_APP_NAME << " already initialized.");
     return StatusCode::FAILURE;
   }
-  std::cout << "Info: " << m_APP_NAME << " initializing" << std::endl;
+  ATH_MSG_INFO(m_APP_NAME << " initializing");
   // set to true, we're calling it now
   m_isInitialized = true;
 
@@ -160,24 +160,24 @@ void JetReclusteringTool::execute() const {
 }
 
 void JetReclusteringTool::print() const {
-  std::cout << "Properties for " << m_APP_NAME << "(" << m_name << ")" << std::endl
-            << "    InputJetContainer:      " << m_inputJetContainer << std::endl
-            << "    OutputJetContainer:     " << m_outputJetContainer << std::endl
-            << "    Radius:                 " << m_radius << std::endl
-            << "    ReclusteringAlgorithm:  " << m_rc_alg << " (" << m_rc_alg << ")" << std::endl
-            << "    VariableRMinRadius:     " << m_varR_minR << std::endl
-            << "    VariableRMassScale:     " << m_varR_mass << " GeV" << std::endl
-            << "    InputJetPtCut:          " << m_ptMin_input << " GeV" << std::endl
-            << "    ReclusteredJetPtCut:    " << m_ptMin_rc << " GeV" << std::endl
-            << "    ReclusteredJetPtFrac:   " << m_ptFrac << std::endl
-            << "    ReclusteredJetSubjetR:  " << m_subjet_radius << std::endl;
+  ATH_MSG_INFO("Properties for " << m_APP_NAME << "(" << m_name << ")");
+  ATH_MSG_INFO("    InputJetContainer:      " << m_inputJetContainer );
+  ATH_MSG_INFO("    OutputJetContainer:     " << m_outputJetContainer );
+  ATH_MSG_INFO("    Radius:                 " << m_radius );
+  ATH_MSG_INFO("    ReclusteringAlgorithm:  " << m_rc_alg << " (" << m_rc_alg << ")" );
+  ATH_MSG_INFO("    VariableRMinRadius:     " << m_varR_minR );
+  ATH_MSG_INFO("    VariableRMassScale:     " << m_varR_mass << " GeV" );
+  ATH_MSG_INFO("    InputJetPtCut:          " << m_ptMin_input << " GeV" );
+  ATH_MSG_INFO("    ReclusteredJetPtCut:    " << m_ptMin_rc << " GeV" );
+  ATH_MSG_INFO("    ReclusteredJetPtFrac:   " << m_ptFrac );
+  ATH_MSG_INFO("    ReclusteredJetSubjetR:  " << m_subjet_radius );
 
   if(m_isInitialized){
     m_inputJetFilterTool->print();
     m_reclusterJetTool->print();
     m_trimJetTool->print();
   } else {
-    std::cout << m_APP_NAME << " has not been initialized yet" << std::endl;
+    ATH_MSG_INFO(m_APP_NAME << " has not been initialized yet");
   }
 
   return;
