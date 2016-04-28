@@ -7,12 +7,12 @@ public
 use AtlasPolicy 	            AtlasPolicy-*
 use AsgTools                    AsgTools-*                      Control/AthToolSupport
 use JetRec                      JetRec-*                        Reconstruction/Jet
-use xAODBase                    xAODBase-*                      Event/xAOD
 use AtlasROOT                   AtlasROOT-*                     External
 use JetSubStructureMomentTools  JetSubStructureMomentTools-*    Reconstruction/Jet
 use JetMomentTools              JetMomentTools-*                Reconstruction/Jet
 
 private
+use xAODBase                    xAODBase-*                      Event/xAOD
 ## for gaudi tools, services and objects
 use GaudiInterface 	            GaudiInterface-* 	            External
 use AtlasFastJet                AtlasFastJet-*                  External
