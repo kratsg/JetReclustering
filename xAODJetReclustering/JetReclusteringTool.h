@@ -3,6 +3,7 @@
 
 // making it more like a tool
 #include "AsgTools/AsgTool.h"
+#include "xAODJetReclustering/IJetReclusteringTool.h"
 
 #include <fastjet/JetDefinition.hh>
 #include <map>
@@ -42,9 +43,9 @@
 #include "JetMomentTools/JetWidthTool.h"
 #include "JetSubStructureMomentTools/NSubjettinessTool.h"
 
-class JetReclusteringTool : virtual public asg::AsgTool {
+class JetReclusteringTool : virtual public asg::AsgTool, virtual public IJetReclusteringTool {
   public:
-    ASG_TOOL_INTERFACE(JetReclusteringTool)
+    ASG_TOOL_CLASS(JetReclusteringTool, IJetReclusteringTool)
     JetReclusteringTool(std::string myname);
 
     // initialization - set up everything
