@@ -8,6 +8,15 @@ use AtlasPolicy 	AtlasPolicy-*
 ## for gaudi tools, services and objects
 use GaudiInterface 	GaudiInterface-* 	External
 
+use AsgTools AsgTools-* Control/AthToolSupport
+
+#uncomment the next line to use ROOT libraries in your package
+#use AtlasROOT AtlasROOT-* External
+
+#next line only needed for example code in asg tool...please remove if not using
+use xAODBase xAODBase-* Event/xAOD
+
+
 ## put here your package dependencies...
 
 ##
@@ -15,7 +24,7 @@ use GaudiInterface 	GaudiInterface-* 	External
 branches src src/components doc python share
 
 ## default is to make component library. See: https://twiki.cern.ch/twiki/bin/view/Main/LearningAthena#Libraries_in_CMT for alternatives
-library xAODJetReclustering *.cxx components/*.cxx
+library xAODJetReclustering *.cxx components/*.cxx ../Root/*.cxx
 apply_pattern component_library
 
 apply_pattern declare_joboptions files="*.py"
@@ -23,3 +32,14 @@ apply_pattern declare_python_modules files="*.py"
 
 
 
+#Reflex Dictionary Generation:
+private
+use AtlasReflex AtlasReflex-* External
+apply_pattern lcgdict dict=xAODJetReclustering selectionfile=selection.xml headerfiles="../xAODJetReclustering/xAODJetReclusteringDict.h"
+end_private
+#test for JetReclusteringTool ... compile and execute it with 'make check' 
+private
+use TestTools      TestTools-*         AtlasTest
+apply_pattern UnitTest_run unit_test=ut_JetReclusteringTool
+macro_append ut_JetReclusteringTool_test_dependencies " xAODJetReclustering xAODJetReclusteringMergeComponentsList "
+end_private
