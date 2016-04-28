@@ -1,3 +1,4 @@
+#ifdef ROOTCORE
 // Dear emacs, this is -*- c++ -*-
 // $Id: Message.h 567323 2013-10-27 14:49:47Z krasznaa $
 #ifndef xAODJetReclustering_TOOLS_MESSAGE_H
@@ -15,3 +16,4 @@
      "%s:%i " MESSAGE, __FILE__, __LINE__
 
 #endif // xAODJetReclustering_TOOLS_MESSAGE_H
+#endif // ROOTCORE

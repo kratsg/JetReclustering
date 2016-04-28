@@ -1,3 +1,4 @@
+#ifdef ROOTCORE
 #ifndef xAODJetReclustering_JetReclusteringAlgo_H
 #define xAODJetReclustering_JetReclusteringAlgo_H
 
@@ -60,3 +61,4 @@ public:
 };
 
 #endif
+#endif // ROOTCORE

@@ -1,3 +1,4 @@
+#ifdef ROOTCORE
 #include <EventLoop/Job.h>
 #include <EventLoop/StatusCode.h>
 #include <EventLoop/Worker.h>
@@ -159,3 +160,4 @@ EL::StatusCode JetReclusteringAlgo :: finalize () {
 }
 
 EL::StatusCode JetReclusteringAlgo :: histFinalize () { return EL::StatusCode::SUCCESS; }
+#endif // ROOTCORE
