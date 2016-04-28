@@ -12,6 +12,7 @@ use JetSubStructureMomentTools  JetSubStructureMomentTools-*    Reconstruction/J
 
 private
 use xAODBase                    xAODBase-*                      Event/xAOD
+use xAODRootAccess              xAODRootAccess-*                Control
 ## for gaudi tools, services and objects
 use GaudiInterface 	            GaudiInterface-* 	            External
 use CxxUtils                    CxxUtils-*                      Control
