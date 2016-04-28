@@ -9,7 +9,6 @@ use AsgTools                    AsgTools-*                      Control/AthToolS
 use JetRec                      JetRec-*                        Reconstruction/Jet
 use AtlasROOT                   AtlasROOT-*                     External
 use JetSubStructureMomentTools  JetSubStructureMomentTools-*    Reconstruction/Jet
-use JetMomentTools              JetMomentTools-*                Reconstruction/Jet
 
 private
 use xAODBase                    xAODBase-*                      Event/xAOD
