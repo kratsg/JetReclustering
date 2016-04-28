@@ -15,7 +15,6 @@ private
 use xAODBase                    xAODBase-*                      Event/xAOD
 ## for gaudi tools, services and objects
 use GaudiInterface 	            GaudiInterface-* 	            External
-use AtlasFastJet                AtlasFastJet-*                  External
 use CxxUtils                    CxxUtils-*                      Control
 use JetInterface                JetInterface-*                  Reconstruction/Jet
 ## for ReclusteredJetTrimmingTool (deprecate soon)

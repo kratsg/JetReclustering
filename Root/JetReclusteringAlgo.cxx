@@ -44,16 +44,9 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
   m_event = wk()->xaodEvent();
   m_store = wk()->xaodStore();
 
-  std::map<std::string, fastjet::JetAlgorithm> algNameToAlg = {{"kt_algorithm", fastjet::kt_algorithm}, {"cambridge_algorithm", fastjet::cambridge_algorithm}, {"antikt_algorithm", fastjet::antikt_algorithm}};
-  if(!m_rc_algName.empty()){
-    if(!algNameToAlg.count(m_rc_algName)){
-      Error("setupJob()", "Only `kt_algorithm`, `cambridge_algorithm`, and `antikt_algorithm` are supported!");
-      return EL::StatusCode::FAILURE;
-    }
-    m_rc_alg = algNameToAlg.at(m_rc_algName);
-  } else {
-    Info("setupJob()", "m_rc_algName is empty. Setting to `antikt_algorithm` by default.");
-    m_rc_alg = algNameToAlg.at("antikt_algorithm");
+  if(m_rc_alg.empty()){
+    Info("setupJob()", "m_rc_alg is empty. Setting to `AntiKt` by default.");
+    m_rc_alg = "AntiKt";
   }
 
   if(!m_outputXAODName.empty()){

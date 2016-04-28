@@ -46,7 +46,7 @@ rc compile
 InputJetContainer   | string                    |                           | name of the input jet container for reclustering
 OutputJetContainer  | string                    |                           | name of the output jet container holding reclustered jets
 InputJetPtMin       | float                     | 25.0                      | filter input jets by requiring a minimum pt cut [GeV]
-ReclusterAlgorithm  | fastjet::JetAlgorithm     | fastjet::antikt_algorithm | name of algorithm for clustering large-R jets
+ReclusterAlgorithm  | string                    | AntiKt                    | name of algorithm for clustering large-R jets {AntiKt, Kt, CamKt}
 ReclusterRadius     | float                     | 1.0                       | radius of large-R reclustered jets or maximum radius of variable-R jet finding
 RCJetPtMin          | float                     | 50.0                      | filter reclustered jets by requiring a minimum pt cut [GeV]
 RCJetPtFrac         | float                     | 0.05                      | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
@@ -65,7 +65,7 @@ Variable            | Type      | Default                   | Description
 m_inputJetContainer | string    |                           | see above
 m_outputJetContainer| string    |                           | see above
 m_ptMin_input       | float     | 25.0                      | see above
-m_rc_algName        | string    | antikt_algorithm          | see above
+m_rc_alg            | string    | AntiKt                    | see above
 m_radius            | float     | 1.0                       | see above
 m_ptMin_rc          | float     | 50.0                      | see above
 m_ptFrac            | float     | 0.05                      | see above

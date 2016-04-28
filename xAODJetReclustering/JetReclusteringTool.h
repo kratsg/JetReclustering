@@ -5,7 +5,6 @@
 #include "AsgTools/AsgTool.h"
 #include "xAODJetReclustering/IJetReclusteringTool.h"
 
-#include <fastjet/JetDefinition.hh>
 #include <map>
 #include <memory>
 
@@ -43,7 +42,7 @@
 #include "JetMomentTools/JetWidthTool.h"
 #include "JetSubStructureMomentTools/NSubjettinessTool.h"
 
-class JetReclusteringTool : virtual public asg::AsgTool, virtual public IJetReclusteringTool {
+class JetReclusteringTool : public asg::AsgTool, virtual public IJetReclusteringTool {
   public:
     ASG_TOOL_CLASS(JetReclusteringTool, IJetReclusteringTool)
     JetReclusteringTool(std::string myname);
@@ -72,7 +71,7 @@ class JetReclusteringTool : virtual public asg::AsgTool, virtual public IJetRecl
     // radius of the reclustered jets
     float m_radius;
     // reclustering algorithm to use
-    fastjet::JetAlgorithm m_rc_alg;
+    std::string m_rc_alg;
   /* variable R reclustering */
     // minimum radius
     float m_varR_minR;
@@ -92,14 +91,6 @@ class JetReclusteringTool : virtual public asg::AsgTool, virtual public IJetRecl
 
     // make sure someone only calls a function once
     bool m_isInitialized = false;
-
-    // we have to convert the fastjet algorithm to a named algorithm because
-    // the tools are fucking stupid
-    std::map<fastjet::JetAlgorithm, std::string> algToAlgName = {
-            {fastjet::kt_algorithm, "Kt"},
-            {fastjet::cambridge_algorithm, "CamKt"},
-            {fastjet::antikt_algorithm, "AntiKt"}
-    };
 
   /* all tools we use */
     // this is for filtering input jets

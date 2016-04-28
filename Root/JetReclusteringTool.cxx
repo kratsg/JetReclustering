@@ -1,8 +1,6 @@
 #include "xAODJetReclustering/JetReclusteringTool.h"
 #include "AsgTools/Check.h"
 
-#include <fastjet/PseudoJet.hh>
-#include <fastjet/ClusterSequence.hh>
 #include "JetInterface/IJetModifier.h"
 
 // make unique pointers
@@ -35,7 +33,7 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   declareProperty("InputJetContainer",  m_inputJetContainer = "");
   declareProperty("OutputJetContainer", m_outputJetContainer = "");
   declareProperty("ReclusterRadius",    m_radius = 1.0);
-  declareProperty("ReclusterAlgorithm", m_rc_alg = fastjet::antikt_algorithm);
+  declareProperty("ReclusterAlgorithm", m_rc_alg = "AntiKt");
   declareProperty("VariableRMinRadius", m_varR_minR =-1.0);
   declareProperty("VariableRMassScale", m_varR_mass =-1.0);
   declareProperty("InputJetPtMin",      m_ptMin_input = 25.0);
@@ -106,7 +104,7 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_jetFromPseudoJetTool->setProperty("Attributes", areaAttributes));
   ASG_CHECK(m_jetFromPseudoJetTool->initialize());
   //    - create a ClusterSequence Tool
-  ASG_CHECK(m_jetFinderTool->setProperty("JetAlgorithm", algToAlgName.at(m_rc_alg)));
+  ASG_CHECK(m_jetFinderTool->setProperty("JetAlgorithm", m_rc_alg));
   ASG_CHECK(m_jetFinderTool->setProperty("JetRadius", m_radius));
   ASG_CHECK(m_jetFinderTool->setProperty("VariableRMinRadius", m_varR_minR));
   ASG_CHECK(m_jetFinderTool->setProperty("VariableRMassScale", m_varR_mass*1.e3));
@@ -168,14 +166,13 @@ void JetReclusteringTool::print() const {
             << "    InputJetContainer:      " << m_inputJetContainer << std::endl
             << "    OutputJetContainer:     " << m_outputJetContainer << std::endl
             << "    Radius:                 " << m_radius << std::endl
-            << "    ReclusteringAlgorithm:  " << algToAlgName.at(m_rc_alg) << " (" << m_rc_alg << ")" << std::endl
+            << "    ReclusteringAlgorithm:  " << m_rc_alg << " (" << m_rc_alg << ")" << std::endl
             << "    VariableRMinRadius:     " << m_varR_minR << std::endl
             << "    VariableRMassScale:     " << m_varR_mass << " GeV" << std::endl
             << "    InputJetPtCut:          " << m_ptMin_input << " GeV" << std::endl
             << "    ReclusteredJetPtCut:    " << m_ptMin_rc << " GeV" << std::endl
             << "    ReclusteredJetPtFrac:   " << m_ptFrac << std::endl
             << "    ReclusteredJetSubjetR:  " << m_subjet_radius << std::endl;
-
 
   if(m_isInitialized){
     m_inputJetFilterTool->print();
