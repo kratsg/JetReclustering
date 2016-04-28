@@ -27,7 +27,6 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   m_ktSplittingScaleTool        (CxxUtils::make_unique<KTSplittingScaleTool>("KTSplittingScaleTool_"+name)),
   m_dipolarityTool              (CxxUtils::make_unique<DipolarityTool>("DipolarityTool_"+name)),
   m_centerOfMassShapesTool      (CxxUtils::make_unique<CenterOfMassShapesTool>("CenterOfMassShapesTool_"+name)),
-  m_jetWidthTool                (CxxUtils::make_unique<JetWidthTool>("JetWidthTool_"+name)),
   m_nSubjettinessTool           (CxxUtils::make_unique<NSubjettinessTool>("NSubjettinessTool_"+name))
 {
   declareProperty("InputJetContainer",  m_inputJetContainer = "");
@@ -139,7 +138,6 @@ StatusCode JetReclusteringTool::initialize(){
   modArray.push_back( ToolHandle<IJetModifier>( m_ktSplittingScaleTool.get() ) );
   modArray.push_back( ToolHandle<IJetModifier>( m_dipolarityTool.get() ) );
   modArray.push_back( ToolHandle<IJetModifier>( m_centerOfMassShapesTool.get() ) );
-  modArray.push_back( ToolHandle<IJetModifier>( m_jetWidthTool.get() ) );
   modArray.push_back( ToolHandle<IJetModifier>( m_nSubjettinessTool.get() ) );
   // finish up the rest of the tool
   ASG_CHECK(m_trimJetTool->setProperty("InputContainer", reclusteredJetsContainer));
