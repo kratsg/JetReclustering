@@ -1,4 +1,4 @@
-    
+#include <xAODRootAccess/Init.h>
 #include "AsgTools/AnaToolHandle.h"
 #include "xAODJetReclustering/IJetReclusteringTool.h"
 
@@ -11,9 +11,11 @@ int main() {
   ANA_CHECK (xAOD::Init ());
 #endif
 
-   asg::AnaToolHandle<IJetReclusteringTool> myTool("JetReclusteringTool/ToolInstanceName");
-   ANA_CHECK( myTool.setProperty( "Property", 4.0 ) );
-   ANA_CHECK( myTool.setProperty( "EnumProperty", IJetReclusteringTool::Val2 ) );
+   asg::AnaToolHandle<IJetReclusteringTool> myTool("JetReclusteringTool/testRCJets");
+   //ANA_CHECK(myTool.setProperty("InputJetContainer",  m_inputJetContainer));
+   //ANA_CHECK(myTool.setProperty("OutputJetContainer", m_outputJetContainer));
+   ANA_CHECK(myTool.initialize());
+
    ANA_CHECK( myTool.initialize() );
 
    //myTool->isSelected(....); put test code here
