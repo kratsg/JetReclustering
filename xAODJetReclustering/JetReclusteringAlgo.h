@@ -8,8 +8,9 @@
 #include <xAODRootAccess/TEvent.h>
 #include <xAODRootAccess/TStore.h>
 
-// forward-declare
-class JetReclusteringTool;
+// reclustering
+#include <AsgTools/AnaToolHandle.h>
+#include <xAODJetReclustering/IJetReclusteringTool.h>
 
 class JetReclusteringAlgo : public EL::Algorithm
 {
@@ -35,7 +36,7 @@ private:
   xAOD::TEvent *m_event; //!
   xAOD::TStore *m_store; //!
 
-  JetReclusteringTool* m_jetReclusteringTool; //!
+  asg::AnaToolHandle<IJetReclusteringTool> m_jetReclusteringTool; //!
 
 public:
   // this is a standard constructor
