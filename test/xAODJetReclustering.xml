@@ -3,8 +3,8 @@
    <TEST name="xAODJetReclustering_makeCheck" type="makecheck">
       <package>xAODJetReclustering</package>
       <timelimit>5</timelimit>
-      <author> PLEASE ENTER A NAME </author>
-      <mailto> PLEASEENTER@cern.ch </mailto>
+      <author> Giordon Stark </author>
+      <mailto> gstark@cern.ch </mailto>
       <expectations>
          <errorMessage> Athena exited abnormally </errorMessage>
          <errorMessage>differ</errorMessage>
