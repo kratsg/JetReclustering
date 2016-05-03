@@ -1,0 +1,14 @@
+ <?xml version="1.0"?>
+<atn>
+   <TEST name="xAODJetReclustering_makeCheck" type="makecheck">
+      <package>xAODJetReclustering</package>
+      <timelimit>5</timelimit>
+      <author> PLEASE ENTER A NAME </author>
+      <mailto> PLEASEENTER@cern.ch </mailto>
+      <expectations>
+         <errorMessage> Athena exited abnormally </errorMessage>
+         <errorMessage>differ</errorMessage>
+         <returnValue>0</returnValue>
+      </expectations>
+   </TEST>
+</atn>

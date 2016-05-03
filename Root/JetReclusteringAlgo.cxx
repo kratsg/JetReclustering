@@ -1,3 +1,4 @@
+#ifdef ROOTCORE
 #include <EventLoop/Job.h>
 #include <EventLoop/StatusCode.h>
 #include <EventLoop/Worker.h>
@@ -17,7 +18,9 @@
 // this is needed to distribute the algorithm to the workers
 ClassImp(JetReclusteringAlgo)
 
-JetReclusteringAlgo :: JetReclusteringAlgo () {}
+JetReclusteringAlgo :: JetReclusteringAlgo () :
+  m_jetReclusteringTool("IJetReclusteringTool/"+m_name)
+{}
 
 EL::StatusCode JetReclusteringAlgo :: setupJob (EL::Job& job)
 {
@@ -43,16 +46,9 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
   m_event = wk()->xaodEvent();
   m_store = wk()->xaodStore();
 
-  std::map<std::string, fastjet::JetAlgorithm> algNameToAlg = {{"kt_algorithm", fastjet::kt_algorithm}, {"cambridge_algorithm", fastjet::cambridge_algorithm}, {"antikt_algorithm", fastjet::antikt_algorithm}};
-  if(!m_rc_algName.empty()){
-    if(!algNameToAlg.count(m_rc_algName)){
-      Error("setupJob()", "Only `kt_algorithm`, `cambridge_algorithm`, and `antikt_algorithm` are supported!");
-      return EL::StatusCode::FAILURE;
-    }
-    m_rc_alg = algNameToAlg.at(m_rc_algName);
-  } else {
-    Info("setupJob()", "m_rc_algName is empty. Setting to `antikt_algorithm` by default.");
-    m_rc_alg = algNameToAlg.at("antikt_algorithm");
+  if(m_rc_alg.empty()){
+    Info("setupJob()", "m_rc_alg is empty. Setting to `AntiKt` by default.");
+    m_rc_alg = "AntiKt";
   }
 
   if(!m_outputXAODName.empty()){
@@ -68,20 +64,21 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
     Error("initialize()", "m_name needs to be set and unique.");
     return EL::StatusCode::FAILURE;
   }
-  m_jetReclusteringTool = new JetReclusteringTool(m_name);
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("InputJetContainer",  m_inputJetContainer), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("OutputJetContainer", m_outputJetContainer), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("ReclusterRadius",    m_radius), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("ReclusterAlgorithm", m_rc_alg), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("VariableRMinRadius", m_varR_minR), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("VariableRMassScale", m_varR_mass), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("InputJetPtMin",      m_ptMin_input), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetPtMin",         m_ptMin_rc), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetPtFrac",        m_ptFrac), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetSubjetRadius",  m_subjet_radius), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("DoArea",             m_doArea), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("AreaAttributes",     m_areaAttributes), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->initialize(), "");
+
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", ASG_MAKE_ANA_TOOL(m_jetReclusteringTool, JetReclusteringTool), "Could not make the tool");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("InputJetContainer",  m_inputJetContainer), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("OutputJetContainer", m_outputJetContainer), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("ReclusterRadius",    m_radius), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("ReclusterAlgorithm", m_rc_alg), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("VariableRMinRadius", m_varR_minR), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("VariableRMassScale", m_varR_mass), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("InputJetPtMin",      m_ptMin_input), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("RCJetPtMin",         m_ptMin_rc), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("RCJetPtFrac",        m_ptFrac), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("RCJetSubjetRadius",  m_subjet_radius), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("DoArea",             m_doArea), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.setProperty("AreaAttributes",     m_areaAttributes), "");
+  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool.initialize(), "");
 
   if(m_debug) m_jetReclusteringTool->print();
 
@@ -152,10 +149,8 @@ EL::StatusCode JetReclusteringAlgo :: finalize () {
     }
   }
 
-  // clear off the tool created
-  if(m_jetReclusteringTool) delete m_jetReclusteringTool;
-
   return EL::StatusCode::SUCCESS;
 }
 
 EL::StatusCode JetReclusteringAlgo :: histFinalize () { return EL::StatusCode::SUCCESS; }
+#endif // ROOTCORE

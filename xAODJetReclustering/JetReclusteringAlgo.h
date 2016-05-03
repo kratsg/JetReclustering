@@ -1,3 +1,4 @@
+#ifdef ROOTCORE
 #ifndef xAODJetReclustering_JetReclusteringAlgo_H
 #define xAODJetReclustering_JetReclusteringAlgo_H
 
@@ -7,11 +8,9 @@
 #include <xAODRootAccess/TEvent.h>
 #include <xAODRootAccess/TStore.h>
 
-// jet definition
-#include <fastjet/JetDefinition.hh>
-
-// forward-declare
-class JetReclusteringTool;
+// reclustering
+#include <AsgTools/AnaToolHandle.h>
+#include <xAODJetReclustering/IJetReclusteringTool.h>
 
 class JetReclusteringAlgo : public EL::Algorithm
 {
@@ -19,7 +18,7 @@ public:
   std::string m_name,
               m_inputJetContainer,
               m_outputJetContainer,
-              m_rc_algName,
+              m_rc_alg,
               m_outputXAODName;
   float m_radius = 1.0;
   float m_ptMin_input = 25.0; // GeV
@@ -37,8 +36,7 @@ private:
   xAOD::TEvent *m_event; //!
   xAOD::TStore *m_store; //!
 
-  fastjet::JetAlgorithm m_rc_alg; //!
-  JetReclusteringTool* m_jetReclusteringTool; //!
+  asg::AnaToolHandle<IJetReclusteringTool> m_jetReclusteringTool; //!
 
 public:
   // this is a standard constructor
@@ -60,3 +58,4 @@ public:
 };
 
 #endif
+#endif // ROOTCORE

@@ -28,7 +28,7 @@ If you would like to get involved, see the twiki for [the JetMET working group f
 
 ## Installing
 
-This works in AB 2.1.X and 2.3.X on ROOT6 releases. As long as [JetRec](http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Reconstruction/Jet/JetRec/JetRec/) works, this will be ok.
+This works in AB 2.3.X and 2.4.X on ROOT6 releases. As long as [JetRec](http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Reconstruction/Jet/JetRec/JetRec/) works, this will be ok.
 
 ```bash
 rcSetup Base,2.3.XX
@@ -46,7 +46,7 @@ rc compile
 InputJetContainer   | string                    |                           | name of the input jet container for reclustering
 OutputJetContainer  | string                    |                           | name of the output jet container holding reclustered jets
 InputJetPtMin       | float                     | 25.0                      | filter input jets by requiring a minimum pt cut [GeV]
-ReclusterAlgorithm  | fastjet::JetAlgorithm     | fastjet::antikt_algorithm | name of algorithm for clustering large-R jets
+ReclusterAlgorithm  | string                    | AntiKt                    | name of algorithm for clustering large-R jets {AntiKt, Kt, CamKt}
 ReclusterRadius     | float                     | 1.0                       | radius of large-R reclustered jets or maximum radius of variable-R jet finding
 RCJetPtMin          | float                     | 50.0                      | filter reclustered jets by requiring a minimum pt cut [GeV]
 RCJetPtFrac         | float                     | 0.05                      | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
@@ -65,7 +65,7 @@ Variable            | Type      | Default                   | Description
 m_inputJetContainer | string    |                           | see above
 m_outputJetContainer| string    |                           | see above
 m_ptMin_input       | float     | 25.0                      | see above
-m_rc_algName        | string    | antikt_algorithm          | see above
+m_rc_alg            | string    | AntiKt                    | see above
 m_radius            | float     | 1.0                       | see above
 m_ptMin_rc          | float     | 50.0                      | see above
 m_ptFrac            | float     | 0.05                      | see above
@@ -118,29 +118,45 @@ Areas can be calculated and added to the jets. Fastjet does the area calculation
 If you wish to incorporate `xAODJetReclustering` directly into your code, add this package as a dependency in `cmt/Makefile.RootCore` and then a header
 
 ```c++
+#include <AsgTools/AnaToolHandle.h>
+#include <xAODJetReclustering/IJetReclusteringTool.h>
+
+class MyAlgo {
+  // ...
+
+  asg::AnaToolHandle<IJetReclusteringTool> m_jetReclusteringTool; //!
+}
+```
+
+to get started. In the source, you need to add the tool header
+
+```c++
 #include <xAODJetReclustering/JetReclusteringTool.h>
 ```
 
-to get started. At this point, you can set up your standard tool in the `initialize()` portion of your algorithm as a pointer
+then make sure the AsgTool tool store sets up the tool correctly in the constructor
 
 ```c++
-m_jetReclusteringTool = new JetReclusteringTool(m_name);
-RETURN_CHECK(m_jetReclusteringTool->setProperty("InputJetContainer",  m_inputJetContainer));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("OutputJetContainer", m_outputJetContainer));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("ReclusterRadius",    m_radius));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("ReclusterAlgorithm", m_rc_alg));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("InputJetPtMin",      m_ptMin_input));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("RCJetPtMin",         m_ptMin_rc));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("RCJetPtFrac",        m_ptFrac));
-RETURN_CHECK(m_jetReclusteringTool->initialize());
+MyAlgo :: MyAlgo () :
+  m_jetReclusteringTool("IJetReclusteringTool/ANameForTheTool")
+  {}
 ```
 
-and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Don't forget to delete the pointer when you're done.
+At this point, you can set up your standard tool in the `initialize()` portion of your algorithm as a tool handle
+
 ```c++
-if(m_jetReclusteringTool) delete m_jetReclusteringTool;
+RETURN_CHECK(ASG_MAKE_ANA_TOOL(m_jetReclusteringTool, JetReclusteringTool));
+RETURN_CHECK(m_jetReclusteringTool.setProperty("InputJetContainer",  m_inputJetContainer));
+RETURN_CHECK(m_jetReclusteringTool.setProperty("OutputJetContainer", m_outputJetContainer));
+RETURN_CHECK(m_jetReclusteringTool.setProperty("ReclusterRadius",    m_radius));
+RETURN_CHECK(m_jetReclusteringTool.setProperty("ReclusterAlgorithm", m_rc_alg));
+RETURN_CHECK(m_jetReclusteringTool.setProperty("InputJetPtMin",      m_ptMin_input));
+RETURN_CHECK(m_jetReclusteringTool.setProperty("RCJetPtMin",         m_ptMin_rc));
+RETURN_CHECK(m_jetReclusteringTool.setProperty("RCJetPtFrac",        m_ptFrac));
+RETURN_CHECK(m_jetReclusteringTool.initialize());
 ```
 
-Note that as it behaves like an `AsgTool`, the functions `setProperty()` and `initialize()` have a return type `StatusCode` which needs to be checked. In this package, we use a macro [`ReturnCheck.h`](xAODJetReclustering/tools/ReturnCheck.h) to simplify our code as it is quite repetitive to check it for each `setProperty()` call.
+and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Note that you use a pointer on the second portion when calling `execute()` to access the underlying pointer to the tool itself. The functions `setProperty()` and `initialize()` have a return type `StatusCode` which needs to be checked. In this package, we use a macro [`ReturnCheck.h`](xAODJetReclustering/tools/ReturnCheck.h) to simplify our code as it is quite repetitive to check it for each `setProperty()` call.
 
 ### Incorporating in algorithm chain
 

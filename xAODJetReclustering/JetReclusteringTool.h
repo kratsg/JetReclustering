@@ -3,8 +3,8 @@
 
 // making it more like a tool
 #include "AsgTools/AsgTool.h"
+#include "xAODJetReclustering/IJetReclusteringTool.h"
 
-#include <fastjet/JetDefinition.hh>
 #include <map>
 #include <memory>
 
@@ -39,12 +39,11 @@
 #include "JetSubStructureMomentTools/KTSplittingScaleTool.h"
 #include "JetSubStructureMomentTools/DipolarityTool.h"
 #include "JetSubStructureMomentTools/CenterOfMassShapesTool.h"
-#include "JetMomentTools/JetWidthTool.h"
 #include "JetSubStructureMomentTools/NSubjettinessTool.h"
 
-class JetReclusteringTool : virtual public asg::AsgTool {
+class JetReclusteringTool : public asg::AsgTool, virtual public IJetReclusteringTool {
   public:
-    ASG_TOOL_INTERFACE(JetReclusteringTool)
+    ASG_TOOL_CLASS(JetReclusteringTool, IJetReclusteringTool)
     JetReclusteringTool(std::string myname);
 
     // initialization - set up everything
@@ -71,7 +70,7 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     // radius of the reclustered jets
     float m_radius;
     // reclustering algorithm to use
-    fastjet::JetAlgorithm m_rc_alg;
+    std::string m_rc_alg;
   /* variable R reclustering */
     // minimum radius
     float m_varR_minR;
@@ -91,14 +90,6 @@ class JetReclusteringTool : virtual public asg::AsgTool {
 
     // make sure someone only calls a function once
     bool m_isInitialized = false;
-
-    // we have to convert the fastjet algorithm to a named algorithm because
-    // the tools are fucking stupid
-    std::map<fastjet::JetAlgorithm, std::string> algToAlgName = {
-            {fastjet::kt_algorithm, "Kt"},
-            {fastjet::cambridge_algorithm, "CamKt"},
-            {fastjet::antikt_algorithm, "AntiKt"}
-    };
 
   /* all tools we use */
     // this is for filtering input jets
@@ -123,7 +114,6 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     std::unique_ptr<KTSplittingScaleTool>       m_ktSplittingScaleTool;
     std::unique_ptr<DipolarityTool>             m_dipolarityTool;
     std::unique_ptr<CenterOfMassShapesTool>     m_centerOfMassShapesTool;
-    std::unique_ptr<JetWidthTool>               m_jetWidthTool;
     std::unique_ptr<NSubjettinessTool>          m_nSubjettinessTool;
 
 };

@@ -1,3 +1,4 @@
+#ifdef ROOTCORE
 // Dear emacs, this is -*- c++ -*-
 #ifndef xAODJetReclustering_TOOLS_RETURNCHECK_H
 #define xAODJetReclustering_TOOLS_RETURNCHECK_H
@@ -28,4 +29,4 @@
    } while( false )
 
 #endif // xAODJetReclustering_TOOLS_RETURNCHECK_H
-
+#endif // ROOTCORE

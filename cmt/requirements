@@ -1,0 +1,44 @@
+## automatically generated CMT requirements file
+package xAODJetReclustering
+author  Giordon Stark
+
+## for athena policies: this has to be the first use statement
+public
+use AtlasPolicy 	            AtlasPolicy-*
+use AsgTools                    AsgTools-*                      Control/AthToolSupport
+use JetRec                      JetRec-*                        Reconstruction/Jet
+use AtlasROOT                   AtlasROOT-*                     External
+use JetSubStructureMomentTools  JetSubStructureMomentTools-*    Reconstruction/Jet
+
+private
+use xAODBase                    xAODBase-*                      Event/xAOD
+use xAODRootAccess              xAODRootAccess-*                Control
+## for gaudi tools, services and objects
+use GaudiInterface 	            GaudiInterface-* 	            External
+use CxxUtils                    CxxUtils-*                      Control
+use JetInterface                JetInterface-*                  Reconstruction/Jet
+## for ReclusteredJetTrimmingTool (deprecate soon)
+use AthLinks                    AthLinks-*                      Control
+use xAODJet                     xAODJet-*                       Event/xAOD
+end_private
+
+branches src src/components doc python share
+
+## default is to make component library. See: https://twiki.cern.ch/twiki/bin/view/Main/LearningAthena#Libraries_in_CMT for alternatives
+library xAODJetReclustering *.cxx components/*.cxx ../Root/*.cxx
+apply_pattern component_library
+
+apply_pattern declare_joboptions files="*.py"
+apply_pattern declare_python_modules files="*.py"
+
+#Reflex Dictionary Generation:
+private
+use AtlasReflex AtlasReflex-* External
+apply_pattern lcgdict dict=xAODJetReclustering selectionfile=selection.xml headerfiles="../xAODJetReclustering/xAODJetReclusteringDict.h"
+end_private
+#test for JetReclusteringTool ... compile and execute it with 'make check'
+private
+use TestTools      TestTools-*         AtlasTest
+apply_pattern UnitTest_run unit_test=ut_JetReclusteringTool
+macro_append ut_JetReclusteringTool_test_dependencies " xAODJetReclustering xAODJetReclusteringMergeComponentsList "
+end_private
