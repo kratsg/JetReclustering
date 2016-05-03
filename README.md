@@ -145,18 +145,19 @@ MyAlgo :: MyAlgo () :
 At this point, you can set up your standard tool in the `initialize()` portion of your algorithm as a tool handle
 
 ```c++
-RETURN_CHECK(ASG_MAKE_ANA_TOOL(m_jetReclusteringTool, JetReclusteringTool));
-RETURN_CHECK(m_jetReclusteringTool.setProperty("InputJetContainer",  m_inputJetContainer));
-RETURN_CHECK(m_jetReclusteringTool.setProperty("OutputJetContainer", m_outputJetContainer));
-RETURN_CHECK(m_jetReclusteringTool.setProperty("ReclusterRadius",    m_radius));
-RETURN_CHECK(m_jetReclusteringTool.setProperty("ReclusterAlgorithm", m_rc_alg));
-RETURN_CHECK(m_jetReclusteringTool.setProperty("InputJetPtMin",      m_ptMin_input));
-RETURN_CHECK(m_jetReclusteringTool.setProperty("RCJetPtMin",         m_ptMin_rc));
-RETURN_CHECK(m_jetReclusteringTool.setProperty("RCJetPtFrac",        m_ptFrac));
-RETURN_CHECK(m_jetReclusteringTool.initialize());
+ANA_CHECK_SET_TYPE (EL::StatusCode);
+ANA_CHECK(ASG_MAKE_ANA_TOOL(m_jetReclusteringTool, JetReclusteringTool));
+ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetContainer",  m_inputJetContainer));
+ANA_CHECK(m_jetReclusteringTool.setProperty("OutputJetContainer", m_outputJetContainer));
+ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterRadius",    m_radius));
+ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterAlgorithm", m_rc_alg));
+ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetPtMin",      m_ptMin_input));
+ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtMin",         m_ptMin_rc));
+ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtFrac",        m_ptFrac));
+ANA_CHECK(m_jetReclusteringTool.initialize());
 ```
 
-and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Note that you use a pointer on the second portion when calling `execute()` to access the underlying pointer to the tool itself. The functions `setProperty()` and `initialize()` have a return type `StatusCode` which needs to be checked. In this package, we use a macro [`ReturnCheck.h`](xAODJetReclustering/tools/ReturnCheck.h) to simplify our code as it is quite repetitive to check it for each `setProperty()` call.
+and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Note that you use a pointer on the second portion when calling `execute()` to access the underlying pointer to the tool itself. The functions `setProperty()` and `initialize()` have a return type `StatusCode` which needs to be checked.
 
 ### Incorporating in algorithm chain
 
