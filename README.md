@@ -28,14 +28,16 @@ If you would like to get involved, see the twiki for [the JetMET working group f
 
 ## Installing
 
-This works in AB 2.3.X and 2.4.X on ROOT6 releases. As long as [JetRec](http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Reconstruction/Jet/JetRec/JetRec/) works, this will be ok.
+This works in AB 2.3.X and 2.4.Y on ROOT6 releases. As long as [JetRec](http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Reconstruction/Jet/JetRec/JetRec/) works, this will be ok.
 
 ```bash
-rcSetup Base,2.3.XX
+rcSetup Base,2.3.X # or 2.4.Y
 git clone https://github.com/kratsg/xAODJetReclustering.git
 rc find_packages
 rc compile
 ```
+
+*Warning*: use `X >= 45` since I am using `ANA_CHECK` which only works with `EventLoop-00-01-35` or better.
 
 ## Configurations for
 
