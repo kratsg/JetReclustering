@@ -17,9 +17,6 @@ use xAODRootAccess              xAODRootAccess-*                Control
 use GaudiInterface 	            GaudiInterface-* 	            External
 use CxxUtils                    CxxUtils-*                      Control
 use JetInterface                JetInterface-*                  Reconstruction/Jet
-## for ReclusteredJetTrimmingTool (deprecate soon)
-use AthLinks                    AthLinks-*                      Control
-use xAODJet                     xAODJet-*                       Event/xAOD
 end_private
 
 branches src src/components doc python share
