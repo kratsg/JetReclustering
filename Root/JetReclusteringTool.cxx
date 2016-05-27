@@ -12,7 +12,6 @@
 
 JetReclusteringTool::JetReclusteringTool(std::string name) :
   AsgTool(name),
-  m_name(name),
   m_jetFilterTool("JetFilterTool/JetFilterTool", this),
   m_inputJetFilterTool("JetRecTool/JetRec_InputJetFilterTool", this),
   m_pseudoJetGetterTool("PseudoJetGetter/PseudoJetGetterTool", this),
@@ -191,7 +190,7 @@ int JetReclusteringTool::execute() const {
 }
 
 void JetReclusteringTool::print() const {
-  ATH_MSG_INFO("Properties for " << m_APP_NAME << "(" << m_name << ")");
+  ATH_MSG_INFO("Properties for " << m_APP_NAME << "(" << name() << ")");
   ATH_MSG_INFO("    InputJetContainer:      " << m_inputJetContainer );
   ATH_MSG_INFO("    OutputJetContainer:     " << m_outputJetContainer );
   ATH_MSG_INFO("    Radius:                 " << m_radius );
