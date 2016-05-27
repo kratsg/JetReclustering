@@ -2,32 +2,37 @@
 #include "AsgTools/Check.h"
 
 #include "JetInterface/IJetModifier.h"
+#include "JetInterface/IJetFromPseudojet.h"
+#include "JetInterface/IJetGroomer.h"
+#include "JetInterface/IPseudoJetGetter.h"
+#include "JetInterface/IJetFinder.h"
+#include "JetInterface/IJetExecuteTool.h"
 
 // make unique pointers
-#include<CxxUtils/make_unique.h>
+//#include<CxxUtils/make_unique.h>
 
 #include <sstream>
 
 JetReclusteringTool::JetReclusteringTool(std::string name) :
   AsgTool(name),
   m_name(name),
-  m_jetFilterTool               (CxxUtils::make_unique<JetFilterTool>("JetFilterTool_"+name)),
-  m_inputJetFilterTool          (CxxUtils::make_unique<JetRecTool>("JetRec_InputJetFilterTool_"+name)),
-  m_pseudoJetGetterTool         (CxxUtils::make_unique<PseudoJetGetter>("PseudoJetGetterTool_"+name)),
-  m_jetFromPseudoJetTool        (CxxUtils::make_unique<JetFromPseudojet>("JetFromPseudoJetTool_"+name)),
-  m_jetFinderTool               (CxxUtils::make_unique<JetFinder>("JetFinderTool_"+name)),
-  m_reclusterJetTool            (CxxUtils::make_unique<JetRecTool>("JetRec_JetReclusterTool_"+name)),
-  m_trimJetTool                 (CxxUtils::make_unique<JetRecTool>("JetRec_JetTrimTool_"+name)),
-  m_effectiveRTool              (CxxUtils::make_unique<EffectiveRTool>("EffectiveRTool_"+name)),
-  m_jetTrimmingTool             (CxxUtils::make_unique<JetTrimmer>("JetTrimmerTool_"+name)),
-  m_jetChargeTool               (CxxUtils::make_unique<JetChargeTool>("JetChargeTool_"+name)),
-  m_jetPullTool                 (CxxUtils::make_unique<JetPullTool>("JetPullTool_"+name)),
-  m_energyCorrelatorTool        (CxxUtils::make_unique<EnergyCorrelatorTool>("EnergyCorrelatorTool_"+name)),
-  m_energyCorrelatorRatiosTool  (CxxUtils::make_unique<EnergyCorrelatorRatiosTool>("EnergyCorrelatorRatiosTool_"+name)),
-  m_ktSplittingScaleTool        (CxxUtils::make_unique<KTSplittingScaleTool>("KTSplittingScaleTool_"+name)),
-  m_dipolarityTool              (CxxUtils::make_unique<DipolarityTool>("DipolarityTool_"+name)),
-  m_centerOfMassShapesTool      (CxxUtils::make_unique<CenterOfMassShapesTool>("CenterOfMassShapesTool_"+name)),
-  m_nSubjettinessTool           (CxxUtils::make_unique<NSubjettinessTool>("NSubjettinessTool_"+name))
+  m_jetFilterTool("JetFilterTool/JetFilterTool"),
+  m_inputJetFilterTool("JetRecTool/JetRec_InputJetFilterTool"),
+  m_pseudoJetGetterTool("PseudoJetGetter/PseudoJetGetterTool"),
+  m_jetFromPseudoJetTool("JetFromPseudojet/JetFromPseudoJetTool"),
+  m_jetFinderTool("JetFinder/JetFinderTool"),
+  m_reclusterJetTool("JetRecTool/JetRec_JetReclusterTool"),
+  m_trimJetTool("JetRecTool/JetRec_JetTrimTool"),
+  m_effectiveRTool("EffectiveRTool/EffectiveRTool"),
+  m_jetTrimmingTool("JetTrimmer/JetTrimmerTool"),
+  m_jetChargeTool("JetChargeTool/JetChargeTool"),
+  m_jetPullTool("JetPullTool/JetPullTool"),
+  m_energyCorrelatorTool("EnergyCorrelatorTool/EnergyCorrelatorTool"),
+  m_energyCorrelatorRatiosTool("EnergyCorrelatorRatiosTool/EnergyCorrelatorRatiosTool"),
+  m_ktSplittingScaleTool("KTSplittingScaleTool/KTSplittingScaleTool"),
+  m_dipolarityTool("DipolarityTool/DipolarityTool"),
+  m_centerOfMassShapesTool("CenterOfMassShapesTool/CenterOfMassShapesTool"),
+  m_nSubjettinessTool("NSubjettinessTool/NSubjettinessTool")
 {
   declareProperty("InputJetContainer",  m_inputJetContainer = "");
   declareProperty("OutputJetContainer", m_outputJetContainer = "");
@@ -49,6 +54,12 @@ StatusCode JetReclusteringTool::initialize(){
     return StatusCode::FAILURE;
   }
   ATH_MSG_INFO(m_APP_NAME << " initializing");
+
+  ATH_MSG_INFO( "With properties:" );
+  ATH_MSG_INFO( "InputJetContainer: " << m_inputJetContainer );
+  ATH_MSG_INFO( "OutputJetContainer: " << m_outputJetContainer );
+  ATH_MSG_INFO( "ReclusterRadius: " << m_radius );
+
   // set to true, we're calling it now
   m_isInitialized = true;
 
@@ -58,24 +69,29 @@ StatusCode JetReclusteringTool::initialize(){
 
   // this is for intermediate output containers used between tools
   std::string filteredInputJetContainer(m_inputJetContainer);
-  if(m_ptMin_input > 0) filteredInputJetContainer = "Filtered_"+m_name;
-  std::string filteredInputPseudoJetsContainer = "PseudoJets_"+m_name;
-  std::string reclusteredJetsContainer = "ReclusteredJets_"+m_name;
+  if(m_ptMin_input > 0) filteredInputJetContainer = "Filtered_"+name();
+  std::string filteredInputPseudoJetsContainer = "PseudoJets_"+name();
+  std::string reclusteredJetsContainer = "ReclusteredJets_"+name();
 
   if(m_ptMin_input > 0){
     /* initialize input jet filtering */
     //    - create a tool that will filter jets
-    ASG_CHECK(m_jetFilterTool->setProperty("PtMin", m_ptMin_input*1.e3));
+    ASG_CHECK(m_jetFilterTool.setProperty("PtMin", m_ptMin_input*1.e3));
+    ASG_CHECK(m_jetFilterTool.setProperty("OutputLevel", msg().level() ) );
+    ASG_CHECK(m_jetFilterTool.retrieve() );
     modArray.clear();
-    modArray.push_back( ToolHandle<IJetModifier>( m_jetFilterTool.get() ) );
+    //modArray.push_back( m_jetFilterTool.getHandle() );
+    modArray.push_back( m_jetFilterTool.name() );
+
     //    - create the master tool to filter the input jets
-    ASG_CHECK(m_inputJetFilterTool->setProperty("InputContainer", m_inputJetContainer));
-    ASG_CHECK(m_inputJetFilterTool->setProperty("OutputContainer", filteredInputJetContainer));
-    ASG_CHECK(m_inputJetFilterTool->setProperty("JetModifiers", modArray));
+    ASG_CHECK(m_inputJetFilterTool.setProperty("InputContainer", m_inputJetContainer));
+    ASG_CHECK(m_inputJetFilterTool.setProperty("OutputContainer", filteredInputJetContainer));
+    ASG_CHECK(m_inputJetFilterTool.setProperty("JetModifiers", modArray));
     /* note: we cannot use shallow copies since we are removing elements from a
      * container, we need a deep copy as linking will break */
-    ASG_CHECK(m_inputJetFilterTool->setProperty("ShallowCopy", false));
-    ASG_CHECK(m_inputJetFilterTool->initialize());
+    ASG_CHECK(m_inputJetFilterTool.setProperty("ShallowCopy", false));
+    ASG_CHECK(m_inputJetFilterTool.setProperty("OutputLevel", msg().level() ) );
+    ASG_CHECK(m_inputJetFilterTool.retrieve());
   }
 
   // only compute area if ptFrac = 0.0 and m_areaAttributes is specified
@@ -89,62 +105,68 @@ StatusCode JetReclusteringTool::initialize(){
     while(std::getline(ss, token, ' '))
       areaAttributes.push_back(token);
   }
-
   /* initialize jet reclustering */
   //    - create a PseudoJet builder.
-  ASG_CHECK(m_pseudoJetGetterTool->setProperty("InputContainer", filteredInputJetContainer));
-  ASG_CHECK(m_pseudoJetGetterTool->setProperty("OutputContainer", filteredInputPseudoJetsContainer));
-  ASG_CHECK(m_pseudoJetGetterTool->setProperty("Label", "LCTopo"));
-  ASG_CHECK(m_pseudoJetGetterTool->setProperty("SkipNegativeEnergy", true));
-  ASG_CHECK(m_pseudoJetGetterTool->setProperty("GhostScale", 0.0));
-  ASG_CHECK(m_pseudoJetGetterTool->initialize());
-  getterArray.push_back( ToolHandle<IPseudoJetGetter>(m_pseudoJetGetterTool.get()) );
+  ASG_CHECK(m_pseudoJetGetterTool.setProperty("InputContainer", filteredInputJetContainer));
+  ASG_CHECK(m_pseudoJetGetterTool.setProperty("OutputContainer", filteredInputPseudoJetsContainer));
+  ASG_CHECK(m_pseudoJetGetterTool.setProperty("Label", "LCTopo"));
+  ASG_CHECK(m_pseudoJetGetterTool.setProperty("SkipNegativeEnergy", true));
+  ASG_CHECK(m_pseudoJetGetterTool.setProperty("GhostScale", 0.0));
+  ASG_CHECK(m_pseudoJetGetterTool.setProperty("OutputLevel", msg().level() ) );
+  ASG_CHECK(m_pseudoJetGetterTool.retrieve());
+  getterArray.push_back( m_pseudoJetGetterTool.getHandle() );
   //    - create a Jet builder
-  ASG_CHECK(m_jetFromPseudoJetTool->setProperty("Attributes", areaAttributes));
-  ASG_CHECK(m_jetFromPseudoJetTool->initialize());
+  ASG_CHECK(m_jetFromPseudoJetTool.setProperty("Attributes", areaAttributes));
+  ASG_CHECK(m_jetFromPseudoJetTool.setProperty("OutputLevel", msg().level() ) );
+  ASG_CHECK(m_jetFromPseudoJetTool.retrieve());
   //    - create a ClusterSequence Tool
-  ASG_CHECK(m_jetFinderTool->setProperty("JetAlgorithm", m_rc_alg));
-  ASG_CHECK(m_jetFinderTool->setProperty("JetRadius", m_radius));
-  ASG_CHECK(m_jetFinderTool->setProperty("VariableRMinRadius", m_varR_minR));
-  ASG_CHECK(m_jetFinderTool->setProperty("VariableRMassScale", m_varR_mass*1.e3));
-  ASG_CHECK(m_jetFinderTool->setProperty("PtMin", m_ptMin_rc*1.e3));
+  ASG_CHECK(m_jetFinderTool.setProperty("JetAlgorithm", m_rc_alg));
+  ASG_CHECK(m_jetFinderTool.setProperty("JetRadius", m_radius));
+  ASG_CHECK(m_jetFinderTool.setProperty("VariableRMinRadius", m_varR_minR));
+  ASG_CHECK(m_jetFinderTool.setProperty("VariableRMassScale", m_varR_mass*1.e3));
+  ASG_CHECK(m_jetFinderTool.setProperty("PtMin", m_ptMin_rc*1.e3));
   // set ghost area, ignore if trimming is being applied to reclustered jets
-  ASG_CHECK(m_jetFinderTool->setProperty("GhostArea", ghostArea));
-  ASG_CHECK(m_jetFinderTool->setProperty("RandomOption", 1));
-  ASG_CHECK(m_jetFinderTool->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(m_jetFromPseudoJetTool.get())));
-  ASG_CHECK(m_jetFinderTool->initialize());
+  ASG_CHECK(m_jetFinderTool.setProperty("GhostArea", ghostArea));
+  ASG_CHECK(m_jetFinderTool.setProperty("RandomOption", 1));
+  ASG_CHECK(m_jetFinderTool.setProperty("JetBuilder", m_jetFromPseudoJetTool));
+  ASG_CHECK(m_jetFinderTool.setProperty("OutputLevel", msg().level() ) );
+  ASG_CHECK(m_jetFinderTool.retrieve());
   //    - create list of modifiers.
   modArray.clear();
   //        we need to calculate effectiveR before trimming, if we are doing variableR
-  modArray.push_back( ToolHandle<IJetModifier>( m_effectiveRTool.get() ) );
+  modArray.push_back( m_effectiveRTool.getHandle() );
   //    - create our master reclustering tool
-  ASG_CHECK(m_reclusterJetTool->setProperty("OutputContainer", reclusteredJetsContainer));
-  ASG_CHECK(m_reclusterJetTool->setProperty("PseudoJetGetters", getterArray));
-  ASG_CHECK(m_reclusterJetTool->setProperty("JetFinder", ToolHandle<IJetFinder>(m_jetFinderTool.get())));
-  ASG_CHECK(m_reclusterJetTool->setProperty("JetModifiers", modArray));
-  ASG_CHECK(m_reclusterJetTool->initialize());
+  ASG_CHECK(m_reclusterJetTool.setProperty("OutputContainer", reclusteredJetsContainer));
+  ASG_CHECK(m_reclusterJetTool.setProperty("PseudoJetGetters", getterArray));
+  ASG_CHECK(m_reclusterJetTool.setProperty("JetFinder", m_jetFinderTool));
+  ASG_CHECK(m_reclusterJetTool.setProperty("JetModifiers", modArray));
+  ASG_CHECK(m_reclusterJetTool.setProperty("OutputLevel", msg().level() ) );
+  ASG_CHECK(m_reclusterJetTool.retrieve());
 
   // clear modArray again
   modArray.clear();
   //        then trim the reclustered jets
-  ASG_CHECK(m_jetTrimmingTool->setProperty("PtFrac", m_ptFrac));
-  ASG_CHECK(m_jetTrimmingTool->setProperty("RClus", m_subjet_radius));
-  ASG_CHECK(m_jetTrimmingTool->setProperty("JetBuilder", ToolHandle<IJetFromPseudojet>(m_jetFromPseudoJetTool.get())));
+  ASG_CHECK(m_jetTrimmingTool.setProperty("PtFrac", m_ptFrac));
+  ASG_CHECK(m_jetTrimmingTool.setProperty("RClus", m_subjet_radius));
+  ASG_CHECK(m_jetTrimmingTool.setProperty("JetBuilder", m_jetFromPseudoJetTool));
+  ASG_CHECK(m_jetTrimmingTool.setProperty("OutputLevel", msg().level() ) );
+  ASG_CHECK(m_jetTrimmingTool.retrieve() );
   //        and then apply all other modifiers based on the trimmed reclustered jets
-  modArray.push_back( ToolHandle<IJetModifier>( m_jetChargeTool.get() ) );
-  modArray.push_back( ToolHandle<IJetModifier>( m_jetPullTool.get() ) );
-  modArray.push_back( ToolHandle<IJetModifier>( m_energyCorrelatorTool.get() ) );
-  modArray.push_back( ToolHandle<IJetModifier>( m_energyCorrelatorRatiosTool.get() ) );
-  modArray.push_back( ToolHandle<IJetModifier>( m_ktSplittingScaleTool.get() ) );
-  modArray.push_back( ToolHandle<IJetModifier>( m_dipolarityTool.get() ) );
-  modArray.push_back( ToolHandle<IJetModifier>( m_centerOfMassShapesTool.get() ) );
-  modArray.push_back( ToolHandle<IJetModifier>( m_nSubjettinessTool.get() ) );
+  modArray.push_back(  m_jetChargeTool.getHandle() );
+  modArray.push_back(  m_jetPullTool.getHandle() );
+  modArray.push_back(  m_energyCorrelatorTool.getHandle() );
+  modArray.push_back(  m_energyCorrelatorRatiosTool.getHandle() );
+  modArray.push_back(  m_ktSplittingScaleTool.getHandle() );
+  modArray.push_back(  m_dipolarityTool.getHandle() );
+  modArray.push_back(  m_centerOfMassShapesTool.getHandle() );
+  modArray.push_back(  m_nSubjettinessTool.getHandle() );
   // finish up the rest of the tool
-  ASG_CHECK(m_trimJetTool->setProperty("InputContainer", reclusteredJetsContainer));
-  ASG_CHECK(m_trimJetTool->setProperty("OutputContainer", m_outputJetContainer));
-  ASG_CHECK(m_trimJetTool->setProperty("JetModifiers", modArray));
-  ASG_CHECK(m_trimJetTool->setProperty("JetGroomer", ToolHandle<IJetGroomer>( m_jetTrimmingTool.get() ) ));
-  ASG_CHECK(m_trimJetTool->initialize());
+  ASG_CHECK(m_trimJetTool.setProperty("InputContainer", reclusteredJetsContainer));
+  ASG_CHECK(m_trimJetTool.setProperty("OutputContainer", m_outputJetContainer));
+  ASG_CHECK(m_trimJetTool.setProperty("JetModifiers", modArray));
+  ASG_CHECK(m_trimJetTool.setProperty("JetGroomer",  m_jetTrimmingTool ));
+  ASG_CHECK(m_trimJetTool.setProperty("OutputLevel", msg().level() ) );
+  ASG_CHECK(m_trimJetTool.retrieve());
 
   //m_reclusterJetTool->msg().setLevel(MSG::VERBOSE);
   //m_trimJetTool->msg().setLevel(MSG::VERBOSE);
@@ -152,11 +174,23 @@ StatusCode JetReclusteringTool::initialize(){
   return StatusCode::SUCCESS;
 }
 
-void JetReclusteringTool::execute() const {
-  if(m_ptMin_input > 0)
-    m_inputJetFilterTool->execute();
-  m_reclusterJetTool->execute();
-  m_trimJetTool->execute();
+int JetReclusteringTool::execute() const {
+  int retCode = 0;
+  if(m_ptMin_input > 0) {
+    if ( (retCode = m_inputJetFilterTool->execute() ) != 0) {
+      ATH_MSG_ERROR( "Failure in inputJetFilterTool with return code: " << retCode );
+      return retCode;
+    }
+  }
+  if ( (retCode = m_reclusterJetTool->execute() ) != 0) {
+    ATH_MSG_ERROR( "Failure in reclusterJetTool with return code: " << retCode );
+    return retCode;
+  }
+  if ( (retCode = m_trimJetTool->execute() ) != 0) {
+    ATH_MSG_ERROR( "Failure in trimJetTool with return code: " << retCode );
+    return retCode;
+  }
+  return 0;
 }
 
 void JetReclusteringTool::print() const {

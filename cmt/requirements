@@ -8,14 +8,14 @@ use AtlasPolicy 	            AtlasPolicy-*
 use AsgTools                    AsgTools-*                      Control/AthToolSupport
 use JetRec                      JetRec-*                        Reconstruction/Jet
 use AtlasROOT                   AtlasROOT-*                     External
-use JetSubStructureMomentTools  JetSubStructureMomentTools-*    Reconstruction/Jet
+#use JetSubStructureMomentTools  JetSubStructureMomentTools-*    Reconstruction/Jet
 
 private
 use xAODBase                    xAODBase-*                      Event/xAOD
 use xAODRootAccess              xAODRootAccess-*                Control
 ## for gaudi tools, services and objects
 use GaudiInterface 	            GaudiInterface-* 	            External
-use CxxUtils                    CxxUtils-*                      Control
+#use CxxUtils                    CxxUtils-*                      Control
 use JetInterface                JetInterface-*                  Reconstruction/Jet
 end_private
 
@@ -36,6 +36,7 @@ end_private
 #test for JetReclusteringTool ... compile and execute it with 'make check'
 private
 use TestTools      TestTools-*         AtlasTest
+use AthenaBaseComps AthenaBaseComps-* Control
 apply_pattern UnitTest_run unit_test=ut_JetReclusteringTool
 macro_append ut_JetReclusteringTool_test_dependencies " xAODJetReclustering xAODJetReclusteringMergeComponentsList "
 end_private

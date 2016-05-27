@@ -8,7 +8,7 @@ class IJetReclusteringTool : public virtual asg::IAsgTool {
       ASG_TOOL_INTERFACE( IJetReclusteringTool ) //declares the interface to athena
 
       // execute reclustering
-      virtual void execute() const = 0;
+      virtual int execute() const = 0;
 };
 
 #endif //> !XAODJETRECLUSTERING_IJETRECLUSTERINGTOOL_H

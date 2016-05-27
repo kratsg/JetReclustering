@@ -3,6 +3,7 @@
 
 // making it more like a tool
 #include "AsgTools/AsgTool.h"
+#include "AsgTools/AnaToolHandle.h"
 #include "xAODJetReclustering/IJetReclusteringTool.h"
 
 #include <map>
@@ -21,25 +22,31 @@
   @rc_alg             : reclustering algorithm to use (AntiKt, Kt, CamKt)
   @ptMin              : minimum Pt cut on reclustered jets
 */
-
 // all general tools used
-#include "JetRec/PseudoJetGetter.h"
-#include "JetRec/JetFromPseudojet.h"
-#include "JetRec/JetFinder.h"
-#include "JetRec/JetFilterTool.h"
-#include "JetRec/JetRecTool.h"
-#include "JetRec/JetTrimmer.h"
+//#include "JetRec/PseudoJetGetter.h"
+//#include "JetRec/JetFromPseudojet.h"
+//#include "JetRec/JetFinder.h"
+//#include "JetRec/JetFilterTool.h"
+//#include "JetRec/JetRecTool.h"
+//#include "JetRec/JetTrimmer.h"
 // calculate EffectiveR
-#include "xAODJetReclustering/EffectiveRTool.h"
+//#include "xAODJetReclustering/EffectiveRTool.h"
 // all jet modifier tools
-#include "JetSubStructureMomentTools/JetChargeTool.h"
-#include "JetSubStructureMomentTools/JetPullTool.h"
-#include "JetSubStructureMomentTools/EnergyCorrelatorTool.h"
-#include "JetSubStructureMomentTools/EnergyCorrelatorRatiosTool.h"
-#include "JetSubStructureMomentTools/KTSplittingScaleTool.h"
-#include "JetSubStructureMomentTools/DipolarityTool.h"
-#include "JetSubStructureMomentTools/CenterOfMassShapesTool.h"
-#include "JetSubStructureMomentTools/NSubjettinessTool.h"
+//#include "JetSubStructureMomentTools/JetChargeTool.h"
+//#include "JetSubStructureMomentTools/JetPullTool.h"
+//#include "JetSubStructureMomentTools/EnergyCorrelatorTool.h"
+//#include "JetSubStructureMomentTools/EnergyCorrelatorRatiosTool.h"
+//#include "JetSubStructureMomentTools/KTSplittingScaleTool.h"
+//#include "JetSubStructureMomentTools/DipolarityTool.h"
+//#include "JetSubStructureMomentTools/CenterOfMassShapesTool.h"
+//#include "JetSubStructureMomentTools/NSubjettinessTool.h"
+
+class IJetModifier;
+class IJetExecuteTool;
+class IJetFromPseudojet;
+class IJetFinder;
+class IJetGroomer;
+class IPseudoJetGetter;
 
 class JetReclusteringTool : public asg::AsgTool, virtual public IJetReclusteringTool {
   public:
@@ -47,13 +54,13 @@ class JetReclusteringTool : public asg::AsgTool, virtual public IJetReclustering
     JetReclusteringTool(std::string myname);
 
     // initialization - set up everything
-    StatusCode initialize();
+    virtual StatusCode initialize() override;
 
     // execute - build jets
-    void execute() const;
+    virtual int execute() const override;
 
     // display the configuration
-    void print() const;
+    virtual void print() const override;
 
   private:
     // hold the class name
@@ -90,7 +97,7 @@ class JetReclusteringTool : public asg::AsgTool, virtual public IJetReclustering
 
     // make sure someone only calls a function once
     bool m_isInitialized = false;
-
+#if 0
   /* all tools we use */
     // this is for filtering input jets
     std::unique_ptr<JetFilterTool> m_jetFilterTool;
@@ -115,7 +122,30 @@ class JetReclusteringTool : public asg::AsgTool, virtual public IJetReclustering
     std::unique_ptr<DipolarityTool>             m_dipolarityTool;
     std::unique_ptr<CenterOfMassShapesTool>     m_centerOfMassShapesTool;
     std::unique_ptr<NSubjettinessTool>          m_nSubjettinessTool;
+#endif
+    // this is for filtering input jets
+    asg::AnaToolHandle<IJetModifier> m_jetFilterTool;
+    asg::AnaToolHandle<IJetExecuteTool> m_inputJetFilterTool;
+    // this is for reclustering using filtered input jets
+    asg::AnaToolHandle<IPseudoJetGetter> m_pseudoJetGetterTool;
+    asg::AnaToolHandle<IJetFromPseudojet> m_jetFromPseudoJetTool;
+    asg::AnaToolHandle<IJetFinder> m_jetFinderTool;
+    asg::AnaToolHandle<IJetExecuteTool> m_reclusterJetTool;
+    asg::AnaToolHandle<IJetExecuteTool> m_trimJetTool;
 
-};
+    // tool for calculating effectiveR
+    asg::AnaToolHandle<IJetModifier> m_effectiveRTool;
+    // tool for trimming reclustered jet
+    asg::AnaToolHandle<IJetGroomer> m_jetTrimmingTool;
+    // modifier tools for the reclustered jets
+    asg::AnaToolHandle<IJetModifier> m_jetChargeTool;
+    asg::AnaToolHandle<IJetModifier> m_jetPullTool;
+    asg::AnaToolHandle<IJetModifier> m_energyCorrelatorTool;
+    asg::AnaToolHandle<IJetModifier> m_energyCorrelatorRatiosTool;
+    asg::AnaToolHandle<IJetModifier> m_ktSplittingScaleTool;
+    asg::AnaToolHandle<IJetModifier> m_dipolarityTool;
+    asg::AnaToolHandle<IJetModifier> m_centerOfMassShapesTool;
+    asg::AnaToolHandle<IJetModifier> m_nSubjettinessTool;
+};  
 
 #endif
