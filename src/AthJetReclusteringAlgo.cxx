@@ -1,8 +1,6 @@
 // xAODJetReclustering includes
 #include "AthJetReclusteringAlgo.h"
 
-#include "AthAnalysisBaseComps/AthAnalysisHelper.h"
-
 #include "xAODJetReclustering/IJetReclusteringTool.h"
 
 AthJetReclusteringAlgo::AthJetReclusteringAlgo( const std::string& name, ISvcLocator* pSvcLocator )
@@ -29,7 +27,7 @@ StatusCode AthJetReclusteringAlgo::finalize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode AthJetReclusteringAlgo::execute() {  
+StatusCode AthJetReclusteringAlgo::execute() {
   ATH_MSG_DEBUG ("Executing " << name() << "...");
 
   int retCode = m_jetRecTool->execute();
