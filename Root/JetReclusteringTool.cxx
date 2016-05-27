@@ -8,9 +8,6 @@
 #include "JetInterface/IJetFinder.h"
 #include "JetInterface/IJetExecuteTool.h"
 
-// make unique pointers
-//#include<CxxUtils/make_unique.h>
-
 #include <sstream>
 
 JetReclusteringTool::JetReclusteringTool(std::string name) :

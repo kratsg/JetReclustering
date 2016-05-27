@@ -15,7 +15,6 @@ use xAODBase                    xAODBase-*                      Event/xAOD
 use xAODRootAccess              xAODRootAccess-*                Control
 ## for gaudi tools, services and objects
 use GaudiInterface 	            GaudiInterface-* 	            External
-#use CxxUtils                    CxxUtils-*                      Control
 use JetInterface                JetInterface-*                  Reconstruction/Jet
 end_private
 
