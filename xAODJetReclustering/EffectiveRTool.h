@@ -8,15 +8,11 @@
 /// Updated: May 2016
 /// Make it compatible with AnaToolHandle
 
-#include "AsgTools/AsgTool.h"
-#include "JetInterface/ISingleJetModifier.h"
-#include "JetInterface/IJetModifier.h"
+#include "JetRec/JetModifierBase.h"
 
-class EffectiveRTool : public asg::AsgTool,
-                       virtual public IJetModifier,
-                       virtual public ISingleJetModifier {
+class EffectiveRTool : public JetModifierBase {
   public:
-    ASG_TOOL_CLASS(EffectiveRTool, ISingleJetModifier)
+    ASG_TOOL_CLASS(EffectiveRTool, IJetModifier)
     // Constructor from tool name.
     EffectiveRTool(std::string myname);
 
