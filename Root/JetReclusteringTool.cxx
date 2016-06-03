@@ -166,6 +166,7 @@ StatusCode JetReclusteringTool::initialize(){
   modArray.clear();
   //        we need to calculate effectiveR before trimming, if we are doing variableR
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_effectiveRTool) );
+  ATH_CHECK(m_effectiveRTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_effectiveRTool) );
   ATH_CHECK(modArray.retrieve() );
   //    - create our master reclustering tool
