@@ -19,7 +19,7 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   m_jetFinderTool("JetFinder/JetFinderTool", this),
   m_reclusterJetTool("JetRecTool/JetRec_JetReclusterTool", this),
   m_trimJetTool("JetRecTool/JetRec_JetTrimTool", this),
-  m_effectiveRTool("EffectiveRTool/EffectiveRTool", this),
+  m_effectiveRTool("EffectiveRTool/EffectiveRTool"),
   m_jetTrimmingTool("JetTrimmer/JetTrimmerTool", this),
   m_jetChargeTool("JetChargeTool/JetChargeTool", this),
   m_jetPullTool("JetPullTool/JetPullTool", this),
@@ -66,6 +66,7 @@ StatusCode JetReclusteringTool::initialize(){
     return StatusCode::FAILURE;
   }
   ATH_MSG_INFO(m_APP_NAME << " initializing");
+  ATH_MSG_INFO( "Name is " << name());
 
 #ifndef XAOD_STANDALONE
   if (name().substr(0,8) != "ToolSvc.") {
