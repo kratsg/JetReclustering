@@ -1,4 +1,6 @@
 #include <xAODJetReclustering/JetReclusteringAlgo.h>
+#include <xAODJetReclustering/JetReclusteringTool.h>
+#include <xAODJetReclustering/EffectiveRTool.h>
 
 #ifdef __CINT__
 
@@ -9,4 +11,8 @@
 
 /* Add a pragma link for any EventLoop algorithm */
 #pragma link C++ class JetReclusteringAlgo+;
+#pragma link C++ class JetReclusteringTool+;
+#pragma link C++ class EffectiveRTool+;
+
+#pragma link C++ class IJetReclusteringTool+;
 #endif

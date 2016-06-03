@@ -1,7 +1,7 @@
 #include "xAODJetReclustering/EffectiveRTool.h"
 
 EffectiveRTool::EffectiveRTool(std::string myname):
-  JetModifierBase(myname)
+  AsgTool(myname)
 {}
 
 int EffectiveRTool::modifyJet(xAOD::Jet& jet) const {
