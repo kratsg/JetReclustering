@@ -1,8 +1,6 @@
 #include "xAODJetReclustering/JetReclusteringTool.h"
 #include "AsgTools/Check.h"
 
-#include "AsgTools/ToolHandleArray.h"
-
 #include "JetInterface/IJetModifier.h"
 #include "JetInterface/IJetFromPseudojet.h"
 #include "JetInterface/IJetGroomer.h"
@@ -52,7 +50,6 @@ std::string makeTypeAndNameString(const ToolHandle<T>& handle)
 {
   std::string parentName = handle.parentName();
   if (parentName.substr(0,8) == "ToolSvc.") parentName = parentName.substr(8) + ".";
-  //if (parentName.substr(0,8) == "ToolSvc.") parentName += ".";
   else if (parentName == "ToolSvc" || parentName == "") parentName = "";
   else parentName += ".";
   return handle.type() + "/" + parentName + handle.name();
@@ -105,8 +102,6 @@ StatusCode JetReclusteringTool::initialize(){
     ASG_CHECK(m_jetFilterTool.retrieve() );
     modArray.clear();
 
-    //modArray.push_back(makeTypeAndNameString(m_jetFilterTool) );
-    //ATH_MSG_INFO( "Generated typeAndNameString: " << makeTypeAndNameString(m_jetFilterTool) );
     modArray.push_back(makeTypeAndNameString(m_jetFilterTool) );
     ATH_CHECK(modArray.retrieve() );
 
