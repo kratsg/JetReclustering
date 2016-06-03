@@ -159,7 +159,7 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_jetFinderTool.setProperty("GhostArea", ghostArea));
   ASG_CHECK(m_jetFinderTool.setProperty("RandomOption", 1));
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetFromPseudoJetTool) );
-  ASG_CHECK(m_jetFinderTool.setProperty("JetBuilder", makeTypeAndNameString(m_jetFromPseudoJetTool)));
+  ASG_CHECK(m_jetFinderTool.setProperty("JetBuilder", m_jetFromPseudoJetTool.getHandle()));
   ASG_CHECK(m_jetFinderTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_jetFinderTool.retrieve());
   //    - create list of modifiers.
@@ -174,7 +174,7 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_reclusterJetTool.setProperty("OutputContainer", reclusteredJetsContainer));
   ASG_CHECK(m_reclusterJetTool.setProperty("PseudoJetGetters", getterArray));
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetFinderTool) );
-  ASG_CHECK(m_reclusterJetTool.setProperty("JetFinder", makeTypeAndNameString(m_jetFinderTool)));
+  ASG_CHECK(m_reclusterJetTool.setProperty("JetFinder", m_jetFinderTool.getHandle()));
   ASG_CHECK(m_reclusterJetTool.setProperty("JetModifiers", modArray));
   ASG_CHECK(m_reclusterJetTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_reclusterJetTool.retrieve());
