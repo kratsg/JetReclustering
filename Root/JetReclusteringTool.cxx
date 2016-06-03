@@ -194,20 +194,28 @@ StatusCode JetReclusteringTool::initialize(){
   //        and then apply all other modifiers based on the trimmed reclustered jets
   ATH_MSG_INFO( "\t... and queuing up various jet modifiers..." );
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetChargeTool) );
+  ASG_CHECK(m_jetChargeTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_jetChargeTool) );
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetPullTool) );
+  ASG_CHECK(m_jetPullTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_jetPullTool) );
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_energyCorrelatorTool) );
+  ASG_CHECK(m_energyCorrelatorTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_energyCorrelatorTool) );
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_energyCorrelatorRatiosTool) );
+  ASG_CHECK(m_energyCorrelatorRatiosTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_energyCorrelatorRatiosTool) );
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_ktSplittingScaleTool) );
+  ASG_CHECK(m_ktSplittingScaleTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_ktSplittingScaleTool) );
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_dipolarityTool) );
+  ASG_CHECK(m_dipolarityTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_dipolarityTool) );
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_centerOfMassShapesTool) );
+  ASG_CHECK(m_centerOfMassShapesTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_centerOfMassShapesTool) );
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_nSubjettinessTool) );
+  ASG_CHECK(m_nSubjettinessTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_nSubjettinessTool) );
   ATH_CHECK(modArray.retrieve() );
   // finish up the rest of the tool
@@ -215,7 +223,7 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_trimJetTool.setProperty("OutputContainer", m_outputJetContainer));
   ASG_CHECK(m_trimJetTool.setProperty("JetModifiers", modArray));
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetTrimmingTool) );
-  ASG_CHECK(m_trimJetTool.setProperty("JetGroomer",  makeTypeAndNameString(m_jetTrimmingTool) ));
+  ASG_CHECK(m_trimJetTool.setProperty("JetGroomer",  m_jetTrimmingTool.getHandle() ));
   ASG_CHECK(m_trimJetTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_trimJetTool.retrieve());
 
