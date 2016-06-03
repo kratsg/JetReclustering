@@ -188,7 +188,7 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_jetTrimmingTool.setProperty("PtFrac", m_ptFrac));
   ASG_CHECK(m_jetTrimmingTool.setProperty("RClus", m_subjet_radius));
   ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetFromPseudoJetTool) );
-  ASG_CHECK(m_jetTrimmingTool.setProperty("JetBuilder", makeTypeAndNameString(m_jetFromPseudoJetTool)));
+  ASG_CHECK(m_jetTrimmingTool.setProperty("JetBuilder", m_jetFromPseudoJetTool.getHandle()));
   ASG_CHECK(m_jetTrimmingTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_jetTrimmingTool.retrieve() );
   //        and then apply all other modifiers based on the trimmed reclustered jets
