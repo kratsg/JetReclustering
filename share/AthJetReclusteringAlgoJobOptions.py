@@ -5,10 +5,10 @@ theApp.EvtMax=10                                         #says how many events t
 import AthenaPoolCnvSvc.ReadAthenaPool                   #sets up reading of POOL files (e.g. xAODs)
 svcMgr.EventSelector.InputCollections=[vars().get("input")]   #insert your list of input files here
 
+ToolSvc += CfgMgr.JetReclusteringTool("JetReclusteringTool", InputJetContainer = "AntiKt4EMTopoJets", OutputJetContainer = "AntiKt10EMTopoJets_RC")
+
 algseq = CfgMgr.AthSequencer("AthAlgSeq")                #gets the main AthSequencer
-algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo")                                 #adds an instance of your alg to it
-algseq.JetRecAlgo.JetRecTool.InputJetContainer = "AntiKt4EMTopoJets"
-algseq.JetRecAlgo.JetRecTool.OutputJetContainer = "AntiKt10EMTopoJets_RC"
+algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo", JetRecTool = ToolSvc.JetReclusteringTool)                                 #adds an instance of your alg to it
 
 
 
