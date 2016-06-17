@@ -140,7 +140,7 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_pseudoJetGetterTool.setProperty("GhostScale", 0.0));
   ASG_CHECK(m_pseudoJetGetterTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_pseudoJetGetterTool.retrieve());
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_pseudoJetGetterTool) );
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_pseudoJetGetterTool) );
   getterArray.push_back(makeTypeAndNameString(m_pseudoJetGetterTool) );
   ATH_CHECK(getterArray.retrieve() );
   //    - create a Jet builder
@@ -158,14 +158,15 @@ StatusCode JetReclusteringTool::initialize(){
   // set ghost area, ignore if trimming is being applied to reclustered jets
   ASG_CHECK(m_jetFinderTool.setProperty("GhostArea", ghostArea));
   ASG_CHECK(m_jetFinderTool.setProperty("RandomOption", 1));
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetFromPseudoJetTool) );
-  ASG_CHECK(m_jetFinderTool.setProperty("JetBuilder", m_jetFromPseudoJetTool.getHandle()));
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetFromPseudoJetTool) );
+  //ASG_CHECK(m_jetFinderTool.setProperty("JetBuilder", m_jetFromPseudoJetTool.getHandle()));
+  ASG_CHECK(m_jetFinderTool.setProperty("JetBuilder", makeTypeAndNameString(m_jetFromPseudoJetTool)));
   ASG_CHECK(m_jetFinderTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_jetFinderTool.retrieve());
   //    - create list of modifiers.
   modArray.clear();
   //        we need to calculate effectiveR before trimming, if we are doing variableR
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_effectiveRTool) );
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_effectiveRTool) );
   ATH_CHECK(m_effectiveRTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_effectiveRTool) );
   ATH_CHECK(modArray.retrieve() );
@@ -173,8 +174,9 @@ StatusCode JetReclusteringTool::initialize(){
   ATH_MSG_INFO( "Jet Reclusterer initializing..." );
   ASG_CHECK(m_reclusterJetTool.setProperty("OutputContainer", reclusteredJetsContainer));
   ASG_CHECK(m_reclusterJetTool.setProperty("PseudoJetGetters", getterArray));
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetFinderTool) );
-  ASG_CHECK(m_reclusterJetTool.setProperty("JetFinder", m_jetFinderTool.getHandle()));
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetFinderTool) );
+  //ASG_CHECK(m_reclusterJetTool.setProperty("JetFinder", m_jetFinderTool.getHandle()));
+  ASG_CHECK(m_reclusterJetTool.setProperty("JetFinder", makeTypeAndNameString(m_jetFinderTool)));
   ASG_CHECK(m_reclusterJetTool.setProperty("JetModifiers", modArray));
   ASG_CHECK(m_reclusterJetTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_reclusterJetTool.retrieve());
@@ -187,34 +189,35 @@ StatusCode JetReclusteringTool::initialize(){
   ATH_MSG_INFO( "\tRClus: " << m_subjet_radius );
   ASG_CHECK(m_jetTrimmingTool.setProperty("PtFrac", m_ptFrac));
   ASG_CHECK(m_jetTrimmingTool.setProperty("RClus", m_subjet_radius));
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetFromPseudoJetTool) );
-  ASG_CHECK(m_jetTrimmingTool.setProperty("JetBuilder", m_jetFromPseudoJetTool.getHandle()));
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetFromPseudoJetTool) );
+  //ASG_CHECK(m_jetTrimmingTool.setProperty("JetBuilder", m_jetFromPseudoJetTool.getHandle()));
+  ASG_CHECK(m_jetTrimmingTool.setProperty("JetBuilder", makeTypeAndNameString(m_jetFromPseudoJetTool)));
   ASG_CHECK(m_jetTrimmingTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_jetTrimmingTool.retrieve() );
   //        and then apply all other modifiers based on the trimmed reclustered jets
   ATH_MSG_INFO( "\t... and queuing up various jet modifiers..." );
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetChargeTool) );
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetChargeTool) );
   ASG_CHECK(m_jetChargeTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_jetChargeTool) );
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetPullTool) );
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetPullTool) );
   ASG_CHECK(m_jetPullTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_jetPullTool) );
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_energyCorrelatorTool) );
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_energyCorrelatorTool) );
   ASG_CHECK(m_energyCorrelatorTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_energyCorrelatorTool) );
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_energyCorrelatorRatiosTool) );
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_energyCorrelatorRatiosTool) );
   ASG_CHECK(m_energyCorrelatorRatiosTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_energyCorrelatorRatiosTool) );
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_ktSplittingScaleTool) );
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_ktSplittingScaleTool) );
   ASG_CHECK(m_ktSplittingScaleTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_ktSplittingScaleTool) );
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_dipolarityTool) );
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_dipolarityTool) );
   ASG_CHECK(m_dipolarityTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_dipolarityTool) );
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_centerOfMassShapesTool) );
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_centerOfMassShapesTool) );
   ASG_CHECK(m_centerOfMassShapesTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_centerOfMassShapesTool) );
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_nSubjettinessTool) );
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_nSubjettinessTool) );
   ASG_CHECK(m_nSubjettinessTool.retrieve());
   modArray.push_back(makeTypeAndNameString(m_nSubjettinessTool) );
   ATH_CHECK(modArray.retrieve() );
@@ -222,8 +225,9 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_trimJetTool.setProperty("InputContainer", reclusteredJetsContainer));
   ASG_CHECK(m_trimJetTool.setProperty("OutputContainer", m_outputJetContainer));
   ASG_CHECK(m_trimJetTool.setProperty("JetModifiers", modArray));
-  ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetTrimmingTool) );
-  ASG_CHECK(m_trimJetTool.setProperty("JetGroomer",  m_jetTrimmingTool.getHandle() ));
+  //ATH_MSG_INFO( "Generated makeTypeAndNameString is " << makeTypeAndNameString(m_jetTrimmingTool) );
+  //ASG_CHECK(m_trimJetTool.setProperty("JetGroomer",  m_jetTrimmingTool.getHandle() ));
+  ASG_CHECK(m_trimJetTool.setProperty("JetGroomer",  makeTypeAndNameString(m_jetTrimmingTool) ));
   ASG_CHECK(m_trimJetTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_trimJetTool.retrieve());
 
