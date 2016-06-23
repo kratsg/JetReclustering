@@ -2,3 +2,5 @@
 cmt/*.sh
 cmt/*.csh
 Makefile
+genConf
+x86_64-slc6-gcc49-opt/

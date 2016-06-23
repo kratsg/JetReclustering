@@ -5,13 +5,11 @@ author  Giordon Stark
 ## for athena policies: this has to be the first use statement
 public
 use AtlasPolicy 	            AtlasPolicy-*
-use AsgTools                    AsgTools-*                      Control/AthToolSupport
-use JetRec                      JetRec-*                        Reconstruction/Jet
-use AtlasROOT                   AtlasROOT-*                     External
-#use JetSubStructureMomentTools  JetSubStructureMomentTools-*    Reconstruction/Jet
+use AsgTools                  AsgTools-*                      Control/AthToolSupport
+use AtlasROOT                 AtlasROOT-*                     External
+use JetRec                    JetRec-*                        Reconstruction/Jet
 
 private
-use xAODBase                    xAODBase-*                      Event/xAOD
 use xAODRootAccess              xAODRootAccess-*                Control
 ## for gaudi tools, services and objects
 use GaudiInterface 	            GaudiInterface-* 	            External
