@@ -1,3 +1,4 @@
+#ifdef ROOTCORE
 #include <EventLoop/Job.h>
 #include <EventLoop/StatusCode.h>
 #include <EventLoop/Worker.h>
@@ -11,18 +12,21 @@
 // in case we want to write the output reclustered jet collections
 #include <EventLoop/OutputStream.h>
 
-// RETURN_CHECK macro
-#include <xAODJetReclustering/tools/ReturnCheck.h>
+// ANA_CHECK macro
+#include <AsgTools/MessageCheck.h>
 
 // this is needed to distribute the algorithm to the workers
 ClassImp(JetReclusteringAlgo)
 
-JetReclusteringAlgo :: JetReclusteringAlgo () {}
+JetReclusteringAlgo :: JetReclusteringAlgo () :
+  m_jetReclusteringTool("IJetReclusteringTool/"+m_name)
+{}
 
 EL::StatusCode JetReclusteringAlgo :: setupJob (EL::Job& job)
 {
+  ANA_CHECK_SET_TYPE (EL::StatusCode);
   job.useXAOD();
-  xAOD::Init(("JetReclusteringAlgo_"+m_inputJetContainer).c_str()).ignore(); // call before opening first file
+  ANA_CHECK(xAOD::Init()); // call before opening first file
 
   if(!m_outputXAODName.empty()){
     // write an output xAOD
@@ -39,20 +43,14 @@ EL::StatusCode JetReclusteringAlgo :: changeInput (bool /*firstFile*/) { return 
 
 EL::StatusCode JetReclusteringAlgo :: initialize ()
 {
+  ANA_CHECK_SET_TYPE (EL::StatusCode);
   Info("initialize()", "JetReclusteringAlgo_%s", m_inputJetContainer.c_str() );
   m_event = wk()->xaodEvent();
   m_store = wk()->xaodStore();
 
-  std::map<std::string, fastjet::JetAlgorithm> algNameToAlg = {{"kt_algorithm", fastjet::kt_algorithm}, {"cambridge_algorithm", fastjet::cambridge_algorithm}, {"antikt_algorithm", fastjet::antikt_algorithm}};
-  if(!m_rc_algName.empty()){
-    if(!algNameToAlg.count(m_rc_algName)){
-      Error("setupJob()", "Only `kt_algorithm`, `cambridge_algorithm`, and `antikt_algorithm` are supported!");
-      return EL::StatusCode::FAILURE;
-    }
-    m_rc_alg = algNameToAlg.at(m_rc_algName);
-  } else {
-    Info("setupJob()", "m_rc_algName is empty. Setting to `antikt_algorithm` by default.");
-    m_rc_alg = algNameToAlg.at("antikt_algorithm");
+  if(m_rc_alg.empty()){
+    Info("setupJob()", "m_rc_alg is empty. Setting to `AntiKt` by default.");
+    m_rc_alg = "AntiKt";
   }
 
   if(!m_outputXAODName.empty()){
@@ -68,20 +66,21 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
     Error("initialize()", "m_name needs to be set and unique.");
     return EL::StatusCode::FAILURE;
   }
-  m_jetReclusteringTool = new JetReclusteringTool(m_name);
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("InputJetContainer",  m_inputJetContainer), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("OutputJetContainer", m_outputJetContainer), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("ReclusterRadius",    m_radius), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("ReclusterAlgorithm", m_rc_alg), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("VariableRMinRadius", m_varR_minR), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("VariableRMassScale", m_varR_mass), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("InputJetPtMin",      m_ptMin_input), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetPtMin",         m_ptMin_rc), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetPtFrac",        m_ptFrac), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("RCJetSubjetRadius",  m_subjet_radius), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("DoArea",             m_doArea), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->setProperty("AreaAttributes",     m_areaAttributes), "");
-  RETURN_CHECK("JetReclusteringAlgo::initialize()", m_jetReclusteringTool->initialize(), "");
+
+  ANA_CHECK(ASG_MAKE_ANA_TOOL(m_jetReclusteringTool, JetReclusteringTool));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetContainer",  m_inputJetContainer));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("OutputJetContainer", m_outputJetContainer));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterRadius",    m_radius));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterAlgorithm", m_rc_alg));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("VariableRMinRadius", m_varR_minR));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("VariableRMassScale", m_varR_mass));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetPtMin",      m_ptMin_input));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtMin",         m_ptMin_rc));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtFrac",        m_ptFrac));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetSubjetRadius",  m_subjet_radius));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("DoArea",             m_doArea));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("AreaAttributes",     m_areaAttributes));
+  ANA_CHECK(m_jetReclusteringTool.retrieve());
 
   if(m_debug) m_jetReclusteringTool->print();
 
@@ -91,6 +90,7 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
 
 EL::StatusCode JetReclusteringAlgo :: execute ()
 {
+  ANA_CHECK_SET_TYPE (EL::StatusCode);
   m_jetReclusteringTool->execute();
 
   // print debugging information if needed
@@ -131,7 +131,7 @@ EL::StatusCode JetReclusteringAlgo :: execute ()
 
   /* need to update later, must retrieve all objects include cluster sequence and pseudojets, and record them one at a time
   if(!m_outputXAODName.empty()){
-    RETURN_CHECK("JetReclusteringAlgo::execute()", m_event->copy( reclusteredJets, m_outputJetContainer ),             ("Could not copy container to event: "+ m_outputJetContainer).c_str());
+    ANA_CHECK(m_event->copy( reclusteredJets, m_outputJetContainer ));
 
     // fill the file
     m_event->fill();
@@ -152,10 +152,8 @@ EL::StatusCode JetReclusteringAlgo :: finalize () {
     }
   }
 
-  // clear off the tool created
-  if(m_jetReclusteringTool) delete m_jetReclusteringTool;
-
   return EL::StatusCode::SUCCESS;
 }
 
 EL::StatusCode JetReclusteringAlgo :: histFinalize () { return EL::StatusCode::SUCCESS; }
+#endif // ROOTCORE

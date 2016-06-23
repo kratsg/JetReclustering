@@ -2,7 +2,7 @@
 
 This tool allows you to recluster small-R xAOD jets into large-R xAOD jets. It provides configurable filtering of the small-R jets, reclustering using standard or variable-R algorithms, configurable trimming of the large-R jets, and jet moment & jet substructure moment calculations.
 
-If you would like to get involved, see the twiki for [the JetMET working group for jet reclustering](https://twiki.cern.ch/twiki/bin/view/AtlasProtected/JetReclustering).
+If you would like to get involved, see the twiki for [the JetMET working group for jet reclustering](https://twiki.cern.ch/twiki/bin/view/AtlasProtected/JetReclustering). The [pre-recommendations](https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/PreRec) twiki contains the guidelines for your analyses.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -12,13 +12,18 @@ If you would like to get involved, see the twiki for [the JetMET working group f
 - [Configurations for](#configurations-for)
   - [`JetReclusteringTool` tool](#jetreclusteringtool-tool)
   - [`JetReclusteringAlgo` algorithm](#jetreclusteringalgo-algorithm)
+  - [`AthJetReclusteringAlgo` Athena algorithm](#athjetreclusteringalgo-athena-algorithm)
 - [Using xAOD Jet Reclustering](#using-xaod-jet-reclustering)
   - [Input Jet Filtering](#input-jet-filtering)
   - [Output Reclustered Jet Trimming](#output-reclustered-jet-trimming)
   - [Variable-R Jet Finding](#variable-r-jet-finding)
   - [Area Calculations](#area-calculations)
   - [Incorporating in existing code](#incorporating-in-existing-code)
+    - [RootCore](#rootcore)
+    - [Athena](#athena)
   - [Incorporating in algorithm chain](#incorporating-in-algorithm-chain)
+    - [RootCore](#rootcore-1)
+    - [Athena](#athena-1)
 - [Studies and Example Usage](#studies-and-example-usage)
   - [Accessing the subjets from constituents](#accessing-the-subjets-from-constituents)
   - [Accessing various jet moments](#accessing-various-jet-moments)
@@ -28,14 +33,16 @@ If you would like to get involved, see the twiki for [the JetMET working group f
 
 ## Installing
 
-This works in AB 2.1.X and 2.3.X on ROOT6 releases. As long as [JetRec](http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Reconstruction/Jet/JetRec/JetRec/) works, this will be ok.
+This works in AB 2.3.X and 2.4.Y on ROOT6 releases. As long as [JetRec](http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Reconstruction/Jet/JetRec/JetRec/) works, this will be ok.
 
 ```bash
-rcSetup Base,2.3.XX
+rcSetup Base,2.3.X # or 2.4.Y
 git clone https://github.com/kratsg/xAODJetReclustering.git
 rc find_packages
 rc compile
 ```
+
+*Warning*: use `X >= 45` since I am using `ANA_CHECK` which only works with `EventLoop-00-01-35` or better.
 
 ## Configurations for
 
@@ -46,7 +53,7 @@ rc compile
 InputJetContainer   | string                    |                           | name of the input jet container for reclustering
 OutputJetContainer  | string                    |                           | name of the output jet container holding reclustered jets
 InputJetPtMin       | float                     | 25.0                      | filter input jets by requiring a minimum pt cut [GeV]
-ReclusterAlgorithm  | fastjet::JetAlgorithm     | fastjet::antikt_algorithm | name of algorithm for clustering large-R jets
+ReclusterAlgorithm  | string                    | AntiKt                    | name of algorithm for clustering large-R jets {AntiKt, Kt, CamKt}
 ReclusterRadius     | float                     | 1.0                       | radius of large-R reclustered jets or maximum radius of variable-R jet finding
 RCJetPtMin          | float                     | 50.0                      | filter reclustered jets by requiring a minimum pt cut [GeV]
 RCJetPtFrac         | float                     | 0.05                      | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
@@ -65,7 +72,7 @@ Variable            | Type      | Default                   | Description
 m_inputJetContainer | string    |                           | see above
 m_outputJetContainer| string    |                           | see above
 m_ptMin_input       | float     | 25.0                      | see above
-m_rc_algName        | string    | antikt_algorithm          | see above
+m_rc_alg            | string    | AntiKt                    | see above
 m_radius            | float     | 1.0                       | see above
 m_ptMin_rc          | float     | 50.0                      | see above
 m_ptFrac            | float     | 0.05                      | see above
@@ -76,6 +83,12 @@ m_doArea            | bool      | false                     | see above
 m_areaAttributes    | string    | ActiveArea ActiveArea4vec | see above
 m_outputXAODName    | string    |                           | if defined, put the reclustered jets in an output xAOD file of the given name
 m_debug             | bool      | false                     | enable verbose debugging information, such as printing the tool configurations
+
+### `AthJetReclusteringAlgo` Athena algorithm
+
+ Property           | Type                      | Default                   | Description
+:-------------------|:-------------------------:|--------------------------:|:-------------------------------------------------------------------------------------
+JetRecTool          | ToolHandle                |                           | The JetReclusteringTool to use. All configurables should be set on this.
 
 ## Using xAOD Jet Reclustering
 
@@ -115,34 +128,106 @@ Areas can be calculated and added to the jets. Fastjet does the area calculation
 
 ### Incorporating in existing code
 
+#### RootCore
+
 If you wish to incorporate `xAODJetReclustering` directly into your code, add this package as a dependency in `cmt/Makefile.RootCore` and then a header
+
+```c++
+#include <AsgTools/AnaToolHandle.h>
+#include <xAODJetReclustering/IJetReclusteringTool.h>
+
+class MyAlgo : public EL::Algorithm {
+  // ...
+
+  asg::AnaToolHandle<IJetReclusteringTool> m_jetReclusteringTool; //!
+}
+```
+
+to get started. In the source, you need to add the tool header
 
 ```c++
 #include <xAODJetReclustering/JetReclusteringTool.h>
 ```
 
-to get started. At this point, you can set up your standard tool in the `initialize()` portion of your algorithm as a pointer
+then make sure the AsgTool tool store sets up the tool correctly in the constructor
 
 ```c++
-m_jetReclusteringTool = new JetReclusteringTool(m_name);
-RETURN_CHECK(m_jetReclusteringTool->setProperty("InputJetContainer",  m_inputJetContainer));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("OutputJetContainer", m_outputJetContainer));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("ReclusterRadius",    m_radius));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("ReclusterAlgorithm", m_rc_alg));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("InputJetPtMin",      m_ptMin_input));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("RCJetPtMin",         m_ptMin_rc));
-RETURN_CHECK(m_jetReclusteringTool->setProperty("RCJetPtFrac",        m_ptFrac));
-RETURN_CHECK(m_jetReclusteringTool->initialize());
+MyAlgo :: MyAlgo () :
+  m_jetReclusteringTool("IJetReclusteringTool/ANameForTheTool")
+  {}
 ```
 
-and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Don't forget to delete the pointer when you're done.
+At this point, you can set up your standard tool in the `initialize()` portion of your algorithm as a tool handle
+
 ```c++
-if(m_jetReclusteringTool) delete m_jetReclusteringTool;
+ANA_CHECK_SET_TYPE (EL::StatusCode);
+ANA_CHECK(ASG_MAKE_ANA_TOOL(m_jetReclusteringTool, JetReclusteringTool));
+ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetContainer",  m_inputJetContainer));
+ANA_CHECK(m_jetReclusteringTool.setProperty("OutputJetContainer", m_outputJetContainer));
+ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterRadius",    m_radius));
+ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterAlgorithm", m_rc_alg));
+ANA_CHECK(m_jetReclusteringTool.setProperty("VariableRMinRadius", m_varR_minR));
+ANA_CHECK(m_jetReclusteringTool.setProperty("VariableRMassScale", m_varR_mass));
+ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetPtMin",      m_ptMin_input));
+ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtMin",         m_ptMin_rc));
+ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtFrac",        m_ptFrac));
+ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetSubjetRadius",  m_subjet_radius));
+ANA_CHECK(m_jetReclusteringTool.setProperty("DoArea",             m_doArea));
+ANA_CHECK(m_jetReclusteringTool.setProperty("AreaAttributes",     m_areaAttributes));
+ANA_CHECK(m_jetReclusteringTool.retrieve());
 ```
 
-Note that as it behaves like an `AsgTool`, the functions `setProperty()` and `initialize()` have a return type `StatusCode` which needs to be checked. In this package, we use a macro [`ReturnCheck.h`](xAODJetReclustering/tools/ReturnCheck.h) to simplify our code as it is quite repetitive to check it for each `setProperty()` call.
+and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Note that you use a pointer on the second portion when calling `execute()` to access the underlying pointer to the tool itself. The functions `setProperty()` and `initialize()` have a return type `StatusCode` which needs to be checked.
+
+#### Athena
+
+The methods for incorporating the code into an Athena algorithm are very similar to the method for RootCore.
+The package must be included with a 'use' statement in `cmt/requirements`. Then in your header:
+```c++
+#include <AsgTools/ToolHandle.h> // Can use AnaToolHandle instead if you want
+#include <xAODJetReclustering/IJetReclusteringTool.h>
+
+class MyAlgo : public ::AthAnalysisAlgorithm { // Or any of the other Athena algorithm types
+  // ...
+
+  ToolHandle<IJetReclusteringTool> m_jetReclusteringTool;
+};
+```
+
+As with other Athena algorithms it's recommended to configure the tool in your job options and then pass it into your algorithm as a property. To do this, in the constructor you need to initialize the handle and declare it as a property
+
+```c++
+
+MyAlgo::MyAlgo( const std::string& name, ISvcLocator* pSvcLocator )
+: AthAnalysisAlgorithm( name, pSvcLocator ), // Or other base class
+  m_jetReclusteringTool("") // Can also initialize with a default type/name if you wish
+{
+  // Other properties...
+  declareProperty( "JetRecTool", m_jetReclusteringTool );
+}
+```
+
+Then in the `initialize()` member function of your algorithm `retrieve` the tool
+
+```c++
+  ATH_CHECK( m_jetReclusteringTool.retrieve() );
+```
+
+To use it in your algorithm you can call (in your `execute()` function). Make sure you do this **before** anyone tries to use the output...
+```c++
+  int retCode = m_jetReclusteringTool->execute();
+  if (retCode != 0) {
+    ATH_MSG_ERROR( "JetRecTool failed in execution with code: " << retCode );
+    return StatusCode::FAILURE;
+  }
+```
+
+Then you need to create and pass in your tool in your joboptions (see the section below for more instructions, replace `AthJetReclusteringAlgo` with `MyAlgo` or whatever you called your algorithm).
+It is also possible to set the properties and initialize your tool in the cxx code but this isn't really recommended. If you want to do this either use AnaToolHandle and setProperty (analogously to in RootCore) or use ToolHandle and [AthAnalysisHelper](http://acode-browser2.usatlas.bnl.gov/lxr-AthAna/source/atlas/Control/AthAnalysisBaseComps/AthAnalysisBaseComps/AthAnalysisHelper.h#0053).
 
 ### Incorporating in algorithm chain
+
+#### RootCore
 
 This is the least destructive option since it requires **no change** to your existing code. All you need to do is create a new `JetReclusteringAlgo` algorithm and add it to the job before other algorithms downstream that want access to the reclustered jets. It is highly configurable. In your runner macro, add the header
 
@@ -169,6 +254,24 @@ jetReclusterer->m_ptFrac = 0.05; // GeV
 // add it to your job sometime later
 job.algsAdd(jetReclusterer);
 ```
+
+#### Athena
+
+As with RootCore this is the best way to use the tool (Athena is designed to execute a series of algorithms after all...).
+All you need to do is create a `JetReclusteringTool` in the `ToolSvc`, add an `AthJetReclusteringAlgo` to your `AlgSequence` and connect them
+
+```python
+ToolSvc += CfgMgr.JetReclusteringTool("MyJetRecTool", InputJetContainer = "AntiKt4EMTopoJets", OutputJetContainer = "AntiKt10EMTopoJets_RC") # Set up properties here
+ToolSvc.MyJetRecTool.InputJetPtMin = 10 #Can also set properties like this
+
+algseq = CfgMgr.AthSequencer("AthAlgSeq")                #gets the main AthSequencer
+algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo", JetRecTool = ToolSvc.MyJetReclusteringTool)
+```
+
+Now any algorithm downstream of this in algseq will have access to the `AntiKt10EMPTopoJets_RC` container.
+An example (and a test you can use) is in `share/AthJetReclusteringAlgoJobOptions.py`
+
+For now you will need to have checked out and compiled this package. If (when!) it makes it into the release you'll be able to use immediately once you've called asetup.
 
 ## Studies and Example Usage
 
@@ -236,3 +339,4 @@ for(auto jet: *in_jets){
 
 ## Authors
 - [Giordon Stark](https://github.com/kratsg)
+- [Jon Burr](https://github.com/j0nburr)

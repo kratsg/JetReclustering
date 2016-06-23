@@ -2,16 +2,17 @@
 #define xAODJetReclustering_EffectiveRTool_H
 
 /// Giordon Stark \n
-/// May 2015
+/// Created: May 2015
 ///
 /// Tool to calculate EffectiveR for VariableR reclustering
+/// Updated: May 2016
+/// Make it compatible with AnaToolHandle
 
 #include "JetRec/JetModifierBase.h"
 
 class EffectiveRTool : public JetModifierBase {
-  ASG_TOOL_CLASS(EffectiveRTool, IJetModifier)
-
   public:
+    ASG_TOOL_CLASS(EffectiveRTool, IJetModifier)
     // Constructor from tool name.
     EffectiveRTool(std::string myname);
 

@@ -3,65 +3,45 @@
 
 // making it more like a tool
 #include "AsgTools/AsgTool.h"
+#include "AsgTools/AnaToolHandle.h"
+#include "xAODJetReclustering/IJetReclusteringTool.h"
 
-#include <fastjet/JetDefinition.hh>
 #include <map>
 #include <memory>
 
 /*
   Author  : Giordon Stark
   Email   : gstark@cern.ch
-  Thanks to Ben Nachman for inspiration, P-A for the help
+  Thanks to Ben Nachman for inspiration, P-A for the help, Jon Burr for
+  assisting in dual-use conversion.
 
   Takes a set of small-R jets and reclusters to large-R jets
-
-  @inputJetContainer  : name of small-R jet container
-  @outputJetContainer : name of new jet container to record in TStore
-  @radius             : radius of large-R jets
-  @rc_alg             : reclustering algorithm to use (AntiKt, Kt, CamKt)
-  @ptMin              : minimum Pt cut on reclustered jets
 */
 
-// all general tools used
-#include "JetRec/PseudoJetGetter.h"
-#include "JetRec/JetFromPseudojet.h"
-#include "JetRec/JetFinder.h"
-#include "JetRec/JetFilterTool.h"
-#include "JetRec/JetRecTool.h"
-#include "JetRec/JetTrimmer.h"
-// calculate EffectiveR
-#include "xAODJetReclustering/EffectiveRTool.h"
-// all jet modifier tools
-#include "JetSubStructureMomentTools/JetChargeTool.h"
-#include "JetSubStructureMomentTools/JetPullTool.h"
-#include "JetSubStructureMomentTools/EnergyCorrelatorTool.h"
-#include "JetSubStructureMomentTools/EnergyCorrelatorRatiosTool.h"
-#include "JetSubStructureMomentTools/KTSplittingScaleTool.h"
-#include "JetSubStructureMomentTools/DipolarityTool.h"
-#include "JetSubStructureMomentTools/CenterOfMassShapesTool.h"
-#include "JetMomentTools/JetWidthTool.h"
-#include "JetSubStructureMomentTools/NSubjettinessTool.h"
+class IJetModifier;
+class IJetExecuteTool;
+class IJetFromPseudojet;
+class IJetFinder;
+class IJetGroomer;
+class IPseudoJetGetter;
 
-class JetReclusteringTool : virtual public asg::AsgTool {
+class JetReclusteringTool : public asg::AsgTool, virtual public IJetReclusteringTool {
   public:
-    ASG_TOOL_INTERFACE(JetReclusteringTool)
+    ASG_TOOL_CLASS(JetReclusteringTool, IJetReclusteringTool)
     JetReclusteringTool(std::string myname);
 
     // initialization - set up everything
-    StatusCode initialize();
+    virtual StatusCode initialize() override;
 
     // execute - build jets
-    void execute() const;
+    virtual int execute() const override;
 
     // display the configuration
-    void print() const;
+    virtual void print() const override;
 
   private:
     // hold the class name
     std::string m_APP_NAME = "JetReclusteringTool";
-
-    // unique name for all tools, makes our life fucking easier
-    std::string m_name;
 
   /* Properties */
     // input jet container to use as a constituent proxy
@@ -71,7 +51,7 @@ class JetReclusteringTool : virtual public asg::AsgTool {
     // radius of the reclustered jets
     float m_radius;
     // reclustering algorithm to use
-    fastjet::JetAlgorithm m_rc_alg;
+    std::string m_rc_alg;
   /* variable R reclustering */
     // minimum radius
     float m_varR_minR;
@@ -91,41 +71,29 @@ class JetReclusteringTool : virtual public asg::AsgTool {
 
     // make sure someone only calls a function once
     bool m_isInitialized = false;
-
-    // we have to convert the fastjet algorithm to a named algorithm because
-    // the tools are fucking stupid
-    std::map<fastjet::JetAlgorithm, std::string> algToAlgName = {
-            {fastjet::kt_algorithm, "Kt"},
-            {fastjet::cambridge_algorithm, "CamKt"},
-            {fastjet::antikt_algorithm, "AntiKt"}
-    };
-
-  /* all tools we use */
     // this is for filtering input jets
-    std::unique_ptr<JetFilterTool> m_jetFilterTool;
-    std::unique_ptr<JetRecTool> m_inputJetFilterTool;
+    asg::AnaToolHandle<IJetModifier> m_jetFilterTool;
+    asg::AnaToolHandle<IJetExecuteTool> m_inputJetFilterTool;
     // this is for reclustering using filtered input jets
-    std::unique_ptr<PseudoJetGetter> m_pseudoJetGetterTool;
-    std::unique_ptr<JetFromPseudojet> m_jetFromPseudoJetTool;
-    std::unique_ptr<JetFinder> m_jetFinderTool;
-    std::unique_ptr<JetRecTool> m_reclusterJetTool;
-    std::unique_ptr<JetRecTool> m_trimJetTool;
+    asg::AnaToolHandle<IPseudoJetGetter> m_pseudoJetGetterTool;
+    asg::AnaToolHandle<IJetFromPseudojet> m_jetFromPseudoJetTool;
+    asg::AnaToolHandle<IJetFinder> m_jetFinderTool;
+    asg::AnaToolHandle<IJetExecuteTool> m_reclusterJetTool;
+    asg::AnaToolHandle<IJetExecuteTool> m_trimJetTool;
 
     // tool for calculating effectiveR
-    std::unique_ptr<EffectiveRTool> m_effectiveRTool;
+    asg::AnaToolHandle<IJetModifier> m_effectiveRTool;
     // tool for trimming reclustered jet
-    std::unique_ptr<JetTrimmer> m_jetTrimmingTool;
+    asg::AnaToolHandle<IJetGroomer> m_jetTrimmingTool;
     // modifier tools for the reclustered jets
-    std::unique_ptr<JetChargeTool>              m_jetChargeTool;
-    std::unique_ptr<JetPullTool>                m_jetPullTool;
-    std::unique_ptr<EnergyCorrelatorTool>       m_energyCorrelatorTool;
-    std::unique_ptr<EnergyCorrelatorRatiosTool> m_energyCorrelatorRatiosTool;
-    std::unique_ptr<KTSplittingScaleTool>       m_ktSplittingScaleTool;
-    std::unique_ptr<DipolarityTool>             m_dipolarityTool;
-    std::unique_ptr<CenterOfMassShapesTool>     m_centerOfMassShapesTool;
-    std::unique_ptr<JetWidthTool>               m_jetWidthTool;
-    std::unique_ptr<NSubjettinessTool>          m_nSubjettinessTool;
-
+    asg::AnaToolHandle<IJetModifier> m_jetChargeTool;
+    asg::AnaToolHandle<IJetModifier> m_jetPullTool;
+    asg::AnaToolHandle<IJetModifier> m_energyCorrelatorTool;
+    asg::AnaToolHandle<IJetModifier> m_energyCorrelatorRatiosTool;
+    asg::AnaToolHandle<IJetModifier> m_ktSplittingScaleTool;
+    asg::AnaToolHandle<IJetModifier> m_dipolarityTool;
+    asg::AnaToolHandle<IJetModifier> m_centerOfMassShapesTool;
+    asg::AnaToolHandle<IJetModifier> m_nSubjettinessTool;
 };
 
 #endif
