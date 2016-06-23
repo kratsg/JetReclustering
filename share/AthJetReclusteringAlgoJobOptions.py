@@ -8,7 +8,7 @@ svcMgr.EventSelector.InputCollections=[vars().get("input")]   #insert your list 
 ToolSvc += CfgMgr.JetReclusteringTool("JetReclusteringTool", InputJetContainer = "AntiKt4EMTopoJets", OutputJetContainer = "AntiKt10EMTopoJets_RC")
 
 algseq = CfgMgr.AthSequencer("AthAlgSeq")                #gets the main AthSequencer
-algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo", JetRecTool = ToolSvc.JetReclusteringTool)                                 #adds an instance of your alg to it
+algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo", JetReclusteringTool = ToolSvc.JetReclusteringTool)                                 #adds an instance of your alg to it
 
 
 
