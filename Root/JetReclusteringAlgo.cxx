@@ -80,7 +80,7 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
   ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetSubjetRadius",  m_subjet_radius));
   ANA_CHECK(m_jetReclusteringTool.setProperty("DoArea",             m_doArea));
   ANA_CHECK(m_jetReclusteringTool.setProperty("AreaAttributes",     m_areaAttributes));
-  ANA_CHECK(m_jetReclusteringTool.initialize());
+  ANA_CHECK(m_jetReclusteringTool.retrieve());
 
   if(m_debug) m_jetReclusteringTool->print();
 

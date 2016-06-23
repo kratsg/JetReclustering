@@ -115,7 +115,7 @@ Areas can be calculated and added to the jets. Fastjet does the area calculation
 - `ActiveArea` (most people use this one)
 - `ActiveArea4vec`
 
-### Incorporating in existing code
+### Incorporating in existing code (RootCore)
 
 If you wish to incorporate `xAODJetReclustering` directly into your code, add this package as a dependency in `cmt/Makefile.RootCore` and then a header
 
@@ -123,7 +123,7 @@ If you wish to incorporate `xAODJetReclustering` directly into your code, add th
 #include <AsgTools/AnaToolHandle.h>
 #include <xAODJetReclustering/IJetReclusteringTool.h>
 
-class MyAlgo {
+class MyAlgo : public EL::Algorithm {
   // ...
 
   asg::AnaToolHandle<IJetReclusteringTool> m_jetReclusteringTool; //!
@@ -153,15 +153,20 @@ ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetContainer",  m_inputJetCont
 ANA_CHECK(m_jetReclusteringTool.setProperty("OutputJetContainer", m_outputJetContainer));
 ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterRadius",    m_radius));
 ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterAlgorithm", m_rc_alg));
+ANA_CHECK(m_jetReclusteringTool.setProperty("VariableRMinRadius", m_varR_minR));
+ANA_CHECK(m_jetReclusteringTool.setProperty("VariableRMassScale", m_varR_mass));
 ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetPtMin",      m_ptMin_input));
 ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtMin",         m_ptMin_rc));
 ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtFrac",        m_ptFrac));
-ANA_CHECK(m_jetReclusteringTool.initialize());
+ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetSubjetRadius",  m_subjet_radius));
+ANA_CHECK(m_jetReclusteringTool.setProperty("DoArea",             m_doArea));
+ANA_CHECK(m_jetReclusteringTool.setProperty("AreaAttributes",     m_areaAttributes));
+ANA_CHECK(m_jetReclusteringTool.retrieve());
 ```
 
 and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Note that you use a pointer on the second portion when calling `execute()` to access the underlying pointer to the tool itself. The functions `setProperty()` and `initialize()` have a return type `StatusCode` which needs to be checked.
 
-### Incorporating in algorithm chain
+### Incorporating in algorithm chain (RootCore)
 
 This is the least destructive option since it requires **no change** to your existing code. All you need to do is create a new `JetReclusteringAlgo` algorithm and add it to the job before other algorithms downstream that want access to the reclustered jets. It is highly configurable. In your runner macro, add the header
 
@@ -255,3 +260,4 @@ for(auto jet: *in_jets){
 
 ## Authors
 - [Giordon Stark](https://github.com/kratsg)
+- [Jon Burr](https://github.com/j0nburr)
