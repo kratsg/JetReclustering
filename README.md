@@ -18,10 +18,12 @@ If you would like to get involved, see the twiki for [the JetMET working group f
   - [Output Reclustered Jet Trimming](#output-reclustered-jet-trimming)
   - [Variable-R Jet Finding](#variable-r-jet-finding)
   - [Area Calculations](#area-calculations)
-  - [Incorporating in existing code (RootCore)](#incorporating-in-existing-code-rootcore)
-  - [Incorporating in algorithm chain (RootCore)](#incorporating-in-algorithm-chain-rootcore)
-  - [Incorporating in existing code (Athena)](#incorporating-in-existing-code-athena)
-  - [Incorporating in algorithm chain (Athena)](#incorporating-in-algorithm-chain-athena)
+  - [Incorporating in existing code](#incorporating-in-existing-code)
+    - [RootCore](#rootcore)
+    - [Athena](#athena)
+  - [Incorporating in algorithm chain](#incorporating-in-algorithm-chain)
+    - [RootCore](#rootcore-1)
+    - [Athena](#athena-1)
 - [Studies and Example Usage](#studies-and-example-usage)
   - [Accessing the subjets from constituents](#accessing-the-subjets-from-constituents)
   - [Accessing various jet moments](#accessing-various-jet-moments)
@@ -124,7 +126,9 @@ Areas can be calculated and added to the jets. Fastjet does the area calculation
 - `ActiveArea` (most people use this one)
 - `ActiveArea4vec`
 
-### Incorporating in existing code (RootCore)
+### Incorporating in existing code
+
+#### RootCore
 
 If you wish to incorporate `xAODJetReclustering` directly into your code, add this package as a dependency in `cmt/Makefile.RootCore` and then a header
 
@@ -175,34 +179,7 @@ ANA_CHECK(m_jetReclusteringTool.retrieve());
 
 and then simply call `m_jetReclusteringTool->execute()` in the `execute()` portion of your algorithm to fill the TStore with the appropriate container(s). Note that you use a pointer on the second portion when calling `execute()` to access the underlying pointer to the tool itself. The functions `setProperty()` and `initialize()` have a return type `StatusCode` which needs to be checked.
 
-### Incorporating in algorithm chain (RootCore)
-
-This is the least destructive option since it requires **no change** to your existing code. All you need to do is create a new `JetReclusteringAlgo` algorithm and add it to the job before other algorithms downstream that want access to the reclustered jets. It is highly configurable. In your runner macro, add the header
-
-```c++
-#include <xAODJetReclustering/JetReclusteringAlgo.h>
-```
-
-and then simply set up your algorithm like so
-
-```c++
-// initialize and set it up
-JetReclustering* jetReclusterer = new JetReclusteringAlgo();
-jetReclusterer->m_inputJetContainer = "AntiKt4LCTopoJets";
-jetReclusterer->m_outputJetContainer = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
-jetReclusterer->m_name = "R10"; // unique name for the tool
-jetReclusterer->m_ptMin_input = 25.0; // GeV
-jetReclusterer->m_ptMin_rc = 50.0; // GeV
-jetReclusterer->m_ptFrac = 0.05; // GeV
-
-// ...
-// ...
-// ...
-
-// add it to your job sometime later
-job.algsAdd(jetReclusterer);
-```
-### Incorporating in existing code (Athena)
+#### Athena
 
 The methods for incorporating the code into an Athena algorithm are very similar to the method for RootCore.
 The package must be included with a 'use' statement in `cmt/requirements`. Then in your header:
@@ -212,7 +189,7 @@ The package must be included with a 'use' statement in `cmt/requirements`. Then 
 
 class MyAlgo : public ::AthAnalysisAlgorithm { // Or any of the other Athena algorithm types
   // ...
-  
+
   ToolHandle<IJetReclusteringTool> m_jetReclusteringTool;
 };
 ```
@@ -248,14 +225,44 @@ To use it in your algorithm you can call (in your `execute()` function). Make su
 Then you need to create and pass in your tool in your joboptions (see the section below for more instructions, replace `AthJetReclusteringAlgo` with `MyAlgo` or whatever you called your algorithm).
 It is also possible to set the properties and initialize your tool in the cxx code but this isn't really recommended. If you want to do this either use AnaToolHandle and setProperty (analogously to in RootCore) or use ToolHandle and [AthAnalysisHelper](http://acode-browser2.usatlas.bnl.gov/lxr-AthAna/source/atlas/Control/AthAnalysisBaseComps/AthAnalysisBaseComps/AthAnalysisHelper.h#0053).
 
-### Incorporating in algorithm chain (Athena)
+### Incorporating in algorithm chain
+
+#### RootCore
+
+This is the least destructive option since it requires **no change** to your existing code. All you need to do is create a new `JetReclusteringAlgo` algorithm and add it to the job before other algorithms downstream that want access to the reclustered jets. It is highly configurable. In your runner macro, add the header
+
+```c++
+#include <xAODJetReclustering/JetReclusteringAlgo.h>
+```
+
+and then simply set up your algorithm like so
+
+```c++
+// initialize and set it up
+JetReclustering* jetReclusterer = new JetReclusteringAlgo();
+jetReclusterer->m_inputJetContainer = "AntiKt4LCTopoJets";
+jetReclusterer->m_outputJetContainer = "AntiKt10LCTopoJetsRCAntiKt4LCTopoJets";
+jetReclusterer->m_name = "R10"; // unique name for the tool
+jetReclusterer->m_ptMin_input = 25.0; // GeV
+jetReclusterer->m_ptMin_rc = 50.0; // GeV
+jetReclusterer->m_ptFrac = 0.05; // GeV
+
+// ...
+// ...
+// ...
+
+// add it to your job sometime later
+job.algsAdd(jetReclusterer);
+```
+
+#### Athena
 
 As with RootCore this is the best way to use the tool (Athena is designed to execute a series of algorithms after all...).
 All you need to do is create a `JetReclusteringTool` in the `ToolSvc`, add an `AthJetReclusteringAlgo` to your `AlgSequence` and connect them
 
 ```python
 ToolSvc += CfgMgr.JetReclusteringTool("MyJetRecTool", InputJetContainer = "AntiKt4EMTopoJets", OutputJetContainer = "AntiKt10EMTopoJets_RC") # Set up properties here
-ToolSvc.MyJetRecTool.InputJetPtMin = 10 #Can also set properties like this 
+ToolSvc.MyJetRecTool.InputJetPtMin = 10 #Can also set properties like this
 
 algseq = CfgMgr.AthSequencer("AthAlgSeq")                #gets the main AthSequencer
 algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo", JetRecTool = ToolSvc.MyJetReclusteringTool)
