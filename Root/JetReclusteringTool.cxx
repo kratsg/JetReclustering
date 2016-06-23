@@ -101,7 +101,7 @@ StatusCode JetReclusteringTool::initialize(){
     ASG_CHECK(m_jetFilterTool.setProperty("OutputLevel", msg().level() ) );
     ASG_CHECK(m_jetFilterTool.retrieve() );
     modArray.clear();
-    modArray.push_back(m_jetFilterTool.handle().typeAndName() );
+    modArray.push_back(m_jetFilterTool.handle() );
     ATH_CHECK(modArray.retrieve() );
 
     //    - create the master tool to filter the input jets
