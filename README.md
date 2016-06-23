@@ -245,7 +245,7 @@ To use it in your algorithm you can call (in your `execute()` function). Make su
 Then you need to create and pass in your tool in your joboptions (see the section below for more instructions, replace `AthJetReclusteringAlgo` with `MyAlgo` or whatever you called your algorithm).
 It is also possible to set the properties and initialize your tool in the cxx code but this isn't really recommended. If you want to do this either use AnaToolHandle and setProperty (analogously to in RootCore) or use ToolHandle and [AthAnalysisHelper](http://acode-browser2.usatlas.bnl.gov/lxr-AthAna/source/atlas/Control/AthAnalysisBaseComps/AthAnalysisBaseComps/AthAnalysisHelper.h#0053).
 
-### Incorporating in algorithm chain (Athena) **RECOMMENDED METHOD**
+### Incorporating in algorithm chain (Athena)
 
 As with RootCore this is the best way to use the tool (Athena is designed to execute a series of algorithms after all...).
 All you need to do is create a `JetReclusteringTool` in the `ToolSvc`, add an `AthJetReclusteringAlgo` to your `AlgSequence` and connect them
@@ -261,6 +261,7 @@ algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo", JetRecTool = ToolSvc.MyJet
 Now any algorithm downstream of this in algseq will have access to the `AntiKt10EMPTopoJets_RC` container.
 An example (and a test you can use) is in `share/AthJetReclusteringAlgoJobOptions.py`
 
+For now you will need to have checked out and compiled this package. If (when!) it makes it into the release you'll be able to use immediately once you've called asetup.
 
 ## Studies and Example Usage
 
