@@ -88,7 +88,7 @@ m_debug             | bool      | false                     | enable verbose deb
 
  Property           | Type                      | Default                   | Description
 :-------------------|:-------------------------:|--------------------------:|:-------------------------------------------------------------------------------------
-JetRecTool          | ToolHandle                |                           | The JetReclusteringTool to use. All configurables should be set on this.
+JetReclusteringTool          | ToolHandle                |                           | The JetReclusteringTool to use. All configurables should be set on this.
 
 ## Using xAOD Jet Reclustering
 
@@ -203,7 +203,7 @@ MyAlgo::MyAlgo( const std::string& name, ISvcLocator* pSvcLocator )
   m_jetReclusteringTool("") // Can also initialize with a default type/name if you wish
 {
   // Other properties...
-  declareProperty( "JetRecTool", m_jetReclusteringTool );
+  declareProperty( "JetReclusteringTool", m_jetReclusteringTool );
 }
 ```
 
@@ -217,7 +217,7 @@ To use it in your algorithm you can call (in your `execute()` function). Make su
 ```c++
   int retCode = m_jetReclusteringTool->execute();
   if (retCode != 0) {
-    ATH_MSG_ERROR( "JetRecTool failed in execution with code: " << retCode );
+    ATH_MSG_ERROR( "JetReclusteringTool failed in execution with code: " << retCode );
     return StatusCode::FAILURE;
   }
 ```
@@ -261,11 +261,11 @@ As with RootCore this is the best way to use the tool (Athena is designed to exe
 All you need to do is create a `JetReclusteringTool` in the `ToolSvc`, add an `AthJetReclusteringAlgo` to your `AlgSequence` and connect them
 
 ```python
-ToolSvc += CfgMgr.JetReclusteringTool("MyJetRecTool", InputJetContainer = "AntiKt4EMTopoJets", OutputJetContainer = "AntiKt10EMTopoJets_RC") # Set up properties here
-ToolSvc.MyJetRecTool.InputJetPtMin = 10 #Can also set properties like this
+ToolSvc += CfgMgr.JetReclusteringTool("MyJetReclusteringTool", InputJetContainer = "AntiKt4EMTopoJets", OutputJetContainer = "AntiKt10EMTopoJets_RC") # Set up properties here
+ToolSvc.MyJetReclusteringTool.InputJetPtMin = 10 #Can also set properties like this 
 
 algseq = CfgMgr.AthSequencer("AthAlgSeq")                #gets the main AthSequencer
-algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo", JetRecTool = ToolSvc.MyJetReclusteringTool)
+algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo", JetReclusteringTool = ToolSvc.MyJetReclusteringTool)
 ```
 
 Now any algorithm downstream of this in algseq will have access to the `AntiKt10EMPTopoJets_RC` container.

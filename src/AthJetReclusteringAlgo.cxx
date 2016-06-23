@@ -5,9 +5,9 @@
 
 AthJetReclusteringAlgo::AthJetReclusteringAlgo( const std::string& name, ISvcLocator* pSvcLocator )
   : AthAlgorithm( name, pSvcLocator ),
-    m_jetRecTool("JetReclusteringTool/"+this->name()+"JetRecTool")
+    m_jetRecTool("JetReclusteringTool/"+this->name()+"JetReclusteringTool")
 {
-  declareProperty( "JetRecTool", m_jetRecTool );
+  declareProperty( "JetReclusteringTool", m_jetRecTool );
 }
 
 
@@ -32,7 +32,7 @@ StatusCode AthJetReclusteringAlgo::execute() {
 
   int retCode = m_jetRecTool->execute();
   if (retCode != 0) {
-    ATH_MSG_ERROR( "JetRecTool failed in execution with code: " << retCode );
+    ATH_MSG_ERROR( "JetReclusteringTool failed in execution with code: " << retCode );
     return StatusCode::FAILURE;
   }
 
