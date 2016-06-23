@@ -5,7 +5,7 @@
 
 AthJetReclusteringAlgo::AthJetReclusteringAlgo( const std::string& name, ISvcLocator* pSvcLocator )
   : AthAlgorithm( name, pSvcLocator ),
-    m_jetRecTool("JetReclusteringTool/"+name+"JetRecTool")
+    m_jetRecTool("JetReclusteringTool/"+this->name()+"JetRecTool")
 {
   declareProperty( "JetRecTool", m_jetRecTool );
 }

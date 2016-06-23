@@ -79,6 +79,12 @@ m_areaAttributes    | string    | ActiveArea ActiveArea4vec | see above
 m_outputXAODName    | string    |                           | if defined, put the reclustered jets in an output xAOD file of the given name
 m_debug             | bool      | false                     | enable verbose debugging information, such as printing the tool configurations
 
+### `AthJetReclusteringAlgo` Athena algorithm
+
+ Property           | Type                      | Default                   | Description
+:-------------------|:-------------------------:|--------------------------:|:-------------------------------------------------------------------------------------
+JetRecTool          | ToolHandle                |                           | The JetReclusteringTool to use. All configurables should be set on this.
+
 ## Using xAOD Jet Reclustering
 
 ### Input Jet Filtering
@@ -193,6 +199,69 @@ jetReclusterer->m_ptFrac = 0.05; // GeV
 // add it to your job sometime later
 job.algsAdd(jetReclusterer);
 ```
+### Incorporating in existing code (Athena)
+
+The methods for incorporating the code into an Athena algorithm are very similar to the method for RootCore.
+The package must be included with a 'use' statement in `cmt/requirements`. Then in your header:
+```c++
+#include <AsgTools/ToolHandle.h> // Can use AnaToolHandle instead if you want
+#include <xAODJetReclustering/IJetReclusteringTool.h>
+
+class MyAlgo : public ::AthAnalysisAlgorithm { // Or any of the other Athena algorithm types
+  // ...
+  
+  ToolHandle<IJetReclusteringTool> m_jetReclusteringTool;
+};
+```
+
+As with other Athena algorithms it's recommended to configure the tool in your job options and then pass it into your algorithm as a property. To do this, in the constructor you need to initialize the handle and declare it as a property
+
+```c++
+
+MyAlgo::MyAlgo( const std::string& name, ISvcLocator* pSvcLocator )
+: AthAnalysisAlgorithm( name, pSvcLocator ), // Or other base class
+  m_jetReclusteringTool("") // Can also initialize with a default type/name if you wish
+{
+  // Other properties...
+  declareProperty( "JetRecTool", m_jetReclusteringTool );
+}
+```
+
+Then in the `initialize()` member function of your algorithm `retrieve` the tool
+
+```c++
+  ATH_CHECK( m_jetReclusteringTool.retrieve() );
+```
+
+To use it in your algorithm you can call (in your `execute()` function). Make sure you do this **before** anyone tries to use the output...
+```c++
+  int retCode = m_jetReclusteringTool->execute();
+  if (retCode != 0) {
+    ATH_MSG_ERROR( "JetRecTool failed in execution with code: " << retCode );
+    return StatusCode::FAILURE;
+  }
+```
+
+Then you need to create and pass in your tool in your joboptions (see the section below for more instructions, replace `AthJetReclusteringAlgo` with `MyAlgo` or whatever you called your algorithm).
+It is also possible to set the properties and initialize your tool in the cxx code but this isn't really recommended. If you want to do this either use AnaToolHandle and setProperty (analogously to in RootCore) or use ToolHandle and [AthAnalysisHelper](http://acode-browser2.usatlas.bnl.gov/lxr-AthAna/source/atlas/Control/AthAnalysisBaseComps/AthAnalysisBaseComps/AthAnalysisHelper.h#0053).
+
+### Incorporating in algorithm chain (Athena)
+
+As with RootCore this is the best way to use the tool (Athena is designed to execute a series of algorithms after all...).
+All you need to do is create a `JetReclusteringTool` in the `ToolSvc`, add an `AthJetReclusteringAlgo` to your `AlgSequence` and connect them
+
+```python
+ToolSvc += CfgMgr.JetReclusteringTool("MyJetRecTool", InputJetContainer = "AntiKt4EMTopoJets", OutputJetContainer = "AntiKt10EMTopoJets_RC") # Set up properties here
+ToolSvc.MyJetRecTool.InputJetPtMin = 10 #Can also set properties like this 
+
+algseq = CfgMgr.AthSequencer("AthAlgSeq")                #gets the main AthSequencer
+algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo", JetRecTool = ToolSvc.MyJetReclusteringTool)
+```
+
+Now any algorithm downstream of this in algseq will have access to the `AntiKt10EMPTopoJets_RC` container.
+An example (and a test you can use) is in `share/AthJetReclusteringAlgoJobOptions.py`
+
+For now you will need to have checked out and compiled this package. If (when!) it makes it into the release you'll be able to use immediately once you've called asetup.
 
 ## Studies and Example Usage
 
