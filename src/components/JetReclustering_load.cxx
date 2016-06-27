@@ -1,3 +1,3 @@
- 
+
 #include "GaudiKernel/LoadFactoryEntries.h"
-LOAD_FACTORY_ENTRIES(xAODJetReclustering)
+LOAD_FACTORY_ENTRIES(JetReclustering)

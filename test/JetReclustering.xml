@@ -1,7 +1,7 @@
  <?xml version="1.0"?>
 <atn>
-   <TEST name="xAODJetReclustering_makeCheck" type="makecheck">
-      <package>xAODJetReclustering</package>
+   <TEST name="JetReclustering_makeCheck" type="makecheck">
+      <package>JetReclustering</package>
       <timelimit>5</timelimit>
       <author> Giordon Stark </author>
       <mailto> gstark@cern.ch </mailto>

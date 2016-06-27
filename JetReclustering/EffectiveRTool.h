@@ -1,5 +1,5 @@
-#ifndef xAODJetReclustering_EffectiveRTool_H
-#define xAODJetReclustering_EffectiveRTool_H
+#ifndef JetReclustering_EffectiveRTool_H
+#define JetReclustering_EffectiveRTool_H
 
 /// Giordon Stark \n
 /// Created: May 2015

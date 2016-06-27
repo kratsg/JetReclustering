@@ -1,6 +1,6 @@
-#include <xAODJetReclustering/JetReclusteringAlgo.h>
-#include <xAODJetReclustering/JetReclusteringTool.h>
-#include <xAODJetReclustering/EffectiveRTool.h>
+#include <JetReclustering/JetReclusteringAlgo.h>
+#include <JetReclustering/JetReclusteringTool.h>
+#include <JetReclustering/EffectiveRTool.h>
 
 #ifdef __CINT__
 

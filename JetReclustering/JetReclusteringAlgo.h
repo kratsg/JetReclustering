@@ -1,6 +1,6 @@
 #ifdef ROOTCORE
-#ifndef xAODJetReclustering_JetReclusteringAlgo_H
-#define xAODJetReclustering_JetReclusteringAlgo_H
+#ifndef JetReclustering_JetReclusteringAlgo_H
+#define JetReclustering_JetReclusteringAlgo_H
 
 #include <EventLoop/Algorithm.h>
 
@@ -10,7 +10,7 @@
 
 // reclustering
 #include <AsgTools/AnaToolHandle.h>
-#include <xAODJetReclustering/IJetReclusteringTool.h>
+#include <JetReclustering/IJetReclusteringTool.h>
 
 class JetReclusteringAlgo : public EL::Algorithm
 {

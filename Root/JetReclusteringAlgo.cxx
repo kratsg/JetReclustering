@@ -3,8 +3,8 @@
 #include <EventLoop/StatusCode.h>
 #include <EventLoop/Worker.h>
 
-#include <xAODJetReclustering/JetReclusteringAlgo.h>
-#include <xAODJetReclustering/JetReclusteringTool.h>
+#include <JetReclustering/JetReclusteringAlgo.h>
+#include <JetReclustering/JetReclusteringTool.h>
 
 #include "xAODEventInfo/EventInfo.h"
 #include "xAODJet/JetContainer.h"

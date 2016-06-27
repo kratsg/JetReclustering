@@ -1,5 +1,5 @@
 ## automatically generated CMT requirements file
-package xAODJetReclustering
+package JetReclustering
 author  Giordon Stark
 
 ## for athena policies: this has to be the first use statement
@@ -19,7 +19,7 @@ end_private
 branches src src/components doc python share
 
 ## default is to make component library. See: https://twiki.cern.ch/twiki/bin/view/Main/LearningAthena#Libraries_in_CMT for alternatives
-library xAODJetReclustering *.cxx components/*.cxx ../Root/*.cxx
+library JetReclustering *.cxx components/*.cxx ../Root/*.cxx
 apply_pattern component_library
 
 apply_pattern declare_joboptions files="*.py"
@@ -28,12 +28,12 @@ apply_pattern declare_python_modules files="*.py"
 #Reflex Dictionary Generation:
 private
 use AtlasReflex AtlasReflex-* External
-apply_pattern lcgdict dict=xAODJetReclustering selectionfile=selection.xml headerfiles="../xAODJetReclustering/xAODJetReclusteringDict.h"
+apply_pattern lcgdict dict=JetReclustering selectionfile=selection.xml headerfiles="../JetReclustering/JetReclusteringDict.h"
 end_private
 #test for JetReclusteringTool ... compile and execute it with 'make check'
 private
 use TestTools      TestTools-*         AtlasTest
 use AthenaBaseComps AthenaBaseComps-* Control
 apply_pattern UnitTest_run unit_test=ut_JetReclusteringTool
-macro_append ut_JetReclusteringTool_test_dependencies " xAODJetReclustering xAODJetReclusteringMergeComponentsList "
+macro_append ut_JetReclusteringTool_test_dependencies " JetReclustering JetReclusteringMergeComponentsList "
 end_private

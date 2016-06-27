@@ -1,4 +1,4 @@
-#include "xAODJetReclustering/JetReclusteringTool.h"
+#include "JetReclustering/JetReclusteringTool.h"
 #include "AsgTools/Check.h"
 
 #include "JetInterface/IJetModifier.h"
@@ -17,7 +17,7 @@
 #include "JetRec/JetFromPseudojet.h"
 #include "JetRec/JetFinder.h"
 #include "JetRec/JetTrimmer.h"
-#include "xAODJetReclustering/EffectiveRTool.h"
+#include "JetReclustering/EffectiveRTool.h"
 #include "JetSubStructureMomentTools/JetChargeTool.h"
 #include "JetSubStructureMomentTools/JetPullTool.h"
 #include "JetSubStructureMomentTools/EnergyCorrelatorTool.h"
@@ -48,7 +48,7 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   m_centerOfMassShapesTool("CenterOfMassShapesTool/CenterOfMassShapesTool_" + this->name()),
   m_nSubjettinessTool("NSubjettinessTool/NSubjettinessTool_" + this->name())
 {
-  
+
 
   declareProperty("InputJetContainer",  m_inputJetContainer = "");
   declareProperty("OutputJetContainer", m_outputJetContainer = "");
@@ -227,7 +227,7 @@ StatusCode JetReclusteringTool::initialize(){
   modArray.push_back(m_nSubjettinessTool.handle() );
   ATH_CHECK(modArray.retrieve() );
   // finish up the rest of the tool
-  
+
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_trimJetTool, JetRecTool) );
   ASG_CHECK(m_trimJetTool.setProperty("InputContainer", reclusteredJetsContainer));
   ASG_CHECK(m_trimJetTool.setProperty("OutputContainer", m_outputJetContainer));

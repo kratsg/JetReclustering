@@ -2,7 +2,7 @@
 # https://twiki.cern.ch/twiki/bin/viewauth/Atlas/RootCore#Package_Makefile
 
 
-PACKAGE          = xAODJetReclustering
+PACKAGE          = JetReclustering
 PACKAGE_PRELOAD  =
 PACKAGE_CXXFLAGS =
 PACKAGE_OBJFLAGS =

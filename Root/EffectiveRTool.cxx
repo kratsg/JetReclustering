@@ -1,4 +1,4 @@
-#include "xAODJetReclustering/EffectiveRTool.h"
+#include "JetReclustering/EffectiveRTool.h"
 
 EffectiveRTool::EffectiveRTool(std::string myname):
   JetModifierBase(myname)

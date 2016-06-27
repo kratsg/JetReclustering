@@ -1,10 +1,10 @@
-#ifndef xAODJetReclustering_JetReclusteringTool_H
-#define xAODJetReclustering_JetReclusteringTool_H
+#ifndef JetReclustering_JetReclusteringTool_H
+#define JetReclustering_JetReclusteringTool_H
 
 // making it more like a tool
 #include "AsgTools/AsgTool.h"
 #include "AsgTools/AnaToolHandle.h"
-#include "xAODJetReclustering/IJetReclusteringTool.h"
+#include "JetReclustering/IJetReclusteringTool.h"
 
 #include <map>
 #include <memory>

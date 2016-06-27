@@ -1,4 +1,4 @@
-# xAOD Jet Reclustering
+# Jet Reclustering
 
 This tool allows you to recluster small-R xAOD jets into large-R xAOD jets. It provides configurable filtering of the small-R jets, reclustering using standard or variable-R algorithms, configurable trimming of the large-R jets, and jet moment & jet substructure moment calculations.
 
@@ -13,7 +13,7 @@ If you would like to get involved, see the twiki for [the JetMET working group f
   - [`JetReclusteringTool` tool](#jetreclusteringtool-tool)
   - [`JetReclusteringAlgo` algorithm](#jetreclusteringalgo-algorithm)
   - [`AthJetReclusteringAlgo` Athena algorithm](#athjetreclusteringalgo-athena-algorithm)
-- [Using xAOD Jet Reclustering](#using-xaod-jet-reclustering)
+- [Using Jet Reclustering](#using-jet-reclustering)
   - [Input Jet Filtering](#input-jet-filtering)
   - [Output Reclustered Jet Trimming](#output-reclustered-jet-trimming)
   - [Variable-R Jet Finding](#variable-r-jet-finding)
@@ -37,7 +37,7 @@ This works in AB 2.3.X and 2.4.Y on ROOT6 releases. As long as [JetRec](http://a
 
 ```bash
 rcSetup Base,2.3.X # or 2.4.Y
-git clone https://github.com/kratsg/xAODJetReclustering.git
+git clone https://github.com/kratsg/JetReclustering.git
 rc find_packages
 rc compile
 ```
@@ -90,7 +90,7 @@ m_debug             | bool      | false                     | enable verbose deb
 :-------------------|:-------------------------:|--------------------------:|:-------------------------------------------------------------------------------------
 JetReclusteringTool          | ToolHandle                |                           | The JetReclusteringTool to use. All configurables should be set on this.
 
-## Using xAOD Jet Reclustering
+## Using Jet Reclustering
 
 ### Input Jet Filtering
 
@@ -130,11 +130,11 @@ Areas can be calculated and added to the jets. Fastjet does the area calculation
 
 #### RootCore
 
-If you wish to incorporate `xAODJetReclustering` directly into your code, add this package as a dependency in `cmt/Makefile.RootCore` and then a header
+If you wish to incorporate `JetReclustering` directly into your code, add this package as a dependency in `cmt/Makefile.RootCore` and then a header
 
 ```c++
 #include <AsgTools/AnaToolHandle.h>
-#include <xAODJetReclustering/IJetReclusteringTool.h>
+#include <JetReclustering/IJetReclusteringTool.h>
 
 class MyAlgo : public EL::Algorithm {
   // ...
@@ -146,7 +146,7 @@ class MyAlgo : public EL::Algorithm {
 to get started. In the source, you need to add the tool header
 
 ```c++
-#include <xAODJetReclustering/JetReclusteringTool.h>
+#include <JetReclustering/JetReclusteringTool.h>
 ```
 
 then make sure the AsgTool tool store sets up the tool correctly in the constructor
@@ -185,7 +185,7 @@ The methods for incorporating the code into an Athena algorithm are very similar
 The package must be included with a 'use' statement in `cmt/requirements`. Then in your header:
 ```c++
 #include <AsgTools/ToolHandle.h> // Can use AnaToolHandle instead if you want
-#include <xAODJetReclustering/IJetReclusteringTool.h>
+#include <JetReclustering/IJetReclusteringTool.h>
 
 class MyAlgo : public ::AthAnalysisAlgorithm { // Or any of the other Athena algorithm types
   // ...
@@ -232,7 +232,7 @@ It is also possible to set the properties and initialize your tool in the cxx co
 This is the least destructive option since it requires **no change** to your existing code. All you need to do is create a new `JetReclusteringAlgo` algorithm and add it to the job before other algorithms downstream that want access to the reclustered jets. It is highly configurable. In your runner macro, add the header
 
 ```c++
-#include <xAODJetReclustering/JetReclusteringAlgo.h>
+#include <JetReclustering/JetReclusteringAlgo.h>
 ```
 
 and then simply set up your algorithm like so
@@ -262,7 +262,7 @@ All you need to do is create a `JetReclusteringTool` in the `ToolSvc`, add an `A
 
 ```python
 ToolSvc += CfgMgr.JetReclusteringTool("MyJetReclusteringTool", InputJetContainer = "AntiKt4EMTopoJets", OutputJetContainer = "AntiKt10EMTopoJets_RC") # Set up properties here
-ToolSvc.MyJetReclusteringTool.InputJetPtMin = 10 #Can also set properties like this 
+ToolSvc.MyJetReclusteringTool.InputJetPtMin = 10 #Can also set properties like this
 
 algseq = CfgMgr.AthSequencer("AthAlgSeq")                #gets the main AthSequencer
 algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo", JetReclusteringTool = ToolSvc.MyJetReclusteringTool)

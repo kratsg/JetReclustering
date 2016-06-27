@@ -1,6 +1,6 @@
 #include <xAODRootAccess/Init.h>
 #include "AsgTools/AnaToolHandle.h"
-#include "xAODJetReclustering/IJetReclusteringTool.h"
+#include "JetReclustering/IJetReclusteringTool.h"
 
 using namespace asg::msgUserCode;
 
