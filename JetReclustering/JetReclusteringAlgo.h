@@ -10,7 +10,7 @@
 
 // reclustering
 #include <AsgTools/AnaToolHandle.h>
-#include <JetReclustering/IJetReclusteringTool.h>
+#include <JetInterface/IJetExecuteTool.h>
 
 class JetReclusteringAlgo : public EL::Algorithm
 {
@@ -36,7 +36,7 @@ private:
   xAOD::TEvent *m_event; //!
   xAOD::TStore *m_store; //!
 
-  asg::AnaToolHandle<IJetReclusteringTool> m_jetReclusteringTool; //!
+  asg::AnaToolHandle<IJetExecuteTool> m_jetReclusteringTool; //!
 
 public:
   // this is a standard constructor

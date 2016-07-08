@@ -3,7 +3,7 @@
 theApp.EvtMax=10                                         #says how many events to run over. Set to -1 for all events
 
 import AthenaPoolCnvSvc.ReadAthenaPool                   #sets up reading of POOL files (e.g. xAODs)
-svcMgr.EventSelector.InputCollections=[vars().get("input")]   #insert your list of input files here
+svcMgr.EventSelector.InputCollections=[vars().get("input", "/afs/cern.ch/user/a/asgbase/patspace/xAODs/r7725/mc15_13TeV.410000.PowhegPythiaEvtGen_P2012_ttbar_hdamp172p5_nonallhad.merge.AOD.e3698_s2608_s2183_r7725_r7676/AOD.07915862._000100.pool.root.1")]   #insert your list of input files here
 
 ToolSvc += CfgMgr.JetReclusteringTool("JetReclusteringTool", InputJetContainer = "AntiKt4EMTopoJets", OutputJetContainer = "AntiKt10EMTopoJets_RC")
 

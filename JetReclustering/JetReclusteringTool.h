@@ -4,7 +4,7 @@
 // making it more like a tool
 #include "AsgTools/AsgTool.h"
 #include "AsgTools/AnaToolHandle.h"
-#include "JetReclustering/IJetReclusteringTool.h"
+#include "JetInterface/IJetExecuteTool.h"
 
 #include <map>
 #include <memory>
@@ -19,15 +19,15 @@
 */
 
 class IJetModifier;
-class IJetExecuteTool;
+//class IJetExecuteTool;
 class IJetFromPseudojet;
 class IJetFinder;
 class IJetGroomer;
 class IPseudoJetGetter;
 
-class JetReclusteringTool : public asg::AsgTool, virtual public IJetReclusteringTool {
+class JetReclusteringTool : public asg::AsgTool, virtual public IJetExecuteTool {
   public:
-    ASG_TOOL_CLASS(JetReclusteringTool, IJetReclusteringTool)
+    ASG_TOOL_CLASS(JetReclusteringTool, IJetExecuteTool)
     JetReclusteringTool(std::string myname);
 
     // initialization - set up everything

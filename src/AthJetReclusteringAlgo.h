@@ -4,7 +4,7 @@
 #include "AthenaBaseComps/AthAlgorithm.h"
 #include "GaudiKernel/ToolHandle.h" //included under assumption you'll want to use some tools! Remove if you don't!
 
-class IJetReclusteringTool;
+class IJetExecuteTool;
 
 class AthJetReclusteringAlgo: public ::AthAlgorithm { 
  public: 
@@ -16,7 +16,7 @@ class AthJetReclusteringAlgo: public ::AthAlgorithm {
   virtual StatusCode  finalize();
 
  private: 
-  ToolHandle<IJetReclusteringTool> m_jetRecTool;
+  ToolHandle<IJetExecuteTool> m_jetRecTool;
 }; 
 
 #endif //> !XAODJETRECLUSTERING_ATHJETRECLUSTERINGALGO_H

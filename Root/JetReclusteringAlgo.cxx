@@ -19,7 +19,7 @@
 ClassImp(JetReclusteringAlgo)
 
 JetReclusteringAlgo :: JetReclusteringAlgo () :
-  m_jetReclusteringTool("IJetReclusteringTool/"+m_name)
+  m_jetReclusteringTool("JetReclusteringTool/"+m_name)
 {}
 
 EL::StatusCode JetReclusteringAlgo :: setupJob (EL::Job& job)
