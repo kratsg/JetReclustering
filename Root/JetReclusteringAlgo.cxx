@@ -67,6 +67,8 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
     return EL::StatusCode::FAILURE;
   }
 
+  m_jetReclusteringTool.handle().setName(m_name+"_JetReclusteringTool");
+
   ANA_CHECK(ASG_MAKE_ANA_TOOL(m_jetReclusteringTool, JetReclusteringTool));
   ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetContainer",  m_inputJetContainer));
   ANA_CHECK(m_jetReclusteringTool.setProperty("OutputJetContainer", m_outputJetContainer));
