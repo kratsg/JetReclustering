@@ -1,6 +1,6 @@
 #include <xAODRootAccess/Init.h>
 #include "AsgTools/AnaToolHandle.h"
-#include "JetReclustering/IJetExecute.h"
+#include "JetInterface/IJetExecuteTool.h"
 
 using namespace asg::msgUserCode;
 
@@ -11,7 +11,7 @@ int main() {
   ANA_CHECK (xAOD::Init ());
 #endif
 
-   asg::AnaToolHandle<IJetExecute> myTool("JetReclusteringTool/testRCJets");
+   asg::AnaToolHandle<IJetExecuteTool> myTool("JetReclusteringTool/testRCJets");
    //ANA_CHECK(myTool.setProperty("InputJetContainer",  m_inputJetContainer));
    //ANA_CHECK(myTool.setProperty("OutputJetContainer", m_outputJetContainer));
    ANA_CHECK(myTool.initialize());
