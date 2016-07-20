@@ -134,12 +134,12 @@ If you wish to incorporate `JetReclustering` directly into your code, add this p
 
 ```c++
 #include <AsgTools/AnaToolHandle.h>
-#include <JetReclustering/IJetReclusteringTool.h>
+#include <JetInterface/IJetExecuteTool.h>
 
 class MyAlgo : public EL::Algorithm {
   // ...
 
-  asg::AnaToolHandle<IJetReclusteringTool> m_jetReclusteringTool; //!
+  asg::AnaToolHandle<IJetExecuteTool> m_jetReclusteringTool; //!
 }
 ```
 
@@ -153,7 +153,7 @@ then make sure the AsgTool tool store sets up the tool correctly in the construc
 
 ```c++
 MyAlgo :: MyAlgo () :
-  m_jetReclusteringTool("IJetReclusteringTool/ANameForTheTool")
+  m_jetReclusteringTool("JetReclusteringTool/ANameForTheTool")
   {}
 ```
 
@@ -185,12 +185,12 @@ The methods for incorporating the code into an Athena algorithm are very similar
 The package must be included with a 'use' statement in `cmt/requirements`. Then in your header:
 ```c++
 #include <AsgTools/ToolHandle.h> // Can use AnaToolHandle instead if you want
-#include <JetReclustering/IJetReclusteringTool.h>
+#include <JetInterface/IJetExecuteTool.h>
 
 class MyAlgo : public ::AthAnalysisAlgorithm { // Or any of the other Athena algorithm types
   // ...
 
-  ToolHandle<IJetReclusteringTool> m_jetReclusteringTool;
+  ToolHandle<IJetExecuteTool> m_jetReclusteringTool;
 };
 ```
 
@@ -286,6 +286,10 @@ for(auto jet: *in_jets){
   const xAOD::Jet* subjet(nullptr);
   const xAOD::BTagging* btag(nullptr);
   for(auto constit: jet->getConstituents()){
+    if (subjet->type() != xAOD::Type::Jet) {
+      // You need to handle this somehow
+      continue;
+    }
     subjet = static_cast<const xAOD::Jet*>(constit->rawConstituent());
     btag = subjet->btagging();
     if(btag)

@@ -19,7 +19,7 @@
 ClassImp(JetReclusteringAlgo)
 
 JetReclusteringAlgo :: JetReclusteringAlgo () :
-  m_jetReclusteringTool("IJetReclusteringTool/"+m_name)
+  m_jetReclusteringTool("JetReclusteringTool/"+m_name)
 {}
 
 EL::StatusCode JetReclusteringAlgo :: setupJob (EL::Job& job)
@@ -66,6 +66,8 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
     Error("initialize()", "m_name needs to be set and unique.");
     return EL::StatusCode::FAILURE;
   }
+
+  m_jetReclusteringTool.handle().setName(m_name+"_JetReclusteringTool");
 
   ANA_CHECK(ASG_MAKE_ANA_TOOL(m_jetReclusteringTool, JetReclusteringTool));
   ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetContainer",  m_inputJetContainer));

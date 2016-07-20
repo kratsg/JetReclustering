@@ -1,7 +1,7 @@
 // JetReclustering includes
 #include "AthJetReclusteringAlgo.h"
 
-#include "JetReclustering/IJetReclusteringTool.h"
+#include "JetInterface/IJetExecuteTool.h"
 
 AthJetReclusteringAlgo::AthJetReclusteringAlgo( const std::string& name, ISvcLocator* pSvcLocator )
   : AthAlgorithm( name, pSvcLocator ),
