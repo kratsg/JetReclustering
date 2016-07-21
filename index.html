@@ -39,7 +39,7 @@
         </div>
 
         <h1>
-<a id="xaod-jet-reclustering" class="anchor" href="#xaod-jet-reclustering" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>xAOD Jet Reclustering</h1>
+<a id="jet-reclustering" class="anchor" href="#jet-reclustering" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Jet Reclustering</h1>
 
 <p>This tool allows you to recluster small-R xAOD jets into large-R xAOD jets. It provides configurable filtering of the small-R jets, reclustering using standard or variable-R algorithms, configurable trimming of the large-R jets, and jet moment &amp; jet substructure moment calculations.</p>
 
@@ -63,7 +63,7 @@
 </ul>
 </li>
 <li>
-<a href="#using-xaod-jet-reclustering">Using xAOD Jet Reclustering</a>
+<a href="#using-jet-reclustering">Using Jet Reclustering</a>
 
 <ul>
 <li><a href="#input-jet-filtering">Input Jet Filtering</a></li>
@@ -107,7 +107,7 @@
 <p>This works in AB 2.3.X and 2.4.Y on ROOT6 releases. As long as <a href="http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Reconstruction/Jet/JetRec/JetRec/">JetRec</a> works, this will be ok.</p>
 
 <div class="highlight highlight-source-shell"><pre>rcSetup Base,2.3.X <span class="pl-c"># or 2.4.Y</span>
-git clone https://github.com/kratsg/xAODJetReclustering.git
+git clone https://github.com/kratsg/JetReclustering.git
 rc find_packages
 rc compile</pre></div>
 
@@ -329,7 +329,7 @@ rc compile</pre></div>
 </table>
 
 <h2>
-<a id="using-xaod-jet-reclustering" class="anchor" href="#using-xaod-jet-reclustering" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using xAOD Jet Reclustering</h2>
+<a id="using-jet-reclustering" class="anchor" href="#using-jet-reclustering" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using Jet Reclustering</h2>
 
 <h3>
 <a id="input-jet-filtering" class="anchor" href="#input-jet-filtering" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Input Jet Filtering</h3>
@@ -428,25 +428,25 @@ rc compile</pre></div>
 <h4>
 <a id="rootcore" class="anchor" href="#rootcore" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>RootCore</h4>
 
-<p>If you wish to incorporate <code>xAODJetReclustering</code> directly into your code, add this package as a dependency in <code>cmt/Makefile.RootCore</code> and then a header</p>
+<p>If you wish to incorporate <code>JetReclustering</code> directly into your code, add this package as a dependency in <code>cmt/Makefile.RootCore</code> and then a header</p>
 
 <div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>AsgTools/AnaToolHandle.h<span class="pl-pds">&gt;</span></span>
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>xAODJetReclustering/IJetReclusteringTool.h<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>JetInterface/IJetExecuteTool.h<span class="pl-pds">&gt;</span></span>
 
 <span class="pl-k">class</span> <span class="pl-en">MyAlgo</span> : <span class="pl-k">public</span> <span class="pl-en">EL</span>::Algorithm {
   <span class="pl-c">// ...</span>
 
-  asg::AnaToolHandle&lt;IJetReclusteringTool&gt; m_jetReclusteringTool; <span class="pl-c">//!</span>
+  asg::AnaToolHandle&lt;IJetExecuteTool&gt; m_jetReclusteringTool; <span class="pl-c">//!</span>
 }<span class="pl-ii"></span></pre></div>
 
 <p>to get started. In the source, you need to add the tool header</p>
 
-<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>xAODJetReclustering/JetReclusteringTool.h<span class="pl-pds">&gt;</span></span></pre></div>
+<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>JetReclustering/JetReclusteringTool.h<span class="pl-pds">&gt;</span></span></pre></div>
 
 <p>then make sure the AsgTool tool store sets up the tool correctly in the constructor</p>
 
 <div class="highlight highlight-source-c++"><pre>MyAlgo :: MyAlgo () :
-  <span class="pl-en">m_jetReclusteringTool</span>(<span class="pl-s"><span class="pl-pds">"</span>IJetReclusteringTool/ANameForTheTool<span class="pl-pds">"</span></span>)
+  <span class="pl-en">m_jetReclusteringTool</span>(<span class="pl-s"><span class="pl-pds">"</span>JetReclusteringTool/ANameForTheTool<span class="pl-pds">"</span></span>)
   {}</pre></div>
 
 <p>At this point, you can set up your standard tool in the <code>initialize()</code> portion of your algorithm as a tool handle</p>
@@ -476,12 +476,12 @@ rc compile</pre></div>
 The package must be included with a 'use' statement in <code>cmt/requirements</code>. Then in your header:</p>
 
 <div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>AsgTools/ToolHandle.h<span class="pl-pds">&gt;</span></span> <span class="pl-c">// Can use AnaToolHandle instead if you want</span>
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>xAODJetReclustering/IJetReclusteringTool.h<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>JetInterface/IJetExecuteTool.h<span class="pl-pds">&gt;</span></span>
 
 <span class="pl-k">class</span> <span class="pl-en">MyAlgo</span> : public ::AthAnalysisAlgorithm { <span class="pl-c">// Or any of the other Athena algorithm types</span>
   <span class="pl-c">// ...</span>
 
-  ToolHandle&lt;IJetReclusteringTool&gt; m_jetReclusteringTool;
+  ToolHandle&lt;IJetExecuteTool&gt; m_jetReclusteringTool;
 };</pre></div>
 
 <p>As with other Athena algorithms it's recommended to configure the tool in your job options and then pass it into your algorithm as a property. To do this, in the constructor you need to initialize the handle and declare it as a property</p>
@@ -518,7 +518,7 @@ It is also possible to set the properties and initialize your tool in the cxx co
 
 <p>This is the least destructive option since it requires <strong>no change</strong> to your existing code. All you need to do is create a new <code>JetReclusteringAlgo</code> algorithm and add it to the job before other algorithms downstream that want access to the reclustered jets. It is highly configurable. In your runner macro, add the header</p>
 
-<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>xAODJetReclustering/JetReclusteringAlgo.h<span class="pl-pds">&gt;</span></span></pre></div>
+<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>JetReclustering/JetReclusteringAlgo.h<span class="pl-pds">&gt;</span></span></pre></div>
 
 <p>and then simply set up your algorithm like so</p>
 
@@ -545,7 +545,7 @@ job.algsAdd(jetReclusterer);</pre></div>
 All you need to do is create a <code>JetReclusteringTool</code> in the <code>ToolSvc</code>, add an <code>AthJetReclusteringAlgo</code> to your <code>AlgSequence</code> and connect them</p>
 
 <div class="highlight highlight-source-python"><pre>ToolSvc <span class="pl-k">+=</span> CfgMgr.JetReclusteringTool(<span class="pl-s"><span class="pl-pds">"</span>MyJetReclusteringTool<span class="pl-pds">"</span></span>, <span class="pl-v">InputJetContainer</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>AntiKt4EMTopoJets<span class="pl-pds">"</span></span>, <span class="pl-v">OutputJetContainer</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>AntiKt10EMTopoJets_RC<span class="pl-pds">"</span></span>) <span class="pl-c"># Set up properties here</span>
-ToolSvc.MyJetReclusteringTool.InputJetPtMin <span class="pl-k">=</span> <span class="pl-c1">10</span> <span class="pl-c">#Can also set properties like this </span>
+ToolSvc.MyJetReclusteringTool.InputJetPtMin <span class="pl-k">=</span> <span class="pl-c1">10</span> <span class="pl-c">#Can also set properties like this</span>
 
 algseq <span class="pl-k">=</span> CfgMgr.AthSequencer(<span class="pl-s"><span class="pl-pds">"</span>AthAlgSeq<span class="pl-pds">"</span></span>)                <span class="pl-c">#gets the main AthSequencer</span>
 algseq <span class="pl-k">+=</span> CfgMgr.AthJetReclusteringAlgo(<span class="pl-s"><span class="pl-pds">"</span>JetRecAlgo<span class="pl-pds">"</span></span>, <span class="pl-v">JetReclusteringTool</span> <span class="pl-k">=</span> ToolSvc.MyJetReclusteringTool)</pre></div>
@@ -569,6 +569,10 @@ An example (and a test you can use) is in <code>share/AthJetReclusteringAlgoJobO
   <span class="pl-k">const</span> xAOD::Jet* <span class="pl-c1">subjet</span>(<span class="pl-v">nullptr</span>);
   <span class="pl-k">const</span> xAOD::BTagging* <span class="pl-c1">btag</span>(<span class="pl-v">nullptr</span>);
   <span class="pl-k">for</span>(<span class="pl-k">auto</span> constit: jet-&gt;<span class="pl-c1">getConstituents</span>()){
+    <span class="pl-k">if</span> (subjet-&gt;<span class="pl-c1">type</span>() != xAOD::Type::Jet) {
+      <span class="pl-c">// You need to handle this somehow</span>
+      <span class="pl-k">continue</span>;
+    }
     subjet = <span class="pl-k">static_cast</span>&lt;<span class="pl-k">const</span> xAOD::Jet*&gt;(constit-&gt;<span class="pl-c1">rawConstituent</span>());
     btag = subjet-&gt;<span class="pl-c1">btagging</span>();
     <span class="pl-k">if</span>(btag)
