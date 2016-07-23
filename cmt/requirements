@@ -8,12 +8,12 @@ use AtlasPolicy 	            AtlasPolicy-*
 use AsgTools                  AsgTools-*                      Control/AthToolSupport
 use AtlasROOT                 AtlasROOT-*                     External
 use JetRec                    JetRec-*                        Reconstruction/Jet
+use JetInterface                JetInterface-*                  Reconstruction/Jet
 
 private
 use xAODRootAccess              xAODRootAccess-*                Control
 ## for gaudi tools, services and objects
 use GaudiInterface 	            GaudiInterface-* 	            External
-use JetInterface                JetInterface-*                  Reconstruction/Jet
 end_private
 
 branches src src/components doc python share
