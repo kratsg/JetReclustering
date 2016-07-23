@@ -1,1 +1,1 @@
-# completely devoid of content, like a management talk
+# completely devoid of content, like a management talk.
