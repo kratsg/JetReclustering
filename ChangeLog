@@ -1,0 +1,3 @@
+2016-08-23 Will Buttinger <will@cern.ch>
+	* test/JetReclustering.xml: fix so that atn is happy with it
+	* test/ut_JetReclusteringTool_test.cxx : extend with complete example

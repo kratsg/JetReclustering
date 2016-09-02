@@ -1,7 +1,10 @@
- <?xml version="1.0"?>
+<?xml version="1.0"?>
+<!DOCTYPE unifiedTestConfiguration SYSTEM "http://www.hep.ucl.ac.uk/atlas/AtlasTesting/DTD/unifiedTestConfiguration.dtd">
+
+<unifiedTestConfiguration>
+
 <atn>
    <TEST name="JetReclustering_makeCheck" type="makecheck">
-      <package>JetReclustering</package>
       <timelimit>5</timelimit>
       <author> Giordon Stark </author>
       <mailto> gstark@cern.ch </mailto>
@@ -12,3 +15,5 @@
       </expectations>
    </TEST>
 </atn>
+
+</unifiedTestConfiguration>

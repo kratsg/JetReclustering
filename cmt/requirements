@@ -14,6 +14,9 @@ private
 use xAODRootAccess              xAODRootAccess-*                Control
 ## for gaudi tools, services and objects
 use GaudiInterface 	            GaudiInterface-* 	            External
+
+use POOLRootAccess POOLRootAccess-* PhysicsAnalysis
+
 end_private
 
 branches src src/components doc python share
