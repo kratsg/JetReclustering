@@ -1,6 +1,7 @@
 #include <xAODRootAccess/Init.h>
 #include "AsgTools/AnaToolHandle.h"
 #include "JetInterface/IJetExecuteTool.h"
+#include "xAODJet/JetContainer.h"
 
 #ifndef XAOD_STANDALONE
 #include "POOLRootAccess/TEvent.h"
@@ -35,7 +36,7 @@ int main() {
    ANA_CHECK(myTool.setProperty("InputJetPtMin",      25.0)); //GeV
    ANA_CHECK(myTool.setProperty("RCJetPtMin",         50.0)); //GeV
    ANA_CHECK(myTool.setProperty("RCJetPtFrac",        0.05));
-   ANA_CHECK(myTool.setProperty("RCJetSubjetRadius",  0.0));
+   ANA_CHECK(myTool.setProperty("RCJetSubjetRadius",  0.4));
    ANA_CHECK(myTool.setProperty("DoArea",             false));
    ANA_CHECK(myTool.setProperty("AreaAttributes",     ""));
    ANA_CHECK(myTool.initialize());
