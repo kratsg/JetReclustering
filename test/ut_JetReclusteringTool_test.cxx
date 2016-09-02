@@ -12,11 +12,9 @@ int main() {
 #endif
 
    asg::AnaToolHandle<IJetExecuteTool> myTool("JetReclusteringTool/testRCJets");
-   //ANA_CHECK(myTool.setProperty("InputJetContainer",  m_inputJetContainer));
-   //ANA_CHECK(myTool.setProperty("OutputJetContainer", m_outputJetContainer));
-   ANA_CHECK(myTool.initialize());
-
-   ANA_CHECK( myTool.initialize() );
+   ANA_CHECK(myTool.setProperty("InputJetContainer",  "FakeInputContainer"));
+   ANA_CHECK(myTool.setProperty("OutputJetContainer", "FakeOutputContainer"));
+   ANA_CHECK(myTool.retrieve());
 
    //myTool->isSelected(....); put test code here
 
