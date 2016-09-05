@@ -14,6 +14,8 @@ private
 use xAODRootAccess              xAODRootAccess-*                Control
 ## for gaudi tools, services and objects
 use GaudiInterface 	            GaudiInterface-* 	            External
+## for the unit test
+use  xAODJet                    xAODJet-*                       Event/xAOD
 
 use POOLRootAccess POOLRootAccess-* PhysicsAnalysis
 
