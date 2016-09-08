@@ -1,5 +1,7 @@
 # Jet Reclustering
 
+*This is currently in AnalysisBase releases 2.4.17+.*
+
 This tool allows you to recluster small-R xAOD jets into large-R xAOD jets. It provides configurable filtering of the small-R jets, reclustering using standard or variable-R algorithms, configurable trimming of the large-R jets, and jet moment & jet substructure moment calculations.
 
 If you would like to get involved, see the twiki for [the JetMET working group for jet reclustering](https://twiki.cern.ch/twiki/bin/view/AtlasProtected/JetReclustering). The [pre-recommendations](https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/PreRec) twiki contains the guidelines for your analyses.
@@ -36,13 +38,13 @@ If you would like to get involved, see the twiki for [the JetMET working group f
 This works in AB 2.3.X and 2.4.Y on ROOT6 releases. As long as [JetRec](http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Reconstruction/Jet/JetRec/JetRec/) works, this will be ok.
 
 ```bash
-rcSetup Base,2.3.X # or 2.4.Y
+rcSetup Base,2.4.Y # or 2.3.X
 git clone https://github.com/kratsg/JetReclustering.git
 rc find_packages
 rc compile
 ```
 
-*Warning*: use `X >= 45` since I am using `ANA_CHECK` which only works with `EventLoop-00-01-35` or better.
+*Warning*: use `X >= 45` since I am using `ANA_CHECK` which only works with `EventLoop-00-01-35` or better. Use `Y >= 17` as it is part of the atlas software releases.
 
 ## Configurations for
 
@@ -270,8 +272,6 @@ algseq += CfgMgr.AthJetReclusteringAlgo("JetRecAlgo", JetReclusteringTool = Tool
 
 Now any algorithm downstream of this in algseq will have access to the `AntiKt10EMPTopoJets_RC` container.
 An example (and a test you can use) is in `share/AthJetReclusteringAlgoJobOptions.py`
-
-For now you will need to have checked out and compiled this package. If (when!) it makes it into the release you'll be able to use immediately once you've called asetup.
 
 ## Studies and Example Usage
 
