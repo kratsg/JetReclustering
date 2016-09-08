@@ -41,6 +41,8 @@
         <h1>
 <a id="jet-reclustering" class="anchor" href="#jet-reclustering" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Jet Reclustering</h1>
 
+<p><em>This is currently in AnalysisBase releases 2.4.17+.</em></p>
+
 <p>This tool allows you to recluster small-R xAOD jets into large-R xAOD jets. It provides configurable filtering of the small-R jets, reclustering using standard or variable-R algorithms, configurable trimming of the large-R jets, and jet moment &amp; jet substructure moment calculations.</p>
 
 <p>If you would like to get involved, see the twiki for <a href="https://twiki.cern.ch/twiki/bin/view/AtlasProtected/JetReclustering">the JetMET working group for jet reclustering</a>. The <a href="https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/PreRec">pre-recommendations</a> twiki contains the guidelines for your analyses.</p>
@@ -106,12 +108,12 @@
 
 <p>This works in AB 2.3.X and 2.4.Y on ROOT6 releases. As long as <a href="http://acode-browser.usatlas.bnl.gov/lxr/source/atlas/Reconstruction/Jet/JetRec/JetRec/">JetRec</a> works, this will be ok.</p>
 
-<div class="highlight highlight-source-shell"><pre>rcSetup Base,2.3.X <span class="pl-c"># or 2.4.Y</span>
+<div class="highlight highlight-source-shell"><pre>rcSetup Base,2.4.Y <span class="pl-c"># or 2.3.X</span>
 git clone https://github.com/kratsg/JetReclustering.git
 rc find_packages
 rc compile</pre></div>
 
-<p><em>Warning</em>: use <code>X &gt;= 45</code> since I am using <code>ANA_CHECK</code> which only works with <code>EventLoop-00-01-35</code> or better.</p>
+<p><em>Warning</em>: use <code>X &gt;= 45</code> since I am using <code>ANA_CHECK</code> which only works with <code>EventLoop-00-01-35</code> or better. Use <code>Y &gt;= 17</code> as it is part of the atlas software releases.</p>
 
 <h2>
 <a id="configurations-for" class="anchor" href="#configurations-for" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configurations for</h2>
@@ -553,8 +555,6 @@ algseq <span class="pl-k">+=</span> CfgMgr.AthJetReclusteringAlgo(<span class="p
 <p>Now any algorithm downstream of this in algseq will have access to the <code>AntiKt10EMPTopoJets_RC</code> container.
 An example (and a test you can use) is in <code>share/AthJetReclusteringAlgoJobOptions.py</code></p>
 
-<p>For now you will need to have checked out and compiled this package. If (when!) it makes it into the release you'll be able to use immediately once you've called asetup.</p>
-
 <h2>
 <a id="studies-and-example-usage" class="anchor" href="#studies-and-example-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Studies and Example Usage</h2>
 
@@ -576,10 +576,10 @@ An example (and a test you can use) is in <code>share/AthJetReclusteringAlgoJobO
     subjet = <span class="pl-k">static_cast</span>&lt;<span class="pl-k">const</span> xAOD::Jet*&gt;(constit-&gt;<span class="pl-c1">rawConstituent</span>());
     btag = subjet-&gt;<span class="pl-c1">btagging</span>();
     <span class="pl-k">if</span>(btag)
-      <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>btagging: <span class="pl-c1">%0.2f</span><span class="pl-pds">"</span></span>, btag-&gt;<span class="pl-c1">MV1_discriminant</span>());
+      <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>btagging: %0.2f<span class="pl-pds">"</span></span>, btag-&gt;<span class="pl-c1">MV1_discriminant</span>());
 
     <span class="pl-k">for</span>(<span class="pl-k">auto</span> subjet_constit: subjet-&gt;<span class="pl-c1">getConstituents</span>())
-      <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>constituent pt: <span class="pl-c1">%0.2f</span><span class="pl-pds">"</span></span>, subjet_constit-&gt;<span class="pl-c1">pt</span>());
+      <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>constituent pt: %0.2f<span class="pl-pds">"</span></span>, subjet_constit-&gt;<span class="pl-c1">pt</span>());
   }
 }</pre></div>
 
@@ -608,17 +608,17 @@ An example (and a test you can use) is in <code>share/AthJetReclusteringAlgoJobO
 
 <div class="highlight highlight-source-c++"><pre><span class="pl-k">for</span>(<span class="pl-k">auto</span> jet: *in_jets){
   <span class="pl-k">if</span>(Split12.<span class="pl-c1">isAvailable</span>(*jet))
-    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>Split12: <span class="pl-c1">%0.2f</span><span class="pl-pds">"</span></span>, <span class="pl-c1">Split12</span>(*jet));
+    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>Split12: %0.2f<span class="pl-pds">"</span></span>, <span class="pl-c1">Split12</span>(*jet));
   <span class="pl-k">if</span>(Split23.<span class="pl-c1">isAvailable</span>(*jet))
-    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>Split23: <span class="pl-c1">%0.2f</span><span class="pl-pds">"</span></span>, <span class="pl-c1">Split23</span>(*jet));
+    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>Split23: %0.2f<span class="pl-pds">"</span></span>, <span class="pl-c1">Split23</span>(*jet));
   <span class="pl-k">if</span>(Split34.<span class="pl-c1">isAvailable</span>(*jet))
-    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>Split34: <span class="pl-c1">%0.2f</span><span class="pl-pds">"</span></span>, <span class="pl-c1">Split34</span>(*jet));
+    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>Split34: %0.2f<span class="pl-pds">"</span></span>, <span class="pl-c1">Split34</span>(*jet));
   <span class="pl-k">if</span>(ZCut12.<span class="pl-c1">isAvailable</span>(*jet))
-    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>ZCut12: <span class="pl-c1">%0.2f</span><span class="pl-pds">"</span></span>, <span class="pl-c1">ZCut12</span>(*jet));
+    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>ZCut12: %0.2f<span class="pl-pds">"</span></span>, <span class="pl-c1">ZCut12</span>(*jet));
   <span class="pl-k">if</span>(ZCut23.<span class="pl-c1">isAvailable</span>(*jet))
-    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>ZCut23: <span class="pl-c1">%0.2f</span><span class="pl-pds">"</span></span>, <span class="pl-c1">ZCut23</span>(*jet));
+    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>ZCut23: %0.2f<span class="pl-pds">"</span></span>, <span class="pl-c1">ZCut23</span>(*jet));
   <span class="pl-k">if</span>(ZCut34.<span class="pl-c1">isAvailable</span>(*jet))
-    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>ZCut34: <span class="pl-c1">%0.2f</span><span class="pl-pds">"</span></span>, <span class="pl-c1">ZCut34</span>(*jet));
+    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>ZCut34: %0.2f<span class="pl-pds">"</span></span>, <span class="pl-c1">ZCut34</span>(*jet));
 }
 </pre></div>
 
