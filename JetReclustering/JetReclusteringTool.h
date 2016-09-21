@@ -24,6 +24,7 @@ class IJetFromPseudojet;
 class IJetFinder;
 class IJetGroomer;
 class IPseudoJetGetter;
+class IJetPseudojetRetriever;
 
 class JetReclusteringTool : public asg::AsgTool, virtual public IJetExecuteTool {
   public:
@@ -85,6 +86,8 @@ class JetReclusteringTool : public asg::AsgTool, virtual public IJetExecuteTool 
     asg::AnaToolHandle<IJetModifier> m_effectiveRTool;
     // tool for trimming reclustered jet
     asg::AnaToolHandle<IJetGroomer> m_jetTrimmingTool;
+    // tool for the jpjr for m_jetTrimmingTool
+    asg::AnaToolHandle<IJetPseudojetRetriever> m_jetTrimmingTool_JPJR;
     // modifier tools for the reclustered jets
     asg::AnaToolHandle<IJetModifier> m_jetChargeTool;
     asg::AnaToolHandle<IJetModifier> m_jetPullTool;

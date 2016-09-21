@@ -7,6 +7,7 @@
 #include "JetInterface/IPseudoJetGetter.h"
 #include "JetInterface/IJetFinder.h"
 #include "JetInterface/IJetExecuteTool.h"
+#include "JetInterface/IJetPseudojetRetriever.h"
 
 #include <sstream>
 
@@ -17,6 +18,7 @@
 #include "JetRec/JetFromPseudojet.h"
 #include "JetRec/JetFinder.h"
 #include "JetRec/JetTrimmer.h"
+#include "JetRec/JetPseudojetRetriever.h"
 #include "JetReclustering/EffectiveRTool.h"
 #include "JetSubStructureMomentTools/JetChargeTool.h"
 #include "JetSubStructureMomentTools/JetPullTool.h"
@@ -102,7 +104,7 @@ StatusCode JetReclusteringTool::initialize(){
     ASG_CHECK(m_jetFilterTool.setProperty("OutputLevel", msg().level() ) );
     ASG_CHECK(m_jetFilterTool.retrieve() );
     modArray.clear();
-    modArray.push_back(m_jetFilterTool.handle() );
+    modArray.push_back(m_jetFilterTool.getHandle() );
     ATH_CHECK(modArray.retrieve() );
 
     //    - create the master tool to filter the input jets
@@ -141,7 +143,7 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_pseudoJetGetterTool.setProperty("GhostScale", 0.0));
   ASG_CHECK(m_pseudoJetGetterTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_pseudoJetGetterTool.retrieve());
-  getterArray.push_back(m_pseudoJetGetterTool.handle());
+  getterArray.push_back(m_pseudoJetGetterTool.getHandle());
   ATH_CHECK(getterArray.retrieve() );
   //    - create a Jet builder
   ATH_MSG_INFO( "Jet Builder initializing..." );
@@ -160,7 +162,7 @@ StatusCode JetReclusteringTool::initialize(){
   // set ghost area, ignore if trimming is being applied to reclustered jets
   ASG_CHECK(m_jetFinderTool.setProperty("GhostArea", ghostArea));
   ASG_CHECK(m_jetFinderTool.setProperty("RandomOption", 1));
-  ASG_CHECK(m_jetFinderTool.setProperty("JetBuilder", m_jetFromPseudoJetTool.handle()));
+  ASG_CHECK(m_jetFinderTool.setProperty("JetBuilder", m_jetFromPseudoJetTool.getHandle()));
   ASG_CHECK(m_jetFinderTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_jetFinderTool.retrieve());
   //    - create list of modifiers.
@@ -168,14 +170,14 @@ StatusCode JetReclusteringTool::initialize(){
   //        we need to calculate effectiveR before trimming, if we are doing variableR
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_effectiveRTool, EffectiveRTool) );
   ATH_CHECK(m_effectiveRTool.retrieve());
-  modArray.push_back(m_effectiveRTool.handle() );
+  modArray.push_back(m_effectiveRTool.getHandle() );
   ATH_CHECK(modArray.retrieve() );
   //    - create our master reclustering tool
   ATH_MSG_INFO( "Jet Reclusterer initializing..." );
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_reclusterJetTool, JetRecTool) );
   ASG_CHECK(m_reclusterJetTool.setProperty("OutputContainer", reclusteredJetsContainer));
   ASG_CHECK(m_reclusterJetTool.setProperty("PseudoJetGetters", getterArray));
-  ASG_CHECK(m_reclusterJetTool.setProperty("JetFinder", m_jetFinderTool.handle()));
+  ASG_CHECK(m_reclusterJetTool.setProperty("JetFinder", m_jetFinderTool.getHandle()));
   ASG_CHECK(m_reclusterJetTool.setProperty("JetModifiers", modArray));
   ASG_CHECK(m_reclusterJetTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_reclusterJetTool.retrieve());
@@ -189,7 +191,7 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_jetTrimmingTool, JetTrimmer) );
   ASG_CHECK(m_jetTrimmingTool.setProperty("PtFrac", m_ptFrac));
   ASG_CHECK(m_jetTrimmingTool.setProperty("RClus", m_subjet_radius));
-  ASG_CHECK(m_jetTrimmingTool.setProperty("JetBuilder", m_jetFromPseudoJetTool.handle()));
+  ASG_CHECK(m_jetTrimmingTool.setProperty("JetBuilder", m_jetFromPseudoJetTool.getHandle()));
   ASG_CHECK(m_jetTrimmingTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_jetTrimmingTool.retrieve() );
 
@@ -203,35 +205,35 @@ StatusCode JetReclusteringTool::initialize(){
 
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_jetChargeTool, JetChargeTool) );
   ASG_CHECK(m_jetChargeTool.retrieve());
-  modArray.push_back(m_jetChargeTool.handle() );
+  modArray.push_back(m_jetChargeTool.getHandle() );
 
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_jetPullTool, JetPullTool) );
   ASG_CHECK(m_jetPullTool.retrieve());
-  modArray.push_back(m_jetPullTool.handle() );
+  modArray.push_back(m_jetPullTool.getHandle() );
 
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_energyCorrelatorTool, EnergyCorrelatorTool) );
   ASG_CHECK(m_energyCorrelatorTool.retrieve());
-  modArray.push_back(m_energyCorrelatorTool.handle() );
+  modArray.push_back(m_energyCorrelatorTool.getHandle() );
 
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_energyCorrelatorRatiosTool, EnergyCorrelatorRatiosTool) );
   ASG_CHECK(m_energyCorrelatorRatiosTool.retrieve());
-  modArray.push_back(m_energyCorrelatorRatiosTool.handle() );
+  modArray.push_back(m_energyCorrelatorRatiosTool.getHandle() );
 
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_ktSplittingScaleTool, KTSplittingScaleTool) );
   ASG_CHECK(m_ktSplittingScaleTool.retrieve());
-  modArray.push_back(m_ktSplittingScaleTool.handle() );
+  modArray.push_back(m_ktSplittingScaleTool.getHandle() );
 
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_dipolarityTool, DipolarityTool) );
   ASG_CHECK(m_dipolarityTool.retrieve());
-  modArray.push_back(m_dipolarityTool.handle() );
+  modArray.push_back(m_dipolarityTool.getHandle() );
 
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_centerOfMassShapesTool, CenterOfMassShapesTool) );
   ASG_CHECK(m_centerOfMassShapesTool.retrieve());
-  modArray.push_back(m_centerOfMassShapesTool.handle() );
+  modArray.push_back(m_centerOfMassShapesTool.getHandle() );
 
   ASG_CHECK( ASG_MAKE_ANA_TOOL( m_nSubjettinessTool, NSubjettinessTool) );
   ASG_CHECK(m_nSubjettinessTool.retrieve());
-  modArray.push_back(m_nSubjettinessTool.handle() );
+  modArray.push_back(m_nSubjettinessTool.getHandle() );
   ATH_CHECK(modArray.retrieve() );
   // finish up the rest of the tool
 
@@ -239,8 +241,8 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_trimJetTool.setProperty("InputContainer", reclusteredJetsContainer));
   ASG_CHECK(m_trimJetTool.setProperty("OutputContainer", m_outputJetContainer));
   ASG_CHECK(m_trimJetTool.setProperty("JetModifiers", modArray));
-  ASG_CHECK(m_trimJetTool.setProperty("JetGroomer",  m_jetTrimmingTool.handle() ));
-  ASG_CHECK(m_trimJetTool.setProperty("JetPseudojetRetriever", m_jetTrimmingTool_JPJR.handle());
+  ASG_CHECK(m_trimJetTool.setProperty("JetGroomer",  m_jetTrimmingTool.getHandle() ));
+  ASG_CHECK(m_trimJetTool.setProperty("JetPseudojetRetriever", m_jetTrimmingTool_JPJR.getHandle()));
   ASG_CHECK(m_trimJetTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_trimJetTool.retrieve());
 
