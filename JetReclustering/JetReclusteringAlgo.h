@@ -15,7 +15,7 @@
 class JetReclusteringAlgo : public EL::Algorithm
 {
 public:
-  std::string m_name,
+  std::string m_name = "GiordonStark",
               m_inputJetContainer,
               m_outputJetContainer,
               m_rc_alg,
