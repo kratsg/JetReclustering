@@ -39,6 +39,7 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   m_trimJetTool("JetRecTool/JetRec_JetTrimTool_" + this->name()),
   m_effectiveRTool("EffectiveRTool/EffectiveRTool"),
   m_jetTrimmingTool("JetTrimmer/JetTrimmerTool_" + this->name()),
+  m_jetTrimmingTool_JPJR("JetPseudojetRetriever/JetRec_JetTrimTool_JPJR_" + this->name()),
   m_jetChargeTool("JetChargeTool/JetChargeTool_" + this->name()),
   m_jetPullTool("JetPullTool/JetPullTool_" + this->name()),
   m_energyCorrelatorTool("EnergyCorrelatorTool/EnergyCorrelatorTool_" + this->name()),
@@ -191,6 +192,12 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_jetTrimmingTool.setProperty("JetBuilder", m_jetFromPseudoJetTool.handle()));
   ASG_CHECK(m_jetTrimmingTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_jetTrimmingTool.retrieve() );
+
+  // because of changes to JetRec, can't rely on them making this tool for us anymore
+  ATH_MSG_INFO( "JetPseudojetRetriever initializing for Jet Trimmer..." );
+  ASG_CHECK( ASG_MAKE_ANA_TOOL( m_jetTrimmingTool_JPJR, JetPseudojetRetriever) );
+  ASG_CHECK(m_jetTrimmingTool_JPJR.retrieve());
+
   //        and then apply all other modifiers based on the trimmed reclustered jets
   ATH_MSG_INFO( "\t... and queuing up various jet modifiers..." );
 
@@ -233,6 +240,7 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_trimJetTool.setProperty("OutputContainer", m_outputJetContainer));
   ASG_CHECK(m_trimJetTool.setProperty("JetModifiers", modArray));
   ASG_CHECK(m_trimJetTool.setProperty("JetGroomer",  m_jetTrimmingTool.handle() ));
+  ASG_CHECK(m_trimJetTool.setProperty("JetPseudojetRetriever", m_jetTrimmingTool_JPJR.handle());
   ASG_CHECK(m_trimJetTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_trimJetTool.retrieve());
 
