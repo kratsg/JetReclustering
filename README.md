@@ -341,6 +341,18 @@ for(auto jet: *in_jets){
 
 ```
 
+If you would like to access any of the Variable-R moments, these will most likely be on the parent jet. In this case, you will need to access the parent jet from the trimmed, reclustered jet. A standard prescription looks like
+
+```c++
+  for(const auto &jet: *in_jets){
+    const ElementLink<xAOD::JetContainer> pparent(jet->getAttribute<ElementLink<xAOD::JetContainer> >("Parent"));
+    const xAOD::Jet* parent(*pparent);
+    Info("execute()", "\tVariableRMassScale": %0.2f", parent->getAttribute<float>("VariableRMassScale"));
+    Info("execute()", "\tEffectiveR: %0.2f", parent->getAttribute<float>("EffectiveR"));
+    ...
+  }
+```
+
 ## Authors
 - [Giordon Stark](https://github.com/kratsg)
 - [Jon Burr](https://github.com/j0nburr)
