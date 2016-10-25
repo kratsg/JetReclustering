@@ -622,6 +622,16 @@ An example (and a test you can use) is in <code>share/AthJetReclusteringAlgoJobO
 }
 </pre></div>
 
+<p>If you would like to access any of the Variable-R moments, these will most likely be on the parent jet. In this case, you will need to access the parent jet from the trimmed, reclustered jet. A standard prescription looks like</p>
+
+<div class="highlight highlight-source-c++"><pre>  <span class="pl-k">for</span>(<span class="pl-k">const</span> <span class="pl-k">auto</span> &amp;jet: *in_jets){
+    <span class="pl-k">const</span> ElementLink&lt;xAOD::JetContainer&gt; <span class="pl-c1">pparent</span>(jet-&gt;getAttribute&lt;ElementLink&lt;xAOD::JetContainer&gt; &gt;(<span class="pl-s"><span class="pl-pds">"</span>Parent<span class="pl-pds">"</span></span>));
+    <span class="pl-k">const</span> xAOD::Jet* <span class="pl-c1">parent</span>(*pparent);
+    <span class="pl-c1">Info</span>(<span class="pl-s"><span class="pl-pds">"</span>execute()<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>VariableRMassScale<span class="pl-pds">"</span></span>: %<span class="pl-c1">0</span>.<span class="pl-c1">2f</span><span class="pl-s"><span class="pl-pds">"</span>, parent-&gt;getAttribute&lt;float&gt;(<span class="pl-pds">"</span></span>VariableRMassScale<span class="pl-s"><span class="pl-pds">"</span>));</span>
+<span class="pl-s">    Info(<span class="pl-pds">"</span></span><span class="pl-c1">execute</span>()<span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span>\tEffectiveR: %<span class="pl-c1">0</span>.<span class="pl-c1">2f</span><span class="pl-s"><span class="pl-pds">"</span>, parent-&gt;getAttribute&lt;float&gt;(<span class="pl-pds">"</span></span>EffectiveR<span class="pl-s"><span class="pl-pds">"</span>));</span>
+<span class="pl-s">    ...</span>
+<span class="pl-s">  }</span></pre></div>
+
 <h2>
 <a id="authors" class="anchor" href="#authors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors</h2>
 
