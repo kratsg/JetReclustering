@@ -50,47 +50,51 @@ rc compile
 
 ### `JetReclusteringTool` tool
 
- Property           | Type                      | Default                   | Description
-:-------------------|:-------------------------:|--------------------------:|:-------------------------------------------------------------------------------------
-InputJetContainer   | string                    |                           | name of the input jet container for reclustering
-OutputJetContainer  | string                    |                           | name of the output jet container holding reclustered jets
-InputJetPtMin       | float                     | 25.0                      | filter input jets by requiring a minimum pt cut [GeV]
-ReclusterAlgorithm  | string                    | AntiKt                    | name of algorithm for clustering large-R jets {AntiKt, Kt, CamKt}
-ReclusterRadius     | float                     | 1.0                       | radius of large-R reclustered jets or maximum radius of variable-R jet finding
-RCJetPtMin          | float                     | 50.0                      | filter reclustered jets by requiring a minimum pt cut [GeV]
-RCJetPtFrac         | float                     | 0.05                      | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
-RCJetSubjetRadius   | float                     | 0.0                       | radius parameter for kt-clustering to form subjets (R=0.0 should not do any clustering)
-VariableRMinRadius  | float                     | -1.0                      | minimum radius for variable-R jet finding
-VariableRMassScale  | float                     | -1.0                      | mass scale [GeV] for variable-R jet finding
-DoArea              | bool                      | false                     | turn on ghost area calculations (set ghost area scale to 0.01)
-AreaAttributes      | string                    | ActiveArea ActiveArea4vec | space-delimited list of attributes to transfer over from fastjet
+ Property                 | Type                      | Default                   | Description
+:-------------------------|:-------------------------:|--------------------------:|:-------------------------------------------------------------------------------------
+InputJetContainer         | string                    |                           | name of the input jet container for reclustering
+OutputJetContainer        | string                    |                           | name of the output jet container holding reclustered jets
+InputJetPtMin             | float                     | 25.0                      | filter input jets by requiring a minimum pt cut [GeV]
+ReclusterAlgorithm        | string                    | AntiKt                    | name of algorithm for clustering large-R jets {AntiKt, Kt, CamKt}
+ReclusterRadius           | float                     | 1.0                       | radius of large-R reclustered jets or maximum radius of variable-R jet finding
+RCJetPtMin                | float                     | 50.0                      | filter reclustered jets by requiring a minimum pt cut [GeV]
+RCJetPtFrac               | float                     | 0.05                      | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
+RCJetSubjetRadius         | float                     | 0.0                       | radius parameter for kt-clustering to form subjets (R=0.0 should not do any clustering)
+VariableRMinRadius        | float                     | -1.0                      | minimum radius for variable-R jet finding
+VariableRMassScale        | float                     | -1.0                      | mass scale [GeV] for variable-R jet finding
+DoArea                    | bool                      | false                     | turn on ghost area calculations (set ghost area scale to 0.01)
+AreaAttributes            | string                    | ActiveArea ActiveArea4vec | space-delimited list of attributes to transfer over from fastjet
+GhostTracksInputContainer | string                    |                           | if set, create ghost tracks for the reclustered jet of radius R using the specified container
+GhostScale                | float                     | 1e-20                     | GhostScale for the GhostTracksInputContainer
 
 ### `JetReclusteringAlgo` algorithm
 
 As well as the provided above configurations for the `JetReclusteringTool`, we also provide a `m_debug` configuration for extra verbose output and an `m_outputXAODName` to create an output xAOD containing the reclustered jets (note: experimental)
 
-Variable            | Type      | Default                   | Description
-:-------------------|:---------:|--------------------------:|:-------------------------------------------------------------------------------------
-m_inputJetContainer | string    |                           | see above
-m_outputJetContainer| string    |                           | see above
-m_ptMin_input       | float     | 25.0                      | see above
-m_rc_alg            | string    | AntiKt                    | see above
-m_radius            | float     | 1.0                       | see above
-m_ptMin_rc          | float     | 50.0                      | see above
-m_ptFrac            | float     | 0.05                      | see above
-m_subjet_radius     | float     | 0.0                       | see above
-m_varR_minR         | float     | -1.0                      | see above
-m_varR_mass         | float     | -1.0                      | see above
-m_doArea            | bool      | false                     | see above
-m_areaAttributes    | string    | ActiveArea ActiveArea4vec | see above
-m_outputXAODName    | string    |                           | if defined, put the reclustered jets in an output xAOD file of the given name
-m_debug             | bool      | false                     | enable verbose debugging information, such as printing the tool configurations
+Variable                    | Type      | Default                   | Description
+:---------------------------|:---------:|--------------------------:|:-------------------------------------------------------------------------------------
+m_inputJetContainer         | string    |                           | see above
+m_outputJetContainer        | string    |                           | see above
+m_ptMin_input               | float     | 25.0                      | see above
+m_rc_alg                    | string    | AntiKt                    | see above
+m_radius                    | float     | 1.0                       | see above
+m_ptMin_rc                  | float     | 50.0                      | see above
+m_ptFrac                    | float     | 0.05                      | see above
+m_subjet_radius             | float     | 0.0                       | see above
+m_varR_minR                 | float     | -1.0                      | see above
+m_varR_mass                 | float     | -1.0                      | see above
+m_doArea                    | bool      | false                     | see above
+m_areaAttributes            | string    | ActiveArea ActiveArea4vec | see above
+m_ghostTracksInputContainer | string    |                           | see above
+m_ghostScale                | float     | 1e-20                     | see above
+m_outputXAODName            | string    |                           | if defined, put the reclustered jets in an output xAOD file of the given name
+m_debug                     | bool      | false                     | enable verbose debugging information, such as printing the tool configurations
 
 ### `AthJetReclusteringAlgo` Athena algorithm
 
  Property           | Type                      | Default                   | Description
 :-------------------|:-------------------------:|--------------------------:|:-------------------------------------------------------------------------------------
-JetReclusteringTool          | ToolHandle                |                           | The JetReclusteringTool to use. All configurables should be set on this.
+JetReclusteringTool | ToolHandle                |                           | The JetReclusteringTool to use. All configurables should be set on this.
 
 ## Using Jet Reclustering
 
@@ -127,6 +131,14 @@ Areas can be calculated and added to the jets. Fastjet does the area calculation
 
 - `ActiveArea` (most people use this one)
 - `ActiveArea4vec`
+
+### (beta) Ghost Track Association
+
+There are two ways we can visualize a reclustered jet:
+- as a fat jet that only occupies the area that its constituents (input jets) do
+- as a fat jet that occupies the area of a circle of radius R centered at itself
+
+In the former case, the ghost tracks that exist on the constituents (input jets) already exist and one can just combine them all to get the ghost tracks of the reclustered jet. In the latter case, we need ghost tracks for the area between constituents (input jets). These Ghost Tracks can be made by setting the `GhostTracksInputContainer` option on the tool to a track jet container. This will create a new `JetRec/PseudoJetGetter` and append to the getter array. These track jets would be scaled by the `GhostScale` parameter and considered as constituents for the reclustered jet.
 
 ### Incorporating in existing code
 
