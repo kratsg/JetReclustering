@@ -20,6 +20,7 @@ If you would like to get involved, see the twiki for [the JetMET working group f
   - [Output Reclustered Jet Trimming](#output-reclustered-jet-trimming)
   - [Variable-R Jet Finding](#variable-r-jet-finding)
   - [Area Calculations](#area-calculations)
+  - [(beta) Ghost Track Association](#beta-ghost-track-association)
   - [Incorporating in existing code](#incorporating-in-existing-code)
     - [RootCore](#rootcore)
     - [Athena](#athena)
