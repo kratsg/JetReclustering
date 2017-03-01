@@ -68,18 +68,20 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
   }
 
   ANA_CHECK(ASG_MAKE_ANA_TOOL(m_jetReclusteringTool, JetReclusteringTool));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetContainer",  m_inputJetContainer));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("OutputJetContainer", m_outputJetContainer));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterRadius",    m_radius));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterAlgorithm", m_rc_alg));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("VariableRMinRadius", m_varR_minR));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("VariableRMassScale", m_varR_mass));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetPtMin",      m_ptMin_input));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtMin",         m_ptMin_rc));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtFrac",        m_ptFrac));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetSubjetRadius",  m_subjet_radius));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("DoArea",             m_doArea));
-  ANA_CHECK(m_jetReclusteringTool.setProperty("AreaAttributes",     m_areaAttributes));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetContainer",         m_inputJetContainer));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("OutputJetContainer",        m_outputJetContainer));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterRadius",           m_radius));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("ReclusterAlgorithm",        m_rc_alg));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("VariableRMinRadius",        m_varR_minR));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("VariableRMassScale",        m_varR_mass));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("InputJetPtMin",             m_ptMin_input));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtMin",                m_ptMin_rc));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetPtFrac",               m_ptFrac));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("RCJetSubjetRadius",         m_subjet_radius));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("DoArea",                    m_doArea));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("AreaAttributes",            m_areaAttributes));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("GhostTracksInputContainer", m_ghostTracksInputContainer));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("GhostScale",                m_ghostScale));
   ANA_CHECK(m_jetReclusteringTool.retrieve());
 
   if(m_debug) m_jetReclusteringTool->print();
