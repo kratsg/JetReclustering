@@ -66,6 +66,7 @@ VariableRMassScale        | float                     | -1.0                    
 DoArea                    | bool                      | false                     | turn on ghost area calculations (set ghost area scale to 0.01)
 AreaAttributes            | string                    | ActiveArea ActiveArea4vec | space-delimited list of attributes to transfer over from fastjet
 GhostTracksInputContainer | string                    |                           | if set, create ghost tracks for the reclustered jet of radius R using the specified container
+GhostTracksVertexAssName  | string                    |                           | if GhostTracksInputContainer is set, this must also be set
 GhostScale                | float                     | 1e-20                     | GhostScale for the GhostTracksInputContainer
 
 ### `JetReclusteringAlgo` algorithm
@@ -88,6 +89,7 @@ m_doArea                    | bool      | false                     | see above
 m_areaAttributes            | string    | ActiveArea ActiveArea4vec | see above
 m_ghostTracksInputContainer | string    |                           | see above
 m_ghostScale                | float     | 1e-20                     | see above
+m_ghostTracksVertexAssName  | string    |                           | see above
 m_outputXAODName            | string    |                           | if defined, put the reclustered jets in an output xAOD file of the given name
 m_debug                     | bool      | false                     | enable verbose debugging information, such as printing the tool configurations
 
@@ -139,7 +141,7 @@ There are two ways we can visualize a reclustered jet:
 - as a fat jet that only occupies the area that its constituents (input jets) do
 - as a fat jet that occupies the area of a circle of radius R centered at itself
 
-In the former case, the ghost tracks that exist on the constituents (input jets) already exist and one can just combine them all to get the ghost tracks of the reclustered jet. In the latter case, we need ghost tracks for the area between constituents (input jets). These Ghost Tracks can be made by setting the `GhostTracksInputContainer` option on the tool to a track jet container. This will create a new `JetRec/PseudoJetGetter` and append to the getter array. These track jets would be scaled by the `GhostScale` parameter and considered as constituents for the reclustered jet.
+In the former case, the ghost tracks that exist on the constituents (input jets) already exist and one can just combine them all to get the ghost tracks of the reclustered jet. In the latter case, we need ghost tracks for the area between constituents (input jets). These Ghost Tracks can be made by setting the `GhostTracksInputContainer` option on the tool to a track jet container. This will create a new `JetRec/PseudoJetGetter` and append to the getter array. These track jets would be scaled by the `GhostScale` parameter and considered as constituents for the reclustered jet. Lastly, there needs to be a `TrackVertexAssociation` tool set up already for reasons unknown (a technical need) so you must make sure you pass in `GhostTracksVertexAssName` as well. This is probably(?) best used in a derivation job in Athena where you know what the `TrackVertexAssociation` tool is.
 
 ### Incorporating in existing code
 

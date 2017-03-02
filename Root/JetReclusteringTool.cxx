@@ -55,20 +55,21 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
 {
 
 
-  declareProperty("InputJetContainer",          m_inputJetContainer = "");
-  declareProperty("OutputJetContainer",         m_outputJetContainer = "");
-  declareProperty("ReclusterRadius",            m_radius = 1.0);
-  declareProperty("ReclusterAlgorithm",         m_rc_alg = "AntiKt");
-  declareProperty("VariableRMinRadius",         m_varR_minR =-1.0);
-  declareProperty("VariableRMassScale",         m_varR_mass =-1.0);
-  declareProperty("InputJetPtMin",              m_ptMin_input = 25.0);
-  declareProperty("RCJetPtMin",                 m_ptMin_rc = 50.0);
-  declareProperty("RCJetPtFrac",                m_ptFrac = 0.05);
-  declareProperty("RCJetSubjetRadius",          m_subjet_radius = 0.2);
-  declareProperty("DoArea",                     m_doArea = false);
-  declareProperty("AreaAttributes",             m_areaAttributes = "ActiveArea ActiveArea4vec");
-  declareProperty("GhostTracksInputContainer",  m_ghostTracksInputContainer = "");
-  declareProperty("GhostScale",                 m_ghostScale = 1e-20);
+  declareProperty("InputJetContainer",         m_inputJetContainer = "");
+  declareProperty("OutputJetContainer",        m_outputJetContainer = "");
+  declareProperty("ReclusterRadius",           m_radius = 1.0);
+  declareProperty("ReclusterAlgorithm",        m_rc_alg = "AntiKt");
+  declareProperty("VariableRMinRadius",        m_varR_minR =-1.0);
+  declareProperty("VariableRMassScale",        m_varR_mass =-1.0);
+  declareProperty("InputJetPtMin",             m_ptMin_input = 25.0);
+  declareProperty("RCJetPtMin",                m_ptMin_rc = 50.0);
+  declareProperty("RCJetPtFrac",               m_ptFrac = 0.05);
+  declareProperty("RCJetSubjetRadius",         m_subjet_radius = 0.2);
+  declareProperty("DoArea",                    m_doArea = false);
+  declareProperty("AreaAttributes",            m_areaAttributes = "ActiveArea ActiveArea4vec");
+  declareProperty("GhostTracksInputContainer", m_ghostTracksInputContainer = "");
+  declareProperty("GhostTracksVertexAssName",  m_ghostTracksVertexAssName = "");
+  declareProperty("GhostScale",                m_ghostScale = 1e-20);
 
 }
 
@@ -152,14 +153,17 @@ StatusCode JetReclusteringTool::initialize(){
   //    - do we need ghost tracks too?
   if(!m_ghostTracksInputContainer.empty()){
     ATH_MSG_INFO( "GhostTracks PseudoJet Builder initializing..." );
-    ASG_CHECK( ASG_MAKE_ANA_TOOL( m_pseudoGhostTrackJetGetterTool, PseudoJetGetter) );
+    if(m_ghostTracksVertexAssociationName.empty()){
+      ATH_MSG_ERROR( "You must set the GhostTracksVertexAssName as well!" );
+      return StatusCode::FAILURE;
+    }
+    ASG_CHECK( ASG_MAKE_ANA_TOOL( m_pseudoGhostTrackJetGetterTool, TrackPseudoJetGetter) );
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("InputContainer", m_ghostTracksInputContainer));
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("OutputContainer", "GhostTracks"+name()));
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("Label", "GhostTrack"));
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("SkipNegativeEnergy", true));
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("GhostScale", m_ghostScale));
-    // TODO: fix me!!!
-    ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("TrackVertexAssociation", ""));
+    ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("TrackVertexAssociation", m_ghostTracksVertexAssName));
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("OutputLevel", msg().level() ) );
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.retrieve());
     getterArray.push_back(m_pseudoGhostTrackJetGetterTool.getHandle());

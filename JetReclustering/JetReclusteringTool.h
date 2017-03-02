@@ -71,6 +71,7 @@ class JetReclusteringTool : public asg::AsgTool, virtual public IJetExecuteTool 
     std::string m_areaAttributes;
   /* for ghost tracks */
     std::string m_ghostTracksInputContainer;
+    std::string m_ghostTracksVertexAssName;
     float m_ghostScale;
 
     // make sure someone only calls a function once
