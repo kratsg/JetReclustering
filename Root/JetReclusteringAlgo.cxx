@@ -85,6 +85,7 @@ EL::StatusCode JetReclusteringAlgo :: initialize ()
   ANA_CHECK(m_jetReclusteringTool.setProperty("DoArea",                    m_doArea));
   ANA_CHECK(m_jetReclusteringTool.setProperty("AreaAttributes",            m_areaAttributes));
   ANA_CHECK(m_jetReclusteringTool.setProperty("GhostTracksInputContainer", m_ghostTracksInputContainer));
+  ANA_CHECK(m_jetReclusteringTool.setProperty("GhostTracksVertexAssName",  m_ghostTracksVertexAssName));
   ANA_CHECK(m_jetReclusteringTool.setProperty("GhostScale",                m_ghostScale));
   ANA_CHECK(m_jetReclusteringTool.retrieve());
 

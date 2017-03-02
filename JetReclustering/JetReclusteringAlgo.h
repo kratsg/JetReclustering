@@ -34,6 +34,7 @@ public:
   bool m_doArea = false;
   std::string m_areaAttributes = "ActiveArea ActiveArea4vec";
   std::string m_ghostTracksInputContainer = "";
+  std::string m_ghostTracksVertexAssName = "";
   float m_ghostScale = 1e-20;
   bool m_debug = false;
 
