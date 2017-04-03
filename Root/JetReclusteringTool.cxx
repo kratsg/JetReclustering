@@ -72,7 +72,7 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   declareProperty("DoArea",                    m_doArea = false);
   declareProperty("AreaAttributes",            m_areaAttributes = "ActiveArea ActiveArea4vec");
   declareProperty("GhostTracksInputContainer", m_ghostTracksInputContainer = "");
-  declareProperty("GhostTracksVertexAssName",  m_ghostTracksVertexAssName = "");
+  declareProperty("GhostTracksVertexAssociationName",  m_ghostTracksVertexAssociationName = "");
   declareProperty("GhostScale",                m_ghostScale = 1e-20);
 
 }
@@ -167,7 +167,7 @@ StatusCode JetReclusteringTool::initialize(){
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("Label", "GhostTrack"));
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("SkipNegativeEnergy", true));
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("GhostScale", m_ghostScale));
-    ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("TrackVertexAssociation", m_ghostTracksVertexAssName));
+    ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("TrackVertexAssociation", m_ghostTracksVertexAssociationName));
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("OutputLevel", msg().level() ) );
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.retrieve());
     getterArray.push_back(m_pseudoGhostTrackJetGetterTool.getHandle());
