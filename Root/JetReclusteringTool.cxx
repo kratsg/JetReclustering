@@ -157,7 +157,7 @@ StatusCode JetReclusteringTool::initialize(){
   //    - do we need ghost tracks too?
   if(!m_ghostTracksInputContainer.empty()){
     ATH_MSG_INFO( "GhostTracks PseudoJet Builder initializing..." );
-    if(m_ghostTracksVertexAssociationName.empty()){
+    if(m_ghostTracksVertexAssName.empty()){
       ATH_MSG_ERROR( "You must set the GhostTracksVertexAssName as well!" );
       return StatusCode::FAILURE;
     }
