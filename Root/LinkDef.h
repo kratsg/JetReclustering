@@ -1,6 +1,8 @@
+/*
+  Copyright (C) 2002-2017 CERN for the benefit of the ATLAS collaboration
+*/
+
 #include <JetReclustering/JetReclusteringAlgo.h>
-#include <JetReclustering/JetReclusteringTool.h>
-#include <JetReclustering/EffectiveRTool.h>
 
 #ifdef __CINT__
 
@@ -11,8 +13,5 @@
 
 /* Add a pragma link for any EventLoop algorithm */
 #pragma link C++ class JetReclusteringAlgo+;
-#pragma link C++ class JetReclusteringTool+;
-#pragma link C++ class EffectiveRTool+;
 
-#pragma link C++ class IJetReclusteringTool+;
 #endif

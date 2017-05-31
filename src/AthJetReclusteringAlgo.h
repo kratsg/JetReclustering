@@ -6,17 +6,17 @@
 
 class IJetExecuteTool;
 
-class AthJetReclusteringAlgo: public ::AthAlgorithm { 
- public: 
+class AthJetReclusteringAlgo: public ::AthAlgorithm {
+ public:
   AthJetReclusteringAlgo( const std::string& name, ISvcLocator* pSvcLocator );
-  virtual ~AthJetReclusteringAlgo(); 
+  virtual ~AthJetReclusteringAlgo();
 
   virtual StatusCode  initialize();
   virtual StatusCode  execute();
   virtual StatusCode  finalize();
 
- private: 
+ private:
   ToolHandle<IJetExecuteTool> m_jetRecTool;
-}; 
+};
 
 #endif //> !XAODJETRECLUSTERING_ATHJETRECLUSTERINGALGO_H
