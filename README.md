@@ -2,10 +2,6 @@
 
 *This is currently in AnalysisBase releases 2.4.17+.*
 
-*This is an updated README for the ghostTracks branch which allows ghost association of tracks to the reclustered, large R jets, there is simply a few more options that must be specified --the name of the TrackContainer and TrackVertexAssociationTool.  Note for this to not crash, a TrackVertexAssociationTool must exist already!!!*
-
-*The new ghost association implementation is only for Athena right now, there is no RootCore equivalent.*
-
 This tool allows you to recluster small-R xAOD jets into large-R xAOD jets. It provides configurable filtering of the small-R jets, reclustering using standard or variable-R algorithms, configurable trimming of the large-R jets, and jet moment & jet substructure moment calculations.
 
 If you would like to get involved, see the twiki for [the JetMET working group for jet reclustering](https://twiki.cern.ch/twiki/bin/view/AtlasProtected/JetReclustering). The [pre-recommendations](https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/PreRec) twiki contains the guidelines for your analyses.
