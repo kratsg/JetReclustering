@@ -1,4 +1,3 @@
-
 # The name of the package:
 atlas_subdir( JetReclustering )
 
@@ -53,12 +52,15 @@ atlas_add_dictionary( JetReclusteringDict
    LINK_LIBRARIES JetReclusteringLib )
 
 # Test(s) in the package:
+set( extra_libs )
 if( NOT XAOD_STANDALONE )
-   atlas_add_test( ut_JetReclusteringTool_test
-      SOURCES test/ut_JetReclusteringTool_test.cxx
-      LINK_LIBRARIES xAODRootAccess AsgTools JetInterface xAODJet
-      POOLRootAccess )
+   set( extra_libs POOLRootAccessLib )
 endif()
+atlas_add_test( ut_JetReclusteringTool_test
+                SOURCES test/ut_JetReclusteringTool_test.cxx
+                INCLUDE_DIRS ${ROOT_INCLUDE_DIRS}
+                LINK_LIBRARIES ${ROOT_LIBRARIES} xAODRootAccess AsgTools JetInterface xAODJet
+                ${extra_libs} )
 
 # Install files from the package:
 atlas_install_joboptions( share/*.py )
