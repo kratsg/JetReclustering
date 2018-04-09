@@ -2,6 +2,8 @@
 
 *This is currently in AnalysisBase releases 2.4.17+.*
 
+This is updated to include ghost association for tracks and now truth particles
+
 This tool allows you to recluster small-R xAOD jets into large-R xAOD jets. It provides configurable filtering of the small-R jets, reclustering using standard or variable-R algorithms, configurable trimming of the large-R jets, and jet moment & jet substructure moment calculations.
 
 If you would like to get involved, see the twiki for [the JetMET working group for jet reclustering](https://twiki.cern.ch/twiki/bin/view/AtlasProtected/JetReclustering). The [pre-recommendations](https://twiki.cern.ch/twiki/bin/viewauth/AtlasProtected/PreRec) twiki contains the guidelines for your analyses.
@@ -67,6 +69,8 @@ DoArea                    | bool                      | false                   
 AreaAttributes            | string                    | ActiveArea ActiveArea4vec | space-delimited list of attributes to transfer over from fastjet
 GhostTracksInputContainer | string                    |                           | if set, create ghost tracks for the reclustered jet of radius R using the specified container
 GhostTracksVertexAssName  | string                    |                           | if GhostTracksInputContainer is set, this must also be set
+GhostTruthInputBContainer | string                    |                           | if set, create ghost truth B-hadrons using specified container
+GhostTruthInputCContainer | string                    |                           | if set, create ghost truth C-hadrons using specified container
 GhostScale                | float                     | 1e-20                     | GhostScale for the GhostTracksInputContainer
 
 ### `JetReclusteringAlgo` algorithm
