@@ -1,3 +1,7 @@
+/*
+  Copyright (C) 2002-2017 CERN for the benefit of the ATLAS collaboration
+*/
+
 #ifdef ROOTCORE
 #include <EventLoop/Job.h>
 #include <EventLoop/StatusCode.h>
@@ -104,7 +108,7 @@ EL::StatusCode JetReclusteringAlgo :: execute ()
     } else if(m_event->contains<jet_t>(m_inputJetContainer)){
       if(!m_event->retrieve( smallRjets, m_inputJetContainer ).isSuccess()) return EL::StatusCode::FAILURE;
     } else {
-      Error("execute()", "Could not find the input jet container. That's fucking weird.");
+      Error("execute()", "Could not find the input jet container. That's really weird.");
       return EL::StatusCode::FAILURE;
     }
 
