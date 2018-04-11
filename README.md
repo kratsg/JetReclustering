@@ -119,7 +119,7 @@ When a new jet is formed using variable-R jet finding, it will have some extra a
 ReclusterRadius     | float                     | SizeParameter
 VariableRMinRadius  | float                     | VariableRMinRadius
 VariableRMassScale  | float                     | VariableRMassScale
-                    | float                     | EffectiveR
+EffectiveR          | float                     | EffectiveR
 
 ### Area Calculations
 
