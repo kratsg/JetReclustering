@@ -77,7 +77,9 @@ class JetReclusteringTool : public asg::AsgTool, virtual public IJetExecuteTool 
     std::string m_ghostTracksInputContainer;
     std::string m_ghostTracksVertexAssociationName;
     float m_ghostScale;
-
+    /* for truth matching */
+    std::string m_ghostTruthInputBContainer;
+    std::string m_ghostTruthInputCContainer;
     // make sure someone only calls a function once
     bool m_isInitialized = false;
     // this is for filtering input jets
@@ -106,6 +108,8 @@ class JetReclusteringTool : public asg::AsgTool, virtual public IJetExecuteTool 
     asg::AnaToolHandle<IJetModifier> m_dipolarityTool;
     asg::AnaToolHandle<IJetModifier> m_centerOfMassShapesTool;
     asg::AnaToolHandle<IJetModifier> m_nSubjettinessTool;
+    asg::AnaToolHandle<IPseudoJetGetter> m_pseudoTruthParticleBJetGetterTool;
+    asg::AnaToolHandle<IPseudoJetGetter> m_pseudoTruthParticleCJetGetterTool;
 };
 
 #endif
