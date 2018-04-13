@@ -2,6 +2,8 @@
 
 *This is currently in AnalysisBase releases 2.4.17+.*
 
+*This is now updated for ghostTracksAndTruth branch which allows ghost association of truth B/C hadrons for reclustered jets.*
+
 *This is an updated README for the ghostTracks branch which allows ghost association of tracks to the reclustered, large R jets, there is simply a few more options that must be specified --the name of the TrackContainer and TrackVertexAssociationTool.  Note for this to not crash, a TrackVertexAssociationTool must exist already!!!*
 
 *The new ghost association implementation is only for Athena right now, there is no RootCore equivalent.*
@@ -69,6 +71,8 @@ VariableRMassScale  | float                     | -1.0                      | ma
 DoArea              | bool                      | false                     | turn on ghost area calculations (set ghost area scale to 0.01)
 AreaAttributes      | string                    | ActiveArea ActiveArea4vec | space-delimited list of attributes to transfer over from fastjet
 GhostTracksInputContainer | string              |                           | name of TrackContainer used for ghost association
+GhostTruthInputBContainer | string              |                           | name of B-Hadrons container for ghost association
+GhostTruthInputCContainer | string              |                           | name of C-Hadrons container for ghost association
 GhostTracksVertexAssociationName | string       |                           | name of TrackVertexAssociationTool, must be created already in order not to crash!
 ### `JetReclusteringAlgo` algorithm
 
