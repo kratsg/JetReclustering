@@ -2,7 +2,13 @@
 
 *This is currently in AnalysisBase releases 2.4.17+.*
 
+<<<<<<< HEAD
 This is updated to include ghost association for tracks and now truth particles
+=======
+*This is an updated README for the ghostTracks branch which allows ghost association of tracks to the reclustered, large R jets, there is simply a few more options that must be specified --the name of the TrackContainer and TrackVertexAssociationTool.  Note for this to not crash, a TrackVertexAssociationTool must exist already!!!*
+
+*The new ghost association implementation is only for Athena right now, there is no RootCore equivalent.*
+>>>>>>> Update README.md
 
 This tool allows you to recluster small-R xAOD jets into large-R xAOD jets. It provides configurable filtering of the small-R jets, reclustering using standard or variable-R algorithms, configurable trimming of the large-R jets, and jet moment & jet substructure moment calculations.
 
@@ -53,6 +59,7 @@ rc compile
 
 ### `JetReclusteringTool` tool
 
+<<<<<<< HEAD
  Property                 | Type                      | Default                   | Description
 :-------------------------|:-------------------------:|--------------------------:|:-------------------------------------------------------------------------------------
 InputJetContainer         | string                    |                           | name of the input jet container for reclustering
@@ -73,6 +80,24 @@ GhostTruthInputBContainer | string                    |                         
 GhostTruthInputCContainer | string                    |                           | if set, create ghost truth C-hadrons using specified container
 GhostScale                | float                     | 1e-20                     | GhostScale for the GhostTracksInputContainer
 
+=======
+ Property           | Type                      | Default                   | Description
+:-------------------|:-------------------------:|--------------------------:|:-------------------------------------------------------------------------------------
+InputJetContainer   | string                    |                           | name of the input jet container for reclustering
+OutputJetContainer  | string                    |                           | name of the output jet container holding reclustered jets
+InputJetPtMin       | float                     | 25.0                      | filter input jets by requiring a minimum pt cut [GeV]
+ReclusterAlgorithm  | string                    | AntiKt                    | name of algorithm for clustering large-R jets {AntiKt, Kt, CamKt}
+ReclusterRadius     | float                     | 1.0                       | radius of large-R reclustered jets or maximum radius of variable-R jet finding
+RCJetPtMin          | float                     | 50.0                      | filter reclustered jets by requiring a minimum pt cut [GeV]
+RCJetPtFrac         | float                     | 0.05                      | trim the reclustered jets with a PtFrac on its constituents (eg: small-R input jets)
+RCJetSubjetRadius   | float                     | 0.0                       | radius parameter for kt-clustering to form subjets (R=0.0 should not do any clustering)
+VariableRMinRadius  | float                     | -1.0                      | minimum radius for variable-R jet finding
+VariableRMassScale  | float                     | -1.0                      | mass scale [GeV] for variable-R jet finding
+DoArea              | bool                      | false                     | turn on ghost area calculations (set ghost area scale to 0.01)
+AreaAttributes      | string                    | ActiveArea ActiveArea4vec | space-delimited list of attributes to transfer over from fastjet
+GhostTracksInputContainer | string              |                           | name of TrackContainer used for ghost association
+GhostTracksVertexAssociationName | string       |                           | name of TrackVertexAssociationTool, must be created already in order not to crash!
+>>>>>>> Update README.md
 ### `JetReclusteringAlgo` algorithm
 
 As well as the provided above configurations for the `JetReclusteringTool`, we also provide a `m_debug` configuration for extra verbose output and an `m_outputXAODName` to create an output xAOD containing the reclustered jets (note: experimental)
