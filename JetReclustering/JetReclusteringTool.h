@@ -1,3 +1,7 @@
+/*
+  Copyright (C) 2002-2017 CERN for the benefit of the ATLAS collaboration
+*/
+
 #ifndef JetReclustering_JetReclusteringTool_H
 #define JetReclustering_JetReclusteringTool_H
 
@@ -72,7 +76,7 @@ class JetReclusteringTool : public asg::AsgTool, virtual public IJetExecuteTool 
   /* for ghost tracks */
     std::string m_ghostTracksInputContainer;
     float m_ghostScale;
-std::string m_ghostTracksVertexAssName;
+std::string m_ghostTracksVertexAssociationName;
   /* for truth matching */
     std::string m_ghostTruthInputBContainer;
     std::string m_ghostTruthInputCContainer;

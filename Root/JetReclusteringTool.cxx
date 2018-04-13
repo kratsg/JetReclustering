@@ -1,3 +1,7 @@
+/*
+   Copyright (C) 2002-2017 CERN for the benefit of the ATLAS collaboration
+*/
+
 #include "JetReclustering/JetReclusteringTool.h"
 #include "AsgTools/Check.h"
 
@@ -72,7 +76,7 @@ JetReclusteringTool::JetReclusteringTool(std::string name) :
   declareProperty("GhostTracksInputContainer", m_ghostTracksInputContainer = "");
   declareProperty("GhostTruthInputBContainer",   m_ghostTruthInputBContainer = "");
   declareProperty("GhostTruthInputCContainer",   m_ghostTruthInputCContainer = "");
-  declareProperty("GhostTracksVertexAssName",  m_ghostTracksVertexAssName = "");
+  declareProperty("GhostTracksVertexAssociationName",  m_ghostTracksVertexAssociationName = "");
   declareProperty("GhostScale",                m_ghostScale = 1e-20);
 
 }
@@ -157,8 +161,8 @@ StatusCode JetReclusteringTool::initialize(){
   //    - do we need ghost tracks too?
   if(!m_ghostTracksInputContainer.empty()){
     ATH_MSG_INFO( "GhostTracks PseudoJet Builder initializing..." );
-    if(m_ghostTracksVertexAssName.empty()){
-      ATH_MSG_ERROR( "You must set the GhostTracksVertexAssName as well!" );
+    if(m_ghostTracksVertexAssociationName.empty()){
+      ATH_MSG_ERROR( "You must set the GhostTracksVertexAssociationName as well!" );
       return StatusCode::FAILURE;
     }
     ASG_CHECK( ASG_MAKE_ANA_TOOL( m_pseudoGhostTrackJetGetterTool, TrackPseudoJetGetter) );
@@ -167,7 +171,7 @@ StatusCode JetReclusteringTool::initialize(){
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("Label", "GhostTrack"));
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("SkipNegativeEnergy", true));
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("GhostScale", m_ghostScale));
-    ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("TrackVertexAssociation", m_ghostTracksVertexAssName));
+    ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("TrackVertexAssociation", m_ghostTracksVertexAssociationName));
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.setProperty("OutputLevel", msg().level() ) );
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.retrieve());
     getterArray.push_back(m_pseudoGhostTrackJetGetterTool.getHandle());
