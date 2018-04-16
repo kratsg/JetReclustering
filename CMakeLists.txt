@@ -18,6 +18,7 @@ atlas_depends_on_subdirs(
    Control/AthToolSupport/AsgTools
    Reconstruction/Jet/JetInterface
    Reconstruction/Jet/JetRec
+   Reconstruction/Jet/JetRecTools
    ${extra_deps}
    Event/xAODJet )
 
@@ -37,7 +38,7 @@ else()
    atlas_add_library( JetReclusteringLib
       JetReclustering/*.h Root/*.cxx
       PUBLIC_HEADERS JetReclustering
-      LINK_LIBRARIES AsgTools JetInterface JetRecLib
+      LINK_LIBRARIES AsgTools JetInterface JetRecLib JetRecToolsLib
       PRIVATE_LINK_LIBRARIES xAODJet xAODRootAccess )
 
    atlas_add_component( JetReclustering
