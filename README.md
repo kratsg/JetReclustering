@@ -68,7 +68,7 @@ VariableRMassScale        | float                     | -1.0                    
 DoArea                    | bool                      | false                     | turn on ghost area calculations (set ghost area scale to 0.01)
 AreaAttributes            | string                    | ActiveArea ActiveArea4vec | space-delimited list of attributes to transfer over from fastjet
 GhostTracksInputContainer | string                    |                           | if set, create ghost tracks for the reclustered jet of radius R using the specified container
-GhostTracksVertexAssName  | string                    |                           | if GhostTracksInputContainer is set, this must also be set
+GhostTracksVertexAssociationName  | string                    |                           | if GhostTracksInputContainer is set, this must also be set
 GhostTruthInputBContainer | string                    |                           | if set, create ghost truth B-hadrons using specified container
 GhostTruthInputCContainer | string                    |                           | if set, create ghost truth C-hadrons using specified container
 GhostScale                | float                     | 1e-20                     | GhostScale for the GhostTracksInputContainer
