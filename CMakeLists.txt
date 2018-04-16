@@ -9,7 +9,8 @@ if( XAOD_STANDALONE )
       Reconstruction/Jet/JetSubStructureMomentTools )
 else()
    set( extra_deps PRIVATE Control/xAODRootAccess Control/AthenaBaseComps
-      PhysicsAnalysis/POOLRootAccess GaudiKernel )
+      PhysicsAnalysis/POOLRootAccess GaudiKernel
+      Reconstruction/Jet/JetRecTools )
 endif()
 
 # The dependencies of the package:
@@ -18,7 +19,6 @@ atlas_depends_on_subdirs(
    Control/AthToolSupport/AsgTools
    Reconstruction/Jet/JetInterface
    Reconstruction/Jet/JetRec
-   Reconstruction/Jet/JetRecTools
    ${extra_deps}
    Event/xAODJet )
 
