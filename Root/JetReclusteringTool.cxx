@@ -23,7 +23,9 @@
 #include "JetRec/JetFinder.h"
 #include "JetRec/JetTrimmer.h"
 #include "JetRec/JetPseudojetRetriever.h"
+#ifndef XAOD_STANDALONE
 #include "JetRecTools/TrackPseudoJetGetter.h"
+#endif
 #include "JetReclustering/EffectiveRTool.h"
 #include "JetSubStructureMomentTools/JetChargeTool.h"
 #include "JetSubStructureMomentTools/JetPullTool.h"
@@ -157,7 +159,7 @@ StatusCode JetReclusteringTool::initialize(){
   ASG_CHECK(m_pseudoJetGetterTool.setProperty("OutputLevel", msg().level() ) );
   ASG_CHECK(m_pseudoJetGetterTool.retrieve());
   getterArray.push_back(m_pseudoJetGetterTool.getHandle());
-
+  #ifndef XAOD_STANDALONE
   //    - do we need ghost tracks too?
   if(!m_ghostTracksInputContainer.empty()){
     ATH_MSG_INFO( "GhostTracks PseudoJet Builder initializing..." );
@@ -176,6 +178,9 @@ StatusCode JetReclusteringTool::initialize(){
     ASG_CHECK(m_pseudoGhostTrackJetGetterTool.retrieve());
     getterArray.push_back(m_pseudoGhostTrackJetGetterTool.getHandle());
   }
+  #else
+  ATH_MSG_INFO( "Ghost track association is ATHENA ONLY, setting the option is doing nothing." );
+  #endif
   if(!m_ghostTruthInputBContainer.empty()){
        ATH_MSG_INFO( "GhostTracks PseudoJet Builder initializing..." );
        ASG_CHECK( ASG_MAKE_ANA_TOOL( m_pseudoTruthParticleBJetGetterTool, PseudoJetGetter) );
