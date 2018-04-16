@@ -3,7 +3,7 @@ atlas_subdir( JetReclustering )
 
 # Dependency helper variable:
 set( extra_deps )
-if( XAOD_STANDALONE )
+if( XAOD_STANDALONE OR XAOD_ANALYSIS )
    set( extra_deps Control/xAODRootAccess
       PhysicsAnalysis/D3PDTools/EventLoop PRIVATE Event/xAOD/xAODEventInfo
       Reconstruction/Jet/JetSubStructureMomentTools )
@@ -35,16 +35,30 @@ if( XAOD_STANDALONE )
       PRIVATE_LINK_LIBRARIES xAODJet xAODEventInfo
       JetSubStructureMomentToolsLib )
 else()
-   atlas_add_library( JetReclusteringLib
-      JetReclustering/*.h Root/*.cxx
-      PUBLIC_HEADERS JetReclustering
-      LINK_LIBRARIES AsgTools JetInterface JetRecLib JetRecToolsLib
-      PRIVATE_LINK_LIBRARIES xAODJet xAODRootAccess )
+   if( XAOD_ANALYSIS )
+     atlas_add_library( JetReclusteringLib
+        JetReclustering/*.h Root/*.cxx
+        PUBLIC_HEADERS JetReclustering
+        LINK_LIBRARIES AsgTools JetInterface JetRecLib
+        PRIVATE_LINK_LIBRARIES xAODJet xAODRootAccess )
 
-   atlas_add_component( JetReclustering
-      src/*.h src/*.cxx src/components/*.cxx
-      LINK_LIBRARIES AthenaBaseComps GaudiKernel JetInterface
-      JetReclusteringLib )
+     atlas_add_component( JetReclustering
+        src/*.h src/*.cxx src/components/*.cxx
+        LINK_LIBRARIES AthenaBaseComps GaudiKernel JetInterface
+        JetReclusteringLib )
+   else()
+     atlas_add_library( JetReclusteringLib
+        JetReclustering/*.h Root/*.cxx
+        PUBLIC_HEADERS JetReclustering
+        LINK_LIBRARIES AsgTools JetInterface JetRecLib JetRecToolsLib
+        PRIVATE_LINK_LIBRARIES xAODJet xAODRootAccess )
+
+     atlas_add_component( JetReclustering
+        src/*.h src/*.cxx src/components/*.cxx
+        LINK_LIBRARIES AthenaBaseComps GaudiKernel JetInterface
+        JetReclusteringLib )
+
+   endif()
 endif()
 
 atlas_add_dictionary( JetReclusteringDict
