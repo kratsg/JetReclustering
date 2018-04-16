@@ -9,7 +9,8 @@ if( XAOD_STANDALONE )
       Reconstruction/Jet/JetSubStructureMomentTools )
 else()
    set( extra_deps PRIVATE Control/xAODRootAccess Control/AthenaBaseComps
-      PhysicsAnalysis/POOLRootAccess GaudiKernel )
+      PhysicsAnalysis/POOLRootAccess GaudiKernel
+      Reconstruction/Jet/JetRecTools )
 endif()
 
 # The dependencies of the package:
@@ -37,7 +38,7 @@ else()
    atlas_add_library( JetReclusteringLib
       JetReclustering/*.h Root/*.cxx
       PUBLIC_HEADERS JetReclustering
-      LINK_LIBRARIES AsgTools JetInterface JetRecLib
+      LINK_LIBRARIES AsgTools JetInterface JetRecLib JetRecToolsLib
       PRIVATE_LINK_LIBRARIES xAODJet xAODRootAccess )
 
    atlas_add_component( JetReclustering
